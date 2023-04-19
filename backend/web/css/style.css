@@ -1,0 +1,139 @@
+.form-control,
+select,
+input {
+    height: 30px;
+    font-size: 12px;
+}
+
+div[data-index],
+.site-clientview {
+    animation-name: fadein;
+    animation-duration: 3s;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.error_color {
+    color: rgb(156, 8, 8);
+}
+
+.border_color {
+    border-color: rgb(156, 8, 8);
+}
+
+.badge {
+    font-weight: normal;
+    font-size: 11px;
+}
+
+.badge-sent {
+    background: rgb(107, 26, 64);
+}
+
+.badge-pending {
+    background: #E64A19;
+}
+
+.badge-received {
+    background: #0277BD
+}
+
+.badge-success, .btn-sucess {
+    background: rgb(1, 110, 6);
+}
+
+.fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.pulse {
+    -webkit-animation-name: pulse;
+    animation-name: pulse;
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1);
+    }
+    50% {
+        -webkit-transform: scale3d(1.05, 1.05, 1.05);
+        transform: scale3d(1.05, 1.05, 1.05);
+    }
+    100% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1);
+    }
+    50% {
+        -webkit-transform: scale3d(1.05, 1.05, 1.05);
+        transform: scale3d(1.05, 1.05, 1.05);
+    }
+    100% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+.btn{ font-weight: bold;}
+
+.top-nav{
+    -moz-box-shadow: 0 0 2em #ccc; -webkit-box-shadow: 0 0 2em #ccc; box-shadow: 0 2px 6px #6d6d6d;    border-bottom: 4px solid #54b53c;
+}
+.top-nav > .row{
+    margin:0; padding:0; background-color: #0564b5;
+}
+.top-nav > .row img{
+    height: 50px;
+}
+@media (max-width: 768px){
+    .top-nav .row img{
+        display: none;
+    }
+    .top-nav .row h4{
+        font-size: 14px;
+    }
+    .top-nav .row h5{
+        font-size: 12px;
+    }
+}

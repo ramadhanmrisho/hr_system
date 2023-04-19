@@ -1,0 +1,195 @@
+<?php
+
+use common\models\Allowance;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use unclead\multipleinput;
+
+/* @var $this yii\web\View */
+/* @var $model common\models\Staff */
+/* @var $form yii\widgets\ActiveForm */
+
+
+$hr=\common\models\UserAccount::userHas(['HR']);
+$admin=\common\models\UserAccount::userHas(['ADMIN']);
+?>
+
+<style>
+
+    form div.required label.control-label:after {
+
+        content:" * ";
+
+        color:red;
+
+    }
+    </style>
+<?php
+\yiister\adminlte\widgets\Box::begin(
+    [
+        "type" => \yiister\adminlte\widgets\Box::TYPE_PRIMARY,
+    ]
+)
+?>
+<div class="staff-form">
+    <div class="panel panel-default fadeIn" style="padding:20px; ">
+        <div class="panel-body" style="font-weight: bold;">
+            <div class="btn-primary">
+                <h4 style="font-weight: bold;font-family: 'Bell MT';color: whitesmoke; align-content: center"> All Fields with <i style="color: red">*</i> are  mandatory</h4>
+            </div>
+
+
+            <?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data']]); ?>
+            <fieldset>
+                <legend style="font-weight: bold;font-family: Tahoma;color: #0d6aad">Personal Information:</legend>
+
+                <div class="col-md-3">
+                <?= $form->field($model, 'fname',['options'=>['class'=>'required']])->textInput(['maxlength' => true],['options'=>['class'=>'required']]) ?>
+                <?php if ($hr ||$admin ){?>
+                <?= $form->field($model, 'dob',['options'=>['class'=>'required']])->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
+                <?php }?>
+                <?= $form->field($model, 'identity_type_id',['options'=>['class'=>'required']],['template' => '<div class="input-group"><span class="input-group-addon">'.Yii::t('app','Identity Type').'</span>{input}</div>'])->widget(\kartik\select2\Select2::className(), ['data'=> ArrayHelper::map(\common\models\IdentityType::find()->all(),'id','name'),             'options'=>['placeholder'=>'--Select ID Type--']]) ?>
+                <?= $form->field($model, 'gender',['options'=>['class'=>'required']])->dropDownList([ 'Male' => 'Male', 'Female' => 'Female', ], ['prompt' => '']) ?>
+                </div>
+
+                <div class="col-md-3">
+                    <?= $form->field($model, 'mname')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'place_of_birth',['options'=>['class'=>'required']])->textInput(['placeholder' =>'eg: Kigoma']) ?>
+                    <?= $form->field($model, 'id_number',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'phone_number',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
+                </div>
+
+                <div class="col-md-3">
+                  <?= $form->field($model, 'lname',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
+                  <?= $form->field($model, 'marital_status',['options'=>['class'=>'required']])->dropDownList([ 'Married' => 'Married', 'Single' => 'Single', 'Divorced' => 'Divorced', ], ['prompt' => '']) ?>
+                  <?= $form->field($model, 'email',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
+                  <?= $form->field($model, 'alternate_phone_number')->textInput() ?>
+
+                </div>
+
+                <div class="col-md-3">
+                    <?php if($model->isNewRecord){?>
+                    <?= $form->field($model, 'photo',['options'=>['class'=>'required']])->widget(\kartik\file\FileInput::className(),[
+                        'options' => ['accept'=>'*', 'required' => true],
+                        'pluginOptions' => ['allowedFileExtensions' => ['jpg','png','jepg'], 'showUpload' => false]
+                    ]); ?>
+<?php }?>
+                </div>
+            </fieldset>
+            <br>
+<fieldset>
+    <legend style="font-weight: bold;font-family: Tahoma;color: #0d6aad">Place of Domicile:</legend>
+
+    <div class="col-md-3">
+            <?= $form->field($model, 'region_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::classname(), [
+                'data' => ArrayHelper::map(\common\models\Region::find()->all(), 'id', 'name'),
+                'language' => 'en',
+                'options' => ['placeholder' => 'Select region ...', 'multiple' => false,
+                    'onchange' => '
+                                            $.post( "index.php?r=staff/listsdistrict&id=' . '"+$(this).val(), function( data ) {
+                                              $( "select#staff-district_id" ).html( data );
+                                              
+                                            });'
+                ],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ]) ?>
+            <?= $form->field($model, 'division')->textInput(['maxlength' => true]) ?>
+
+    </div>
+
+           <div class="col-md-3">
+               <?= $form->field($model, 'district_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::classname(), [
+                   'data' => [],
+                   'language' => 'en',
+                   'options' => ['placeholder' => 'Select district ...', 'multiple' => false],
+                   'pluginOptions' => [
+                       'allowClear' => true
+                   ],
+
+               ]);
+               ?>
+               <?= $form->field($model, 'home_address',['options'=>['class'=>'required']],['template' => '<div class="input-group"><span class="input-group-addon">'.Yii::t('app','Home Address').'</span>{input}</div>'])->textInput(['maxlength' => true]) ?>
+
+           </div>
+    <div class="col-md-3">
+        <?= $form->field($model, 'ward')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'house_number')->textInput() ?>
+
+    </div>
+
+    <div class="col-md-3">
+        <?= $form->field($model, 'village',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
+
+    </div>
+</fieldset>
+   <fieldset>
+       <?php if ($hr ||$admin){?>
+       <legend style="font-weight: bold;font-family: Tahoma;color: #0d6aad">Employment Information:</legend>
+
+       <div class="col-md-3">
+           <?= $form->field($model, 'employee_number',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
+           <?= $form->field($model, 'designation_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::className(), ['data'=> ArrayHelper::map(\common\models\Designation::find()->all(),'id','name'),             'options'=>['placeholder'=>'--Select--']]) ?>
+           <?= $form->field($model, 'paye',['options'=>['class'=>'required']])->textInput() ?>
+           <?= $form->field($model, 'account_name',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
+       </div>
+
+       <div class="col-md-3">
+
+           <?= $form->field($model, 'date_employed',['options'=>['class'=>'required']])->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
+           <?= $form->field($model, 'salary_scale',['options'=>['class'=>'required']])->textInput(['placeholder' =>'e.g TGS,TGTS,TPSW,PHTS, etc']) ?>
+           <?= $form->field($model, 'nssf')->textInput() ?>
+           <?= $form->field($model, 'bank_account_number',['options'=>['class'=>'required']])->textInput() ?>
+       </div>
+
+       <div class="col-md-3">
+           <?= $form->field($model, 'name_of_high_education_level',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
+           <?= $form->field($model, 'basic_salary'  ,['options'=>['class'=>'required']])->textInput() ?>
+           <?= $form->field($model, 'nhif',['options'=>['class'=>'required']])->textInput() ?>
+           <?= $form->field($model, 'category',['options'=>['class'=>'required']])->dropDownList([ 'Academic Staff' => 'Academic Staff', 'Non Academic Staff' => 'Non Academic Staff', ], ['prompt' => '']) ?>
+       </div>
+
+       <div class="col-md-3">
+           <?= $form->field($model, 'department_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::className(), ['data'=> ArrayHelper::map(\common\models\Department::find()->all(),'id','name'),'options'=>['placeholder'=>'--Select Department--']]) ?>
+
+           <?=  $form->field($model,'allowance_id')->widget(multipleinput\MultipleInput::className(),[
+               'max' => 15,
+               'columns'=>[
+                   ['name'=>'allowance_id',
+                       'type'=>Select2::className(),
+                       'title'=>'Allowance',
+
+                          'options'=>[
+                    'data'=> ArrayHelper::map(\common\models\Allowance::find()->all(),'id',function($model){
+                        return $model['name'].' ['.Yii::$app->formatter->asDecimal($model['amount'],0).' Tsh]';
+                    }),
+                    'options' => [ 'prompt' =>'----Select-----',
+
+                    ],
+                ]
+                   ],
+               ]
+           ])->label(false)?>
+           <?= $form->field($model, 'helsb')->textInput() ?>
+           <?= $form->field($model, 'TUGHE')->textInput() ?>
+       </div>
+       <?php }?>
+   </fieldset>
+
+    <div class="form-group" align="center">
+        <?= Html::submitButton(($model->isNewRecord) ? 'Save Details ' : 'Save Changes', ['class' => 'btn btn-success btn-fill','style'=>'min-width:150px;',[
+            'class' => 'btn btn-success',
+            'data' => [
+                'confirm' => 'Are you sure you want to save staff details?',
+                'method' => 'post',
+            ],
+        ]]) ?>
+    </div>
+        </div>
+    </div>
+    <?php ActiveForm::end(); ?>
+
+</div>

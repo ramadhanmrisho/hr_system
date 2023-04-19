@@ -1,0 +1,551 @@
+<?php
+
+/**
+ * @var $content string
+ */
+
+use common\models\AcademicYear;
+use common\models\UserAccount;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use common\models\Semester;
+
+yiister\adminlte\assets\Asset::register($this);
+
+
+$admin=\common\models\Designation::find()->where(['id'=>2])->one();
+
+$date=date('M');
+
+$time = new \DateTime('now');
+$today = $time->format('Y-m-d');
+?>
+<?php $this->beginPage() ?>
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+
+<html lang="<?= Yii::$app->language ?>">
+<head>
+    
+    
+    
+    <meta charset="<?= Yii::$app->charset ?>">
+     <link rel="icon" type="image/png" href="<?= Yii::$app->request->baseUrl ?>/images/logo.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <?= Html::csrfMetaTags() ?>
+    <title><?= Html::encode($this->title) ?></title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.5 -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+
+
+    <![endif]-->
+    <?php $this->head() ?>
+</head>
+<!--
+BODY TAG OPTIONS:
+=================
+Apply one or more of the following classes to get the
+desired effect
+|---------------------------------------------------------|
+| SKINS         | skin-blue                               |
+|               | skin-black                              |
+|               | skin-purple                             |
+|               | skin-yellow                             |
+|               | skin-red                                |
+|               | skin-green                              |
+|---------------------------------------------------------|
+|LAYOUT OPTIONS | fixed                                   |
+|               | layout-boxed                            |
+|               | layout-top-nav                          |
+|               | sidebar-collapse                        |
+|               | sidebar-mini                            |
+|---------------------------------------------------------|
+-->
+<body class="hold-transition skin-blue sidebar-mini" >
+<?php $this->beginBody() ?>
+<div class="wrapper">
+
+    <!-- Main Header -->
+    <header class="main-header" >
+
+        <!-- Logo -->
+       <a href="#" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>K</b>COHAS</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg">KCOHAS
+             <?php
+             $current_academic_year=AcademicYear::find()->where(['status'=>'Active'])->one()->name;
+             $current_semester=Semester::find()->where(['status'=>'Active'])->one()->name;
+
+             echo $current_academic_year.' '.$current_semester;
+              echo  ' <h6>'.$current_semester.'</h6>';
+             ?>
+            </span>
+
+        </a>
+
+        <!-- Header Navbar -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+
+
+                    <!-- Message Menu Begin -->
+
+                    <!-- Message  Menu End -->
+
+                    <!-- Notifications Menu -->
+
+                    <!-- Tasks Menu -->
+                    <li class="dropdown tasks-menu">
+                        <!-- Menu Toggle Button -->
+
+                        <ul class="dropdown-menu">
+                            <li class="header">Shopping Cart</li>
+                            <li>
+                                <!-- Inner menu: contains the tasks -->
+                                <ul class="menu">
+                                    <li><!-- Task item -->
+                                        <a href="#">
+                                            <!-- Task title and progress text -->
+                                            <h3>
+                                                Todays Credit Sales
+                                                <small class="pull-right"><?php echo 100/100?>%</small>
+                                            </h3>
+                                            <!-- The progress bar -->
+                                            <div class="progress xs">
+                                                <!-- Change the css width attribute to simulate progress -->
+                                                <div class="progress-bar progress-bar-aqua" style="width: <?php echo 100/100?>%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                    <span class="sr-only">20% Complete</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li><!-- end task item -->
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- User Account Menu -->
+                    <li class="dropdown user user-menu">
+
+                        <!-- Menu Toggle Button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <!-- The user image in the navbar-->
+
+                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                            <span class="hidden-xs">
+                                Hello ,
+                                <?php
+                                $user_id= UserAccount::find()->where(['id'=>Yii::$app->user->identity->getId()])->one()->user_id;
+                                $staff=\common\models\Staff::find()->where(['id'=>$user_id])->one();
+
+                                echo $staff->fname.' '.$staff->lname;
+                                ?>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- The user image in the menu -->
+                            <li class="user-header">
+                                <?php
+                                $user_id= UserAccount::find()->where(['id'=>Yii::$app->user->identity->getId()])->one()->user_id;
+
+                                $staff=\common\models\Staff::find()->where(['id'=> $user_id])->one();
+                                echo  Html::a(Html::img(Yii::getAlias('@web').'/staff_photo/'.$staff->photo, ['class'=>'img-circle', 'height'=>'100px', 'width'=>'100px']));
+                                ?>
+
+                                <p>
+                                    <?php
+                                    if(!Yii::$app->user->isGuest) {
+                                        echo   Yii::$app->user->identity->email;
+                                        echo '</br>';
+                                        echo   Yii::$app->user->identity->username;
+                                    }
+                                    else{
+                                        echo '';
+                                    }
+                                    ?>
+
+                                </p>
+                            </li>
+                            <!-- Menu Body -->
+
+                            <!-- Menu Footer-->
+                            <li class="user-footer" style="background-color:grey">
+                                <div class="pull-left">
+
+                                    <?=Html::a('<span style="color: black" class="fa fa-lock"> Change Password</span>',['/user-account/change-password'],['data-method'=>'post','class'=>'btn btn-default btn-block'])?>
+
+
+
+                                </div>
+                                <div class="pull-right">
+                                    <?=Html::a('<span style="color: black" class="fa fa-sign-out">Sign out</span>',['/site/logout'],['data-method'=>'post','class'=>'btn btn-default btn-block'])?>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Control Sidebar Toggle Button -->
+
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+
+            <!-- Sidebar user panel (optional) -->
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="images/logo.png" class="img-circle" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p><?php
+
+                        if (!Yii::$app->user->isGuest) {
+                            $user_department_id=\common\models\Staff::find()->where(['id'=>Yii::$app->user->identity->user_id])->one()->department_id;
+                            echo Yii::$app->user->identity->getDesignation();
+                            echo '<br>['.\common\models\Department::find()->where(['id'=>$user_department_id])->one()->abbreviation.' Department]';
+                        }?></p>
+                    <!-- Status -->
+                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+
+
+
+                </div>
+
+            </div>
+            <?php
+
+            $staff_category=\common\models\Staff::find()->where(['category'=>'Academic Staff'])->one();
+
+            $staff_department=\common\models\Staff::find()->where(['id'=>Yii::$app->user->identity->user_id])->one()->department_id;
+
+            ?>
+            <!-- search form (Optional) -->
+
+            <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search...">
+                    <span class="input-group-`12btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
+              </span>
+                </div>
+            </form>
+            <!-- /.search form -->
+
+            <!-- Sidebar Menu -->
+            <div style="font-family: 'Lucida Bright'">
+                <?php
+                if(Yii::$app->user->isGuest){
+                    $menuItems[]=['label'=>'login','Url'=>['/site/login']];
+                }
+                else{
+                    $menuItems=[
+
+                        ["label" => "Home", "url" => ["site/index"], "icon" => "home"],
+                        ["label" => "Staffs", "url" =>"#", "icon" => "fa fa-user",'visible'=> UserAccount::userHas(['HR','ADMIN','PR','ACC','HOD']),
+                            'items'=>[
+                                ["label"=>"View Staffs","url"=>"#","icon"=>"fa fa-user-plus",
+                                    "items"=>[
+                                        ["label" => "Academic Staff", "url" => ["staff/index",'category'=>'academic'], "icon" => "users"],
+                                        ["label" => "Non Academic Staff", "url" => ["staff/index",'category'=>'non_academic'], "icon" => "users"],
+                                    ]],
+                                ["label"=>"Staff Designation","url"=>["designation/index"],"icon"=>"fa fa-linux"],
+                                ["label"=>"Salary Slips","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],
+                                ["label"=>"Staff Pay lists","url"=>["staff-paylist/index"],"icon"=>"fa fa-list",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],
+                                ["label"=>"Allowances","url"=>["allowance/index"],"icon"=>"money",'visible'=> UserAccount::userHas(['HR','ADMIN','PR','ACC']),],
+                            ],
+                        ],
+                        ["label"=>"My Profile","url"=>["staff/view",'id'=>Yii::$app->user->identity->user_id],"icon"=>"user"],
+
+                        ["label"=>"My PaySlips","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['NS','HOD','AS','ACADEMIC','AO'])],
+
+
+
+                        ["label"=>"Students","url"=>"#","icon"=>"users",'visible'=> UserAccount::userHas(['AS','HOD','HR','ACC','ADMIN','PR','ACADEMIC','AO']),
+                            "items"=>[
+                                ["label"=>"Clinical Medicine","url"=>"#","icon"=>"user-md",'visible'=>$staff_department==1||$staff_department==3 ||$staff_department==4,
+                                    "items"=>[
+                                        ["label" => "NTA 4", "url" => ["student/index",'authorization'=>'clinical_1'], "icon" => "slideshare"],
+                                        ["label" => "NTA 5", "url" => ["student/index",'authorization'=>'clinical_2'], "icon" => "user"],
+                                        ["label" => "NTA 6", "url" => ["student/index",'authorization'=>'clinical_3'], "icon" => "graduation-cap"],
+                                    ]
+                                ],
+                                ["label"=>"Nursing and Midwifery","url"=>"#","icon"=>"user-md",'visible'=>$staff_department==2||$staff_department==3||$staff_department==4,
+                                    "items"=>[
+                                        ["label" => "NTA 4", "url" => ["student/index",'authorization'=>'nursing_1'], "icon" => "slideshare"],
+                                        ["label" => "NTA 5", "url" => ["student/index",'authorization'=>'nursing_2'], "icon" => "user"],
+                                        ["label" => "NTA 6", "url" => ["student/index",'authorization'=>'nursing_3'], "icon" => "graduation-cap"],
+                                    ]
+                                ],
+
+                            ]
+
+                        ],
+
+                        ["label" => "Courses", "url" => ["course/index"], "icon" => "folder"],
+
+
+                        ["label"=>"Modules","url"=>'#',"icon"=>"book",'visible'=> UserAccount::userHas(['HOD','AS','PR','ADMIN','ACADEMIC','AO']),
+                            "items"=>[
+                                ["label"=>"Clinical Medicine", "url" =>"#", "icon" => "slideshare",'visible'=>$staff_department==1 || $staff_department==3 || $staff_department==4,
+                                    "items"=>[
+                                        ["label" => "NTA 4", "url" => ["module/index",'authorization'=>'clinical_1'], "icon" => "file-o"],
+                                        ["label" => "NTA 5", "url" => ["module/index",'authorization'=>'clinical_2'], "icon" => "file-o"],
+                                        ["label" => "NTA 6", "url" => ["module/index",'authorization'=>'clinical_3'], "icon" => "file-o"],
+                                    ]],
+
+                                ["label"=>"Nursing and Midwifery","url" => ["module/index",'authorization'=>'nursing'], "icon" => "slideshare",'visible'=>$staff_department==2|| $staff_department==3 || $staff_department==4,
+                                    "items"=>[
+                                        ["label" => "NTA 4", "url" => ["module/index",'authorization'=>'nursing_1'], "icon" => "file-o"],
+                                        ["label" => "NTA 5", "url" => ["module/index",'authorization'=>'nursing_2'], "icon" => "file-o"],
+                                        ["label" => "NTA 6", "url" => ["module/index",'authorization'=>'nursing_3'], "icon" => "file-o"],
+                                    ]],
+                            ],
+
+                        ],
+                        
+
+
+                        ["label"=>"Module Instructors","url"=>["assigned-module/index"],"icon"=>"slideshare",'visible'=> UserAccount::userHas(['HOD','HR','PR'])],
+                        ["label"=>"Assigned Modules","url"=>["assigned-module/index"],"icon"=>"slideshare",'visible'=> UserAccount::userHas(['!HOD','ADMIN','AS','ACADEMIC','AO']),],
+
+                          ["label"=>"Time Tables","url"=>["time-table/index"],"icon"=>"calendar"],
+
+                        ["label"=>"Continuous Assessment","url"=>'#',"icon"=>"file",'visible'=> UserAccount::userHas(['HOD','AS','PR','ADMIN','ACADEMIC','AO','EO']),
+                            "items"=>[
+                                ["label"=>"View CA Marks", "url" => "#", "icon" => "pencil-square-o",
+                                    "items"=>[
+                                        ["label" => "NTA 4", "url" => ["assignment/index",'authorization'=>'nta_4'], "icon" => "pencil-square-o"],
+                                        ["label" => "NTA 5", "url" => ["assignment/index",'authorization'=>'nta_5'], "icon" => "pencil-square-o"],
+                                        ["label"=>"NTA 6","url"=>["assignment/index",'authorization'=>'nta_6'],"icon"=>"pencil-square-o"],
+                                    ],],
+
+                                ["label"=>"Upload CA Results","url" => ["assignment/create"], "icon" => "upload"],
+
+                                ["label"=>"Coursework","url"=>'#',"icon"=>"file",
+                                    "items"=>[
+                                        ["label" => "NTA 4", "url" => ["coursework-nta4/create"], "icon" => "pencil-square"],
+                                        ["label" => "NTA 5", "url" => ["coursework-nta5/create"], "icon" => "pencil-square"],
+                                        ["label"=>"NTA 6","url"=>["coursework-nta6/create"],"icon"=>"pencil-square"],
+                                    ],
+                                ],
+                            ],
+
+                        ],
+
+
+                        ["label"=>"Semester Exams","url"=>'#',"icon"=>"file",'visible'=> UserAccount::userHas(['HOD','AS','PR','ACADEMIC','AO','EO']),
+                            "items"=>[
+
+                                ["label"=>"Upload Results","url" => ["final-exam/create"], "icon" => "upload",'visible'=> UserAccount::userHas(['ACADEMIC'])],
+                                ["label"=>"View  Results", "url" =>["generated-result/create"], "icon" => "pencil-square-o"],
+
+
+                            ],
+
+                        ],
+
+                        ["label"=>"Course Results","url"=>"#","icon"=>"file-o",'visible'=> UserAccount::userHas(['AS','HOD','ADMIN','PR','ACADEMIC','EO']),
+                            "items"=>[
+                                ["label"=>"Clinical Medicine","url"=>"#","icon"=>"user-md",'visible'=>$staff_department==1|| $staff_department==3 || $staff_department==4,
+                                    "items"=>[
+                                        ["label" => "NTA 4", "url" =>"#",
+                                            "items"=>[
+                                                ["label" => "Semester I", "url" => ["exam-result/index",'authorization'=>'clinical_11'], "icon" => "pencil-square-o"],
+                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'clinical_12'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
+
+                                        ["label" => "NTA 5","url" =>"#",
+                                            "items"=>[
+                                                ["label" => "Semester I", "url" => ["exam-result/index",'authorization'=>'clinical_21'], "icon" => "pencil-square-o"],
+                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'clinical_22'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
+                                        ["label" => "NTA 6", "url" =>"#",
+                                            "items"=>[
+                                                ["label" => "Semester I", "url" => ["exam-result/index",'authorization'=>'clinical_31'], "icon" => "pencil-square-o"],
+                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'clinical_32'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
+                                    ]
+                                ],
+                                ["label"=>"Nursing and Midwifery","url"=>"#","icon"=>"user-md",'visible'=>$staff_department==2 || $staff_department==3 || $staff_department==4,
+                                    "items"=>[
+                                        ["label" => "NTA 4", "url" =>"#",
+                                            "items"=>[
+                                                ["label" => "Semester I", "url" => ["exam-result/index",'authorization'=>'nursing_11'], "icon" => "pencil-square-o"],
+                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'nursing_12'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
+
+                                        ["label" => "NTA 5","url" =>"#",
+                                            "items"=>[
+                                                ["label" => "Semester I", "url" => ["exam-result/index",'authorization'=>'nursing_21'], "icon" => "pencil-square-o"],
+                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'nursing_22'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
+                                        ["label" => "NTA 6", "url" =>"#",
+                                            "items"=>[
+                                                ["label" => "Semester I", "url" => ["exam-result/index",'authorization'=>'nursing_31'], "icon" => "pencil-square-o"],
+                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'nursing_32'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
+                                    ]
+                                ],
+
+                            ]
+
+                        ],
+
+                        ["label"=>"General Setup","url"=>'#',"icon"=>"wrench",'visible'=>UserAccount::userHas(['ADMIN']),
+                            "items"=>[
+                                ["label" => "Departments", "url" => ["department/index"], "icon" => "institution"],
+                                ["label" => "Financial Year", "url" => ["academic-year/index"], "icon" => "calendar"],
+                             //   ["label"=>"Semesters","url"=>["semester/index"],"icon"=>"pencil-square-o"],
+                                //["label" => "NTA Levels", "url" => ["nta-level/index"], "icon" => "th"],
+                             //   ["label" => "Assessment Method", "url" => ["assessment-method/index"], "icon" => "pencil-square"],
+
+                                ["label"=>"Identity Types","url"=>["identity-type/index"],"icon"=>"building"],
+                                ["label" => "Regions", "url" => ["region/index"], "icon" => "globe"],
+                                ["label"=>"Districts","url"=>["district/index"],"icon"=>"th-list"],
+
+                            ],
+                        ],
+                        //["label"=>"GPA Class","url"=>["gpa-class/index"],"icon"=>"edit",'visible'=> UserAccount::userHas(['AS','PR','HOD','ADMIN','ACADEMIC','AO','EO'])],
+//
+//                        ["label"=>"Grade","url"=>'#',"icon"=>"sort-alpha-asc",'visible'=> UserAccount::userHas(['AS','PR','ADMIN','HOD','AO','EO']),
+//                            "items"=>[
+//                                ["label" => "NTA 4", "url" => ["grade/index",'authorization'=>'nta_4'], "icon" => "sort-alpha-asc "],
+//                                ["label" => "NTA 5", "url" => ["grade/index",'authorization'=>'nta_5'], "icon" => "sort-alpha-asc "],
+//                                ["label"=>"NTA 6","url"=>["grade/index",'authorization'=>'nta_6'],"icon"=>"sort-alpha-asc "],
+//                            ],
+//                        ],
+
+
+                        ["label"=>"User Accounts","url"=>'#',"icon"=>"user",'visible'=>UserAccount::userHas(['ADMIN']),
+                            "items"=>[
+                                ["label"=>"Staff Accounts","url"=>["user-account/index","authorization"=>'staff'],"icon"=>"fa fa-user-plus"],
+                               // ["label"=>"Student Accounts ","url"=>["user-account/index","authorization"=>'student'],"icon"=>"fa fa-slideshare",],
+                            ],
+                        ],
+
+//                        ["label"=>"Supplementary","url"=>"#","icon"=>"warning",'visible'=> UserAccount::userHas(['AS','HOD','ADMIN','PR','HR','ACADEMIC','AO','EO']),
+//                            "items"=>[
+//                                ["label"=>"Clinical Medicine","url"=>"#","icon"=>"user-md",'visible'=>$staff_department==1 || $staff_department==3 || $staff_department==4,
+//                                    "items"=>[
+//                                        ["label" => "NTA 4", "url" =>"#","icon" => "pencil-square",
+//                                            "items"=>[
+//                                                ["label" => "Semester I", "url" => ["supplementary/index",'authorization'=>'clinical_11'], "icon" => "pencil-square-o"],
+//                                                ["label" => "Semester II", "url" => ["supplementary/index",'authorization'=>'clinical_12'],"icon" => "pencil-square-o"]]],
+//
+//                                        ["label" => "NTA 5","url" =>"#",
+//                                            "items"=>[
+//                                                ["label" => "Semester I", "url" => ["supplementary/index",'authorization'=>'clinical_21'], "icon" => "pencil-square-o"],
+//                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'clinical_22'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
+//                                        ["label" => "NTA 6", "url" =>"#",
+//                                            "items"=>[
+//                                                ["label" => "Semester I", "url" => ["supplementary/index",'authorization'=>'clinical_31'], "icon" => "pencil-square-o"],
+//                                                ["label" => "Semester II", "url" => ["supplementary/index",'authorization'=>'clinical_32'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
+//                                    ]
+//                                ],
+//                                ["label"=>"Nursing and Midwifery","url"=>"#","icon"=>"user-md",'visible'=>$staff_department==2 || $staff_department==3 || $staff_department==4,
+//                                    "items"=>[
+//                                        ["label" => "NTA 4", "url" =>"#",
+//                                            "items"=>[
+//                                                ["label" => "Semester I", "url" => ["supplementary/index",'authorization'=>'nursing_11'], "icon" => "pencil-square-o"],
+//                                                ["label" => "Semester II", "url" => ["supplementary/index",'authorization'=>'nursing_12'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
+//
+//                                        ["label" => "NTA 5","url" =>"#",
+//                                            "items"=>[
+//                                                ["label" => "Semester I", "url" => ["supplementary/index",'authorization'=>'nursing_21'], "icon" => "pencil-square-o"],
+//                                                ["label" => "Semester II", "url" => ["supplementary/index",'authorization'=>'nursing_22'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
+//                                        ["label" => "NTA 6", "url" =>"#",
+//                                            "items"=>[
+//                                                ["label" => "Semester I", "url" => ["supplementary/index",'authorization'=>'nursing_31'], "icon" => "pencil-square-o"],
+//                                                ["label" => "Semester II", "url" => ["supplementary/index",'authorization'=>'nursing_32'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
+//                                    ]
+//                                ],
+//
+//                            ]
+//
+//                        ],
+
+
+
+
+                        ["label"=>"Reports","url"=>"#","icon"=>"fa fa-bar-chart",
+                            'items'=>[
+                               ['label'=>'Student Financial Report','url'=>["student-payment-report/create"],'icon'=>'fa fa-money'],
+                        
+                            ],
+                        ]
+                    ];
+
+                }
+                ?>
+
+                <?= \yiister\adminlte\widgets\Menu::widget(["items"=>$menuItems])?>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">`
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                <?= Html::encode(isset($this->params['h1']) ? $this->params['h1'] : $this->title) ?>
+            </h1>
+            <?php if (isset($this->params['breadcrumbs'])): ?>
+                <?=
+                \yii\widgets\Breadcrumbs::widget(
+                    [
+                        'encodeLabels' => false,
+                        'homeLink' => [
+                            'label' => new \rmrevin\yii\fontawesome\component\Icon('home') . ' Home',
+                            'url' => ['site/index'],
+                        ],
+                        'links' => $this->params['breadcrumbs'],
+                    ]
+                )
+                ?>
+            <?php endif; ?>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <?= $content ?>
+        </section><!-- /.content -->
+    </div><!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <!-- To the right -->
+
+        <!-- Default to the left -->
+        <strong>Copyright &copy; <a href="#">HR and Payroll MIS</a> <?= date("Y") ?>
+    </footer>
+
+
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div><!-- ./wrapper -->
+
+<!-- Optionally, you can add Slimscroll and FastClick plugins.
+     Both of these plugins are recommended to enhance the
+     user experience. Slimscroll is required when using the
+     fixed layout. -->
+<?php $this->endBody() ?>
+</body>
+</html>
+<?php $this->endPage() ?>
+
