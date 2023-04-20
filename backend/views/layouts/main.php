@@ -80,15 +80,14 @@ desired effect
         <!-- Logo -->
        <a href="#" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>K</b>COHAS</span>
+            <span class="logo-mini"><b>HR</b>PAYROLL</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">KCOHAS
+            <span class="logo-lg">HR-PAYROLL
              <?php
              $current_academic_year=AcademicYear::find()->where(['status'=>'Active'])->one()->name;
              $current_semester=Semester::find()->where(['status'=>'Active'])->one()->name;
 
-             echo $current_academic_year.' '.$current_semester;
-              echo  ' <h6>'.$current_semester.'</h6>';
+             echo $current_academic_year;
              ?>
             </span>
 
@@ -214,15 +213,13 @@ desired effect
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="images/logo.png" class="img-circle" alt="User Image">
+                    <img src="images/pay.jpeg" style="width: 35px;height: 40px" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
                     <p><?php
 
                         if (!Yii::$app->user->isGuest) {
-                            $user_department_id=\common\models\Staff::find()->where(['id'=>Yii::$app->user->identity->user_id])->one()->department_id;
                             echo Yii::$app->user->identity->getDesignation();
-                            echo '<br>['.\common\models\Department::find()->where(['id'=>$user_department_id])->one()->abbreviation.' Department]';
                         }?></p>
                     <!-- Status -->
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
@@ -261,173 +258,78 @@ desired effect
                     $menuItems=[
 
                         ["label" => "Home", "url" => ["site/index"], "icon" => "home"],
-                        ["label" => "Staffs", "url" =>"#", "icon" => "fa fa-user",'visible'=> UserAccount::userHas(['HR','ADMIN','PR','ACC','HOD']),
+                        ["label" => "Manage Employees", "url" =>"#", "icon" => "fa fa-users",'visible'=> UserAccount::userHas(['HR','ADMIN','PR','ACC','HOD']),
                             'items'=>[
-                                ["label"=>"View Staffs","url"=>"#","icon"=>"fa fa-user-plus",
+                                ["label"=>"View Employees","url"=>"#","icon"=>"fa fa-user-plus",
                                     "items"=>[
-                                        ["label" => "Academic Staff", "url" => ["staff/index",'category'=>'academic'], "icon" => "users"],
-                                        ["label" => "Non Academic Staff", "url" => ["staff/index",'category'=>'non_academic'], "icon" => "users"],
+                                        ["label" => "All Employees", "url" => ["staff/index",'category'=>'academic'], "icon" => "users"],
+//                                        ["label" => "Non Academic Staff", "url" => ["staff/index",'category'=>'non_academic'], "icon" => "users"],
                                     ]],
-                                ["label"=>"Staff Designation","url"=>["designation/index"],"icon"=>"fa fa-linux"],
-                                ["label"=>"Salary Slips","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],
-                                ["label"=>"Staff Pay lists","url"=>["staff-paylist/index"],"icon"=>"fa fa-list",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],
-                                ["label"=>"Allowances","url"=>["allowance/index"],"icon"=>"money",'visible'=> UserAccount::userHas(['HR','ADMIN','PR','ACC']),],
+                                ["label"=>"Employee Designation","url"=>["designation/index"],"icon"=>"fa fa-linux"],
+                                ["label"=>"Employee Allowances","url"=>["allowance/index"],"icon"=>"money",'visible'=> UserAccount::userHas(['HR','ADMIN','PR','ACC']),],
                             ],
                         ],
                         ["label"=>"My Profile","url"=>["staff/view",'id'=>Yii::$app->user->identity->user_id],"icon"=>"user"],
 
-                        ["label"=>"My PaySlips","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['NS','HOD','AS','ACADEMIC','AO'])],
+                        ["label"=>"My PaySlips","url"=>["staff-salary/index"],"icon"=>"fa fa-money"],
 
 
 
-                        ["label"=>"Students","url"=>"#","icon"=>"users",'visible'=> UserAccount::userHas(['AS','HOD','HR','ACC','ADMIN','PR','ACADEMIC','AO']),
+
+                        ["label" => "Payroll", "url" => "#", "icon" => "book",
                             "items"=>[
-                                ["label"=>"Clinical Medicine","url"=>"#","icon"=>"user-md",'visible'=>$staff_department==1||$staff_department==3 ||$staff_department==4,
-                                    "items"=>[
-                                        ["label" => "NTA 4", "url" => ["student/index",'authorization'=>'clinical_1'], "icon" => "slideshare"],
-                                        ["label" => "NTA 5", "url" => ["student/index",'authorization'=>'clinical_2'], "icon" => "user"],
-                                        ["label" => "NTA 6", "url" => ["student/index",'authorization'=>'clinical_3'], "icon" => "graduation-cap"],
-                                    ]
-                                ],
-                                ["label"=>"Nursing and Midwifery","url"=>"#","icon"=>"user-md",'visible'=>$staff_department==2||$staff_department==3||$staff_department==4,
-                                    "items"=>[
-                                        ["label" => "NTA 4", "url" => ["student/index",'authorization'=>'nursing_1'], "icon" => "slideshare"],
-                                        ["label" => "NTA 5", "url" => ["student/index",'authorization'=>'nursing_2'], "icon" => "user"],
-                                        ["label" => "NTA 6", "url" => ["student/index",'authorization'=>'nursing_3'], "icon" => "graduation-cap"],
-                                    ]
-                                ],
-
-                            ]
-
-                        ],
-
-                        ["label" => "Courses", "url" => ["course/index"], "icon" => "folder"],
-
-
-                        ["label"=>"Modules","url"=>'#',"icon"=>"book",'visible'=> UserAccount::userHas(['HOD','AS','PR','ADMIN','ACADEMIC','AO']),
-                            "items"=>[
-                                ["label"=>"Clinical Medicine", "url" =>"#", "icon" => "slideshare",'visible'=>$staff_department==1 || $staff_department==3 || $staff_department==4,
-                                    "items"=>[
-                                        ["label" => "NTA 4", "url" => ["module/index",'authorization'=>'clinical_1'], "icon" => "file-o"],
-                                        ["label" => "NTA 5", "url" => ["module/index",'authorization'=>'clinical_2'], "icon" => "file-o"],
-                                        ["label" => "NTA 6", "url" => ["module/index",'authorization'=>'clinical_3'], "icon" => "file-o"],
-                                    ]],
-
-                                ["label"=>"Nursing and Midwifery","url" => ["module/index",'authorization'=>'nursing'], "icon" => "slideshare",'visible'=>$staff_department==2|| $staff_department==3 || $staff_department==4,
-                                    "items"=>[
-                                        ["label" => "NTA 4", "url" => ["module/index",'authorization'=>'nursing_1'], "icon" => "file-o"],
-                                        ["label" => "NTA 5", "url" => ["module/index",'authorization'=>'nursing_2'], "icon" => "file-o"],
-                                        ["label" => "NTA 6", "url" => ["module/index",'authorization'=>'nursing_3'], "icon" => "file-o"],
-                                    ]],
+                                ["label"=>"Salary Generate","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],
+                                ["label" => "Salary Advance", "url" => ["department/index"], "icon" => "institution"],
+                            ],
                             ],
 
-                        ],
+
                         
 
 
-                        ["label"=>"Module Instructors","url"=>["assigned-module/index"],"icon"=>"slideshare",'visible'=> UserAccount::userHas(['HOD','HR','PR'])],
-                        ["label"=>"Assigned Modules","url"=>["assigned-module/index"],"icon"=>"slideshare",'visible'=> UserAccount::userHas(['!HOD','ADMIN','AS','ACADEMIC','AO']),],
 
-                          ["label"=>"Time Tables","url"=>["time-table/index"],"icon"=>"calendar"],
+                          ["label"=>"Attendance","url"=>["time-table/index"],"icon"=>"calendar"],
+                          ["label"=>"Leaves","url"=>["time-table/index"],"icon"=>"plane"],
 
-                        ["label"=>"Continuous Assessment","url"=>'#',"icon"=>"file",'visible'=> UserAccount::userHas(['HOD','AS','PR','ADMIN','ACADEMIC','AO','EO']),
-                            "items"=>[
-                                ["label"=>"View CA Marks", "url" => "#", "icon" => "pencil-square-o",
-                                    "items"=>[
-                                        ["label" => "NTA 4", "url" => ["assignment/index",'authorization'=>'nta_4'], "icon" => "pencil-square-o"],
-                                        ["label" => "NTA 5", "url" => ["assignment/index",'authorization'=>'nta_5'], "icon" => "pencil-square-o"],
-                                        ["label"=>"NTA 6","url"=>["assignment/index",'authorization'=>'nta_6'],"icon"=>"pencil-square-o"],
-                                    ],],
-
-                                ["label"=>"Upload CA Results","url" => ["assignment/create"], "icon" => "upload"],
-
-                                ["label"=>"Coursework","url"=>'#',"icon"=>"file",
-                                    "items"=>[
-                                        ["label" => "NTA 4", "url" => ["coursework-nta4/create"], "icon" => "pencil-square"],
-                                        ["label" => "NTA 5", "url" => ["coursework-nta5/create"], "icon" => "pencil-square"],
-                                        ["label"=>"NTA 6","url"=>["coursework-nta6/create"],"icon"=>"pencil-square"],
-                                    ],
-                                ],
-                            ],
-
-                        ],
-
-
-                        ["label"=>"Semester Exams","url"=>'#',"icon"=>"file",'visible'=> UserAccount::userHas(['HOD','AS','PR','ACADEMIC','AO','EO']),
-                            "items"=>[
-
-                                ["label"=>"Upload Results","url" => ["final-exam/create"], "icon" => "upload",'visible'=> UserAccount::userHas(['ACADEMIC'])],
-                                ["label"=>"View  Results", "url" =>["generated-result/create"], "icon" => "pencil-square-o"],
+//                        ["label"=>"Continuous Assessment","url"=>'#',"icon"=>"file",'visible'=> UserAccount::userHas(['HOD','AS','PR','ADMIN','ACADEMIC','AO','EO']),
+//                            "items"=>[
+//                                ["label"=>"View CA Marks", "url" => "#", "icon" => "pencil-square-o",
+//                                    "items"=>[
+//                                        ["label" => "NTA 4", "url" => ["assignment/index",'authorization'=>'nta_4'], "icon" => "pencil-square-o"],
+//                                        ["label" => "NTA 5", "url" => ["assignment/index",'authorization'=>'nta_5'], "icon" => "pencil-square-o"],
+//                                        ["label"=>"NTA 6","url"=>["assignment/index",'authorization'=>'nta_6'],"icon"=>"pencil-square-o"],
+//                                    ],],
+//
+//                                ["label"=>"Upload CA Results","url" => ["assignment/create"], "icon" => "upload"],
+//
+//                                ["label"=>"Coursework","url"=>'#',"icon"=>"file",
+//                                    "items"=>[
+//                                        ["label" => "NTA 4", "url" => ["coursework-nta4/create"], "icon" => "pencil-square"],
+//                                        ["label" => "NTA 5", "url" => ["coursework-nta5/create"], "icon" => "pencil-square"],
+//                                        ["label"=>"NTA 6","url"=>["coursework-nta6/create"],"icon"=>"pencil-square"],
+//                                    ],
+//                                ],
+//                            ],
+//
+//                        ],
 
 
-                            ],
 
-                        ],
 
-                        ["label"=>"Course Results","url"=>"#","icon"=>"file-o",'visible'=> UserAccount::userHas(['AS','HOD','ADMIN','PR','ACADEMIC','EO']),
-                            "items"=>[
-                                ["label"=>"Clinical Medicine","url"=>"#","icon"=>"user-md",'visible'=>$staff_department==1|| $staff_department==3 || $staff_department==4,
-                                    "items"=>[
-                                        ["label" => "NTA 4", "url" =>"#",
-                                            "items"=>[
-                                                ["label" => "Semester I", "url" => ["exam-result/index",'authorization'=>'clinical_11'], "icon" => "pencil-square-o"],
-                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'clinical_12'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
-
-                                        ["label" => "NTA 5","url" =>"#",
-                                            "items"=>[
-                                                ["label" => "Semester I", "url" => ["exam-result/index",'authorization'=>'clinical_21'], "icon" => "pencil-square-o"],
-                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'clinical_22'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
-                                        ["label" => "NTA 6", "url" =>"#",
-                                            "items"=>[
-                                                ["label" => "Semester I", "url" => ["exam-result/index",'authorization'=>'clinical_31'], "icon" => "pencil-square-o"],
-                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'clinical_32'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
-                                    ]
-                                ],
-                                ["label"=>"Nursing and Midwifery","url"=>"#","icon"=>"user-md",'visible'=>$staff_department==2 || $staff_department==3 || $staff_department==4,
-                                    "items"=>[
-                                        ["label" => "NTA 4", "url" =>"#",
-                                            "items"=>[
-                                                ["label" => "Semester I", "url" => ["exam-result/index",'authorization'=>'nursing_11'], "icon" => "pencil-square-o"],
-                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'nursing_12'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
-
-                                        ["label" => "NTA 5","url" =>"#",
-                                            "items"=>[
-                                                ["label" => "Semester I", "url" => ["exam-result/index",'authorization'=>'nursing_21'], "icon" => "pencil-square-o"],
-                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'nursing_22'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
-                                        ["label" => "NTA 6", "url" =>"#",
-                                            "items"=>[
-                                                ["label" => "Semester I", "url" => ["exam-result/index",'authorization'=>'nursing_31'], "icon" => "pencil-square-o"],
-                                                ["label" => "Semester II", "url" => ["exam-result/index",'authorization'=>'nursing_32'], "icon" => "pencil-square-o"]],"icon" => "pencil-square"],
-                                    ]
-                                ],
-
-                            ]
-
-                        ],
-
-                        ["label"=>"General Setup","url"=>'#',"icon"=>"wrench",'visible'=>UserAccount::userHas(['ADMIN']),
+                        ["label"=>"Settings","url"=>'#',"icon"=>"wrench",'visible'=>UserAccount::userHas(['ADMIN']),
                             "items"=>[
                                 ["label" => "Departments", "url" => ["department/index"], "icon" => "institution"],
                                 ["label" => "Financial Year", "url" => ["academic-year/index"], "icon" => "calendar"],
                              //   ["label"=>"Semesters","url"=>["semester/index"],"icon"=>"pencil-square-o"],
                                 //["label" => "NTA Levels", "url" => ["nta-level/index"], "icon" => "th"],
                              //   ["label" => "Assessment Method", "url" => ["assessment-method/index"], "icon" => "pencil-square"],
-
                                 ["label"=>"Identity Types","url"=>["identity-type/index"],"icon"=>"building"],
                                 ["label" => "Regions", "url" => ["region/index"], "icon" => "globe"],
                                 ["label"=>"Districts","url"=>["district/index"],"icon"=>"th-list"],
 
                             ],
                         ],
-                        //["label"=>"GPA Class","url"=>["gpa-class/index"],"icon"=>"edit",'visible'=> UserAccount::userHas(['AS','PR','HOD','ADMIN','ACADEMIC','AO','EO'])],
-//
-//                        ["label"=>"Grade","url"=>'#',"icon"=>"sort-alpha-asc",'visible'=> UserAccount::userHas(['AS','PR','ADMIN','HOD','AO','EO']),
-//                            "items"=>[
-//                                ["label" => "NTA 4", "url" => ["grade/index",'authorization'=>'nta_4'], "icon" => "sort-alpha-asc "],
-//                                ["label" => "NTA 5", "url" => ["grade/index",'authorization'=>'nta_5'], "icon" => "sort-alpha-asc "],
-//                                ["label"=>"NTA 6","url"=>["grade/index",'authorization'=>'nta_6'],"icon"=>"sort-alpha-asc "],
-//                            ],
-//                        ],
+
 
 
                         ["label"=>"User Accounts","url"=>'#',"icon"=>"user",'visible'=>UserAccount::userHas(['ADMIN']),
@@ -483,8 +385,17 @@ desired effect
 
                         ["label"=>"Reports","url"=>"#","icon"=>"fa fa-bar-chart",
                             'items'=>[
-                               ['label'=>'Student Financial Report','url'=>["student-payment-report/create"],'icon'=>'fa fa-money'],
-                        
+                               ['label'=>'Employee Reports','url'=>"#",'icon'=>'fa fa-users',
+                                   'items'=>[
+                                       ['label'=>'Employee List','url'=>["student-payment-report/create"],'icon'=>'fa fa-users'],
+                                       ['label'=>'Departmental Report','url'=>["student-payment-report/create"],'icon'=>'fa fa-building'],
+                                       ['label'=>'Terminated Employee','url'=>["student-payment-report/create"],'icon'=>'fa fa-user'],
+                                   ]
+
+                               ],
+
+                               ['label'=>'Financial Report','url'=>["student-payment-report/create"],'icon'=>'fa fa-money'],
+
                             ],
                         ]
                     ];

@@ -31,9 +31,6 @@ yiister\adminlte\assets\Asset::register($this);
     <?=$content?>
 
     <?php $this->endBody() ?>
-
-
-
     </body>
     </html>
 <?php $this->endPage() ?>

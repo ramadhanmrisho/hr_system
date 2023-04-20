@@ -32,18 +32,18 @@ if(Yii::$app->session->hasFlash('reqDanger')):?>
 
 <?php if (\common\models\UserAccount::userHas(['HOD','PR','HR','ADMIN','ACADEMIC'])){?>
                 <?php \yiister\adminlte\widgets\Callout::begin(["type" => \yiister\adminlte\widgets\Callout::TYPE_INFO]); ?>
-                <h4>STAFFS</h4>
-                <p>A summmary of  KCOHAS  Staffs</p>
+                <h4>EMPLOYEE DASHBOARD</h4>
+                <p>Employee Statistics</p>
                 <?php \yiister\adminlte\widgets\Callout::end(); ?>
 
                 <div class="col-lg-3 col-xs-6">
                         <?=
                         \yiister\adminlte\widgets\SmallBox::widget(
                             [
-                                "color" => \yiister\adminlte\components\AdminLTE::BG_MAROON,
-                                "header" => \common\models\Staff::find()->where(['category'=>'Academic Staff'])->count(),
+                                "color" => \yiister\adminlte\components\AdminLTE::BG_TEAL,
+                                "header" => \common\models\Staff::find()->count(),
                                 "icon" => "group",
-                                "text" => "<b>Academic Staff</b>",
+                                "text" => "<b>Total Employee</b>",
                                 'linkRoute'=>['/staff/index','category'=>'academic']
                             ]
                         )
@@ -54,48 +54,35 @@ if(Yii::$app->session->hasFlash('reqDanger')):?>
                         <?=
                         \yiister\adminlte\widgets\SmallBox::widget(
                             [
-                                "color" => \yiister\adminlte\components\AdminLTE::BG_AQUA,
+                                "color" => \yiister\adminlte\components\AdminLTE::BG_FUCHSIA_ACTIVE,
                                 "header" =>  \common\models\Staff::find()->where(['category'=>'Non Academic Staff'])->count(),
                                 "icon" => "group",
-                                "text" => "<b>Non Academic Staff </b>",
+                                "text" => "<b>Employee with Expired Contract</b>",
+                                'linkRoute'=>['/staff/index','category'=>'non_academic']
+                            ]
+                        )
+                        ?>
+                    </div>
+                       <div class="col-lg-3 col-xs-6">
+                        <?=
+                        \yiister\adminlte\widgets\SmallBox::widget(
+                            [
+                                "color" => \yiister\adminlte\components\AdminLTE::BG_LIGHT_BLUE,
+                                "header" =>  \common\models\Staff::find()->where(['category'=>'Non Academic Staff'])->count(),
+                                "icon" => "group",
+                                "text" => "<b>Employee On Leave </b>",
                                 'linkRoute'=>['/staff/index','category'=>'non_academic']
                             ]
                         )
                         ?>
                     </div>
 <?php }?>
-
-    <?php
-    $assigned_module=\common\models\AssignedModule::find()->where(['staff_id'=>Yii::$app->user->identity->user_id])->exists();
-    $current_academic_year=AcademicYear::find()->where(['status'=>'Active'])->one()->id;
-
-
-    if ($assigned_module){
-    ?>
-                <?php \common\models\UserAccount::userHas(['AS'])?>
-                     <div class="col-lg-3 col-xs-6">
-                        <?=
-                        \yiister\adminlte\widgets\SmallBox::widget(
-                            [
-                                "color" => \yiister\adminlte\components\AdminLTE::BG_LIGHT_BLUE,
-                                "header" =>\common\models\AssignedModule::find()->where(['staff_id'=>Yii::$app->user->identity->user_id,'academic_year_id'=>$current_academic_year])->count(),
-                                "icon" => "slideshare",
-                                "text" => "<b>Assigned Modules</b>",
-                                'linkRoute'=>['assigned-module/index']
-                            ]
-                        )
-                        ?>
-
-                    </div>
-                    <?php }?>
-
-
                       <div class="col-lg-3 col-xs-6">
                         <?=
                         \yiister\adminlte\widgets\SmallBox::widget(
                             [
-                                "color" => \yiister\adminlte\components\AdminLTE::BG_PURPLE,
-                                "header" => 'Profile',
+                                "color" => \yiister\adminlte\components\AdminLTE::BG_YELLOW,
+                                "header" => 'My Profile',
                                 "icon" => "user",
                                 "text" => "<br>",
                                 'linkRoute'=>['staff/view', 'id' =>Yii::$app->user->identity->user_id]
@@ -120,76 +107,71 @@ if(Yii::$app->session->hasFlash('reqDanger')):?>
               $cm3=Course::find()->where(['abbreviation'=>'NTA6_CM'])->one()->id;
             $current_academic_year=AcademicYear::find()->where(['status'=>'Active'])->one()->id;
             ?>
-<?php
-if (\common\models\UserAccount::userHas(['HOD','PR','HR','ADMIN','ACADEMIC'])){
-?>
-            <div class="box-body">
-                <?php \yiister\adminlte\widgets\Callout::begin(["type" => \yiister\adminlte\widgets\Callout::TYPE_SUCCESS]); ?>
-                <h4>STUDENTS</h4>
-                <p>A summmary of  KCOHAS  Students</p>
-                <?php \yiister\adminlte\widgets\Callout::end(); ?>
+
+        </div>
+
+
                 <div class="row">
-                    <div class="col-lg-4 col-xs-6">
-                        <?=
-                        yiister\adminlte\widgets\InfoBox::widget(
-                            [
-                                "color" => \yiister\adminlte\components\AdminLTE::BG_AQUA,
-                                "icon" => "user-md",
-                                "text" => "NTA 4",
-                                "number" => "Clinical Medicine:". Student::find()->where(['academic_year_id'=>$current_academic_year,'course_id'=>$cm1,])->count(),
-                                "filled" => true,
-                                "progress" => 100,
-                                "progressDescription" =>  "<b>Nursing and Midwifery:". Student::find()->where(['academic_year_id'=>$current_academic_year,'course_id'=>$nm1])->count(),
-                            ]
-                        )
-                        ?>
+
+
+
+                            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+                            <script type="text/javascript">
+                                google.charts.load("current", {packages:["corechart"]});
+                                google.charts.setOnLoadCallback(drawChart);
+                                function drawChart() {
+                                    var data = google.visualization.arrayToDataTable([
+
+                                        ['Department', 'Number of Staff'],
+                                        ['Administration',     11],
+                                        ['Human Resource',      2],
+                                        ['ICT',  2],
+                                        ['Procurement', 2],
+                                        ['Other',    7]
+                                    ]);
+
+                                    var options = {
+                                        title: 'Employee by Departments',
+                                        is3D: true,
+                                    };
+
+                                    var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+                                    chart.draw(data, options);
+                                }
+                            </script>
+                        <script type="text/javascript">
+                            google.charts.load("current", {packages:["corechart"]});
+                            google.charts.setOnLoadCallback(drawChart);
+                            function drawChart() {
+                                var data = google.visualization.arrayToDataTable([
+                                    ['Gender', 'Number'],
+                                    ['Male',     22],
+                                    ['Female',      12],
+                                ]);
+
+                                var options = {
+                                    title: 'Employees by Gender',
+                                    is3D: true,
+                                };
+
+                                var chart = new google.visualization.PieChart(document.getElementById('piechart_3c'));
+                                chart.draw(data, options);
+                            }
+                        </script>
+
+
                     </div>
-                    <div class="col-lg-4 col-xs-6">
-                        <?=
-                        yiister\adminlte\widgets\InfoBox::widget(
-                            [
-                                "color" => \yiister\adminlte\components\AdminLTE::BG_LIGHT_BLUE,
-                                "icon" => "user-md",
-                                "text" => "NTA 5",
-                                "number" => "Clinical Medicine:". Student::find()->where(['academic_year_id'=>$current_academic_year,'course_id'=>$cm2])->count(),
-                                "filled" => true,
-                                "progress" => 100,
-                                "progressDescription" =>  "<b>Nursing and Midwifery:". Student::find()->where(['academic_year_id'=>$current_academic_year,'course_id'=>$nm2])->count(),
-                            ]
-                        )
-                        ?>
+    <div class="box box-info" >
+                <div class="box-body">
+                    <div class="col-lg-6 col-xs-6">
+                        <div id="piechart_3d" style="width: 900px; height: 500px;"></div>
                     </div>
-                    <div class="col-lg-4 col-xs-6">
-                        <?=
-                        yiister\adminlte\widgets\InfoBox::widget(
-                            [
-                                "color" => \yiister\adminlte\components\AdminLTE::BG_PURPLE,
-                                "icon" => "user-md",
-                                "text" => "NTA 6",
-                                "number" => "Clinical Medicine:". Student::find()->where(['academic_year_id'=>$current_academic_year,'course_id'=>$cm3])->count(),
-                                "filled" => true,
-                                "progress" => 100,
-                                "progressDescription" =>  "<b>Nursing and Midwifery:". Student::find()->where(['academic_year_id'=>$current_academic_year,'course_id'=>$nm3])->count(),
-                            ]
-                        )
-                        ?>
-                    </div>
-                    <div class="col-lg-4 col-xs-6">
-                        <?=
-                        yiister\adminlte\widgets\InfoBox::widget(
-                            [
-                                "color" => \yiister\adminlte\components\AdminLTE::BG_MAROON,
-                                "icon" => "users",
-                                "text" => "Total Students",
-                                "number" =>Student::find()->where(['academic_year_id'=>$current_academic_year])->count(),
-                                "filled" => true,
-                                "progress" => 50,
-                            ]
-                        )
-                        ?>
+                     <div class="col-lg-6 col-xs-6">
+                        <div id="piechart_3c" style="width: 900px; height: 500px;"></div>
                     </div>
                 </div>
 
-            </div>
+</div>
 
-            <?php }?>
+
+
