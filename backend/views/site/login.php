@@ -13,7 +13,7 @@ $this ->beginBody();
 
 
 
- <strong >
+ <strong>
     <?php if (Yii::$app->session->hasFlash('danger')): ?>
         <div class="col-sm-12 alert alert-danger alert-dismissable align-content-center" align="center" style="text-align: center">
             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
@@ -36,7 +36,7 @@ $this ->beginBody();
 
     </div>
     <!-- /.login-logo -->
-    <div class="panel panel-default fadeIn" style="border-bottom:5px solid black; border-top:5px solid black;border-radius: 45px; padding:20px;">
+    <div class="panel panel-default fadeIn" style="padding:20px;">
         <div class="panel-body ">
     <div class="wrap-inner" style="border-bottom: 5px solid dodgerblue;border-top: 5px solid  dodgerblue;">
     <!--kibox cha ndani-->

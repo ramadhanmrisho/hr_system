@@ -19,7 +19,7 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
 
 
 
-<div class="staff-create">
+<div class="staff-create" style="font-family:Lucida Bright">
 
 
     <?= $this->render('_form', [

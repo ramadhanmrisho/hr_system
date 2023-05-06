@@ -82,7 +82,7 @@ if(Yii::$app->session->hasFlash('reqDanger')):?>
                         \yiister\adminlte\widgets\SmallBox::widget(
                             [
                                 "color" => \yiister\adminlte\components\AdminLTE::BG_YELLOW,
-                                "header" => 'My Profile',
+                                "header" => '<b style="font-family: Lucida Bright" >My Profile</b>',
                                 "icon" => "user",
                                 "text" => "<br>",
                                 'linkRoute'=>['staff/view', 'id' =>Yii::$app->user->identity->user_id]

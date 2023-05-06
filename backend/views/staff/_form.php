@@ -33,17 +33,17 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
     ]
 )
 ?>
-<div class="staff-form">
+<div class="staff-form" style="font-family: 'Lucida Bright'">
     <div class="panel panel-default fadeIn" style="padding:20px; ">
         <div class="panel-body" style="font-weight: bold;">
-            <div class="btn-primary">
-                <h4 style="font-weight: bold;font-family: 'Bell MT';color: whitesmoke; align-content: center"> All Fields with <i style="color: red">*</i> are  mandatory</h4>
-            </div>
+
+<!--                <h6 style="font-weight: bold;align-content: center"> All Fields with <i style="color: red">*</i> are  mandatory</h6>-->
+
 
 
             <?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data']]); ?>
             <fieldset>
-                <legend style="font-weight: bold;font-family: Tahoma;color: #0d6aad">Personal Information:</legend>
+                <legend style="font-weight: bold;color: #0d6aad">Employee Personal Information:</legend>
 
                 <div class="col-md-3">
                 <?= $form->field($model, 'fname',['options'=>['class'=>'required']])->textInput(['maxlength' => true],['options'=>['class'=>'required']]) ?>
@@ -52,13 +52,36 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                 <?php }?>
                 <?= $form->field($model, 'identity_type_id',['options'=>['class'=>'required']],['template' => '<div class="input-group"><span class="input-group-addon">'.Yii::t('app','Identity Type').'</span>{input}</div>'])->widget(\kartik\select2\Select2::className(), ['data'=> ArrayHelper::map(\common\models\IdentityType::find()->all(),'id','name'),             'options'=>['placeholder'=>'--Select ID Type--']]) ?>
                 <?= $form->field($model, 'gender',['options'=>['class'=>'required']])->dropDownList([ 'Male' => 'Male', 'Female' => 'Female', ], ['prompt' => '']) ?>
+                <?= $form->field($model, 'region_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::classname(), [
+                    'data' => ArrayHelper::map(\common\models\Region::find()->all(), 'id', 'name'),
+                    'language' => 'en',
+                    'options' => ['placeholder' => 'Select region ...', 'multiple' => false,
+                        'onchange' => '
+                                            $.post( "index.php?r=staff/listsdistrict&id=' . '"+$(this).val(), function( data ) {
+                                              $( "select#staff-district_id" ).html( data );
+                                              
+                                            });'
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]) ?>
                 </div>
 
                 <div class="col-md-3">
                     <?= $form->field($model, 'mname')->textInput(['maxlength' => true]) ?>
-                    <?= $form->field($model, 'place_of_birth',['options'=>['class'=>'required']])->textInput(['placeholder' =>'eg: Kigoma']) ?>
+                    <?= $form->field($model, 'place_of_birth',['options'=>['class'=>'required']])->textInput(['placeholder' =>'Eg: Dar ess Salaam']) ?>
                     <?= $form->field($model, 'id_number',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'phone_number',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'district_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::classname(), [
+                        'data' => [],
+                        'language' => 'en',
+                        'options' => ['placeholder' => 'Select district ...', 'multiple' => false],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]);
+                    ?>
                 </div>
 
                 <div class="col-md-3">
@@ -66,6 +89,8 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                   <?= $form->field($model, 'marital_status',['options'=>['class'=>'required']])->dropDownList([ 'Married' => 'Married', 'Single' => 'Single', 'Divorced' => 'Divorced', ], ['prompt' => '']) ?>
                   <?= $form->field($model, 'email',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
                   <?= $form->field($model, 'alternate_phone_number')->textInput() ?>
+                  <?= $form->field($model, 'home_address',['options'=>['class'=>'required']])->textInput(['maxlength' => true])->label('Street') ?>
+
 
                 </div>
 
@@ -79,56 +104,10 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                 </div>
             </fieldset>
             <br>
-<fieldset>
-    <legend style="font-weight: bold;font-family: Tahoma;color: #0d6aad">Place of Domicile:</legend>
 
-    <div class="col-md-3">
-            <?= $form->field($model, 'region_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::classname(), [
-                'data' => ArrayHelper::map(\common\models\Region::find()->all(), 'id', 'name'),
-                'language' => 'en',
-                'options' => ['placeholder' => 'Select region ...', 'multiple' => false,
-                    'onchange' => '
-                                            $.post( "index.php?r=staff/listsdistrict&id=' . '"+$(this).val(), function( data ) {
-                                              $( "select#staff-district_id" ).html( data );
-                                              
-                                            });'
-                ],
-                'pluginOptions' => [
-                    'allowClear' => true
-                ],
-            ]) ?>
-            <?= $form->field($model, 'division')->textInput(['maxlength' => true]) ?>
-
-    </div>
-
-           <div class="col-md-3">
-               <?= $form->field($model, 'district_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::classname(), [
-                   'data' => [],
-                   'language' => 'en',
-                   'options' => ['placeholder' => 'Select district ...', 'multiple' => false],
-                   'pluginOptions' => [
-                       'allowClear' => true
-                   ],
-
-               ]);
-               ?>
-               <?= $form->field($model, 'home_address',['options'=>['class'=>'required']],['template' => '<div class="input-group"><span class="input-group-addon">'.Yii::t('app','Home Address').'</span>{input}</div>'])->textInput(['maxlength' => true]) ?>
-
-           </div>
-    <div class="col-md-3">
-        <?= $form->field($model, 'ward')->textInput(['maxlength' => true]) ?>
-        <?= $form->field($model, 'house_number')->textInput() ?>
-
-    </div>
-
-    <div class="col-md-3">
-        <?= $form->field($model, 'village',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
-
-    </div>
-</fieldset>
    <fieldset>
        <?php if ($hr ||$admin){?>
-       <legend style="font-weight: bold;font-family: Tahoma;color: #0d6aad">Employment Information:</legend>
+       <legend style="font-weight: bold;color: #0d6aad">Employment Information:</legend>
 
        <div class="col-md-3">
            <?= $form->field($model, 'employee_number',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
