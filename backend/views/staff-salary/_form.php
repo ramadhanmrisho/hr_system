@@ -10,13 +10,13 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="staff-salary-form">
+<div class="staff-salary-form" style="font-family: 'Lucida Bright'">
 
 
     <?php $form = ActiveForm::begin(); ?>
 <fieldset>
 
-        <div class="panel panel-default fadeIn" style="border-bottom:4px solid dodgerblue;border-top:4px solid dodgerblue; border-radius: 10px; padding:20px; ">
+        <div class="panel panel-default fadeIn" style="border-top:4px solid dodgerblue;padding:20px; ">
             <div class="panel-body" style="font-weight: bold;">
                 <div class="col-md-4">
 

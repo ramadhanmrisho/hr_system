@@ -33,7 +33,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     
     
     <meta charset="<?= Yii::$app->charset ?>">
-     <link rel="icon" type="image/png" href="<?= Yii::$app->request->baseUrl ?>/images/logo.png">
+     <link rel="icon" type="image/png"  class="img-circle" href="<?= Yii::$app->request->baseUrl ?>/images/pay.jpeg">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
@@ -85,7 +85,6 @@ desired effect
             <span class="logo-lg">HR-PAYROLL
              <?php
              $current_academic_year=AcademicYear::find()->where(['status'=>'Active'])->one()->name;
-             $current_semester=Semester::find()->where(['status'=>'Active'])->one()->name;
 
              echo $current_academic_year;
              ?>
@@ -262,7 +261,7 @@ desired effect
                             'items'=>[
                                 ["label"=>"View Employees","url"=>"#","icon"=>"fa fa-user-plus",
                                     "items"=>[
-                                        ["label" => "All Employees", "url" => ["staff/index",'category'=>'academic'], "icon" => "users"],
+                                        ["label" => "All Employees", "url" => ["staff/index"], "icon" => "users"],
 //                                        ["label" => "Non Academic Staff", "url" => ["staff/index",'category'=>'non_academic'], "icon" => "users"],
                                     ]],
                                 ["label"=>"Employee Designation","url"=>["designation/index"],"icon"=>"fa fa-linux"],
@@ -320,7 +319,7 @@ desired effect
                             "items"=>[
                                 ["label" => "Departments", "url" => ["department/index"], "icon" => "institution"],
                                 ["label" => "Financial Year", "url" => ["academic-year/index"], "icon" => "calendar"],
-                             //   ["label"=>"Semesters","url"=>["semester/index"],"icon"=>"pencil-square-o"],
+                               ["label"=>"Attachment Types","url"=>["attachments-type/index"],"icon"=>"book"],
                                 //["label" => "NTA Levels", "url" => ["nta-level/index"], "icon" => "th"],
                              //   ["label" => "Assessment Method", "url" => ["assessment-method/index"], "icon" => "pencil-square"],
                                 ["label"=>"Identity Types","url"=>["identity-type/index"],"icon"=>"building"],

@@ -27,7 +27,7 @@ return [
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
              //'loginUrl' => 'https://kabangacms.ac.tz/kcohas-mis/backend/web/index.php?r=site%2Flogin',
             'enableSession' => true, # this will only work if enableAutoLogin is disabled
-             'authTimeout' => 1200, // twenty minutes if not active, session will logout
+             'authTimeout' => 120000, // twenty minutes if not active, session will logout
         ],
         'session' => [
             // this is the name of the session cookie used for login on the backend

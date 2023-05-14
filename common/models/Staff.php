@@ -62,6 +62,15 @@ class Staff extends \yii\db\ActiveRecord
 {
     public $allowances;
     public $allowance_id;
+    public $attachments;
+    public $dependant_information;
+    public $next_of_kin_name;
+    public $relationship;
+    public $phone;
+    public $next_of_kin_address;
+    public $spouse_name;
+    public $spouse_phone_number;
+
 
     /**
      * {@inheritdoc}
@@ -77,15 +86,21 @@ class Staff extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fname', 'lname', 'dob', 'place_of_birth', 'phone_number', 'identity_type_id', 'id_number', 'marital_status', 'email', 'gender', 'employee_number', 'category', 'region_id', 'district_id', 'village', 'home_address', 'name_of_high_education_level', 'designation_id', 'department_id', 'salary_scale', 'basic_salary', 'paye', 'nhif', 'date_employed', 'account_name', 'bank_account_number', 'created_by'], 'required'],
-            [['dob', 'date_employed', 'created_at', 'updated_at','allowances','photo','allowance_id','TUGHE'], 'safe'],
-            [['identity_type_id', 'region_id', 'district_id', 'house_number', 'designation_id', 'department_id', 'basic_salary', 'helsb', 'paye', 'nssf', 'nhif', 'alternate_phone_number', 'created_by','TUGHE'], 'integer'],
+            [['fname', 'lname', 'dob', 'place_of_birth', 'phone_number', 'identity_type_id', 'id_number', 'marital_status', 'email', 'gender', 'employee_number', 'category', 'region_id', 'district_id',  'home_address', 'name_of_high_education_level', 'designation_id', 'department_id', 'salary_scale', 'basic_salary', 'paye', 'nhif', 'date_employed', 'account_name', 'bank_account_number', 'created_by'], 'required'],
+            [['dob', 'date_employed', 'created_at', 'updated_at','allowances','photo','allowance_id','village','TUGHE'], 'safe'],
+            [['identity_type_id', 'region_id', 'district_id', 'designation_id', 'department_id', 'alternate_phone_number', 'created_by'], 'integer'],
+            [[ 'basic_salary', 'paye', 'nssf', 'nhif'], 'string'],
             [['marital_status', 'gender', 'category'], 'string'],
             [['fname', 'mname', 'lname', 'place_of_birth', 'bank_account_number',], 'string', 'max' => 255],
             [['phone_number'], 'string', 'max' => 14],
-            [['id_number', 'email', 'ward', 'village', 'division', 'home_address', 'salary_scale'], 'string', 'max' => 30],
+            [['id_number', 'email', 'village','home_address'], 'string', 'max' => 30],
             [['employee_number', 'name_of_high_education_level', 'account_name'], 'string', 'max' => 100],
             [['employee_number'], 'unique'],
+            //NEXT OF KIN
+            [['next_of_kin_name', 'relationship', 'phone', 'next_of_kin_address','spouse_name','spouse_phone_number','dependant_information','attachments'], 'safe'],
+            //DEPENDANT INFO
+            //[['dependant_name', 'dependant_gender', 'date_of_birth','dependant_information'], 'safe'],
+
             [['phone_number'], 'match', 'pattern' => '/^[+]?([0-9]?)[(|s|-|.]?([0-9]{3})[)|s|-|.]*([0-9]{3})[s|-|.]*([0-9]{4})$/'],
             [['photo'],'file','extensions' => ['jpg','png','jepg'],'checkExtensionByMimeType'=>true],
             [['photo'], 'file','skipOnEmpty'=>false,'extensions' => ['jpg','png','jepg'],'checkExtensionByMimeType'=>true,'message'=>'Incorrect file uploaded','skipOnError'=>false,'maxSize'=>1024 * 1024 * 2,'on'=>'update-photo-upload'],
@@ -120,18 +135,15 @@ class Staff extends \yii\db\ActiveRecord
             'category' => 'Category',
             'region_id' => 'Region',
             'district_id' => 'District',
-            'ward' => 'Ward',
             'village' => 'Village',
-            'division' => 'Division(Tarafa)',
             'home_address' => 'Home Address',
-            'house_number' => 'House Number',
+
             'name_of_high_education_level' => 'Name Of High Education Level',
             'designation_id' => 'Designation',
             'department_id' => 'Department Name',
-            'salary_scale' => 'Salary Scale',
             'basic_salary' => 'Basic Salary',
             'allowance_id' => 'Allowance',
-            'helsb' => 'HESLB',
+
             'paye' => 'PAYE',
             'nssf' => 'NSSF',
             'nhif' => 'NHIF',

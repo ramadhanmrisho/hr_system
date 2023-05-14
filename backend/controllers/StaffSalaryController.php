@@ -215,7 +215,6 @@ class StaffSalaryController extends Controller
             $helsb=$staff->helsb;
             $nssf=$staff->nssf;
             $nhif=$staff->nhif;
-            $TUGHE=$staff->TUGHE;
             $helsb1=!empty($helsb)?$helsb:0;
             $nssf1=!empty($nssf)?$nssf:0;
             $TUGHE1=!empty($TUGHE)?$TUGHE:0;
@@ -251,7 +250,6 @@ class StaffSalaryController extends Controller
                     'helsb'=>Yii::$app->formatter->asDecimal($helsb,2),
                     'nssf'=>Yii::$app->formatter->asDecimal($nssf,2),
                     'nhif'=>Yii::$app->formatter->asDecimal($nhif,2),
-                    'TUGHE'=>Yii::$app->formatter->asDecimal($TUGHE,2),
                     'total_deduction'=>$total_deduction,
                     'month'=>$month,
                     'hod_allowance_amount'=>!is_null($hod_allowance_amount)?$hod_allowance_amount:0,

@@ -114,19 +114,7 @@ class SiteController extends Controller
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) ) {
 
-
-            $user_category_exist=UserAccount::find()->where(['username'=>$model->username])->exists();
-        if($user_category_exist){
-            $user_category=UserAccount::find()->where(['username'=>$model->username])->one()->category;
-            if($user_category=='student'){
-
-                Yii::$app->session->setFlash('danger','<span class="fa fa-warning"> Sorry!  Only staffs are allowed here</span>');
-                return $this->render('login', ['model' => $model,]);
-            }
-            else {$model->login();}
-}
-
-                Yii::$app->session->setFlash('danger','<span class="fa fa-warning"> Wrong password/username</span>');
+                $model->login();
                 return $this->goBack();
 
         }

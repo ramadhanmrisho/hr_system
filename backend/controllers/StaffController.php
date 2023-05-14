@@ -2,14 +2,20 @@
 
 namespace backend\controllers;
 
+use common\models\AttachmentsType;
+use common\models\Dependants;
 use common\models\Designation;
 use common\models\District;
+use common\models\EmployeeAttachments;
+use common\models\EmployeeSpouse;
+use common\models\NextOfKin;
 use common\models\StaffAllowance;
 use common\models\UserAccount;
 use Yii;
 use common\models\Staff;
 use common\models\search\StaffSearch;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -98,55 +104,114 @@ class StaffController extends Controller
         $userAccount_model=new UserAccount();
         
         if ($model->load(Yii::$app->request->post())) {
-            
-            $model->created_by=Yii::$app->user->identity->getId();
-            
+
+
+
+
              $staff_number=Staff::find()->where(['employee_number'=>$model->employee_number])->exists();
 
             if ($staff_number){
                 Yii::$app->session->setFlash('getDanger','<span class="fa fa-warning">Employee Number already exists in the System!</span>');
                 return $this->render('create', ['model' => $model,]);
             }
+
+
+            $model->created_by=Yii::$app->getUser()->id;
+            $model->salary_scale='TPS';
+
             $model->photo = Uploadedfile::getInstance($model, 'photo');
-            
             $model->fname=strtoupper($model->fname);
             $model->mname=strtoupper($model->mname);
             $model->lname=strtoupper($model->lname);
-
-       
+            $model->basic_salary=str_replace(',','',$model->basic_salary);
+            $model->nhif=str_replace(',','',$model->nhif);
+            $model->paye=str_replace(',','',$model->paye);
+            $model->helsb=str_replace(',','',$model->helsb);
+            $model->nssf=str_replace(',','',$model->nssf);
 
 
             //SAVING STAFF DETAILS
-            if ($model->save()) {
-                //CREATING USER ACCOUNT
-                $userAccount_model->user_id=$model->id;
-                $userAccount_model->username=$model->employee_number;
-                $userAccount_model->password=Yii::$app->security->generatePasswordHash($model->phone_number);
-                $userAccount_model->email=$model->email;
-                $userAccount_model->category='staff';
-                //$userAccount_model->designation_abbr=Designation::find()->where(['id'=>$model->designation_id])->one()->abbreviation;
-                $userAccount_model->created_by=Yii::$app->user->identity->getId();
-                $userAccount_model->save(false);
-                     if (!empty($model->photo)) {
-                $model->photo->saveAs('kcohas/backend/web/staff_photo/' . $model->photo->baseName. '.' . $model->photo->extension);
-            }
-                //SAVING ALLOWANCE
-                if (!empty($model->allowance_id)) {
-                    foreach ($model->allowance_id as $allowance) {
-                        $alowance_model = new StaffAllowance();
-                        $alowance_model->staff_id = $model->id;
-                        $alowance_model->allowance_id = $allowance;
-                        $alowance_model->created_by = Yii::$app->user->identity->getId();
-                        $alowance_model->save(false);
-                    }
-                }
-                Yii::$app->session->setFlash('getSuccess','Staff Added Successfully!');
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-            
-             var_dump($model->getErrors());
-            exit();
 
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                if ($model->save()) {
+                    //CREATING USER ACCOUNT
+                    $userAccount_model->user_id = $model->id;
+                    $userAccount_model->username = $model->employee_number;
+                    $userAccount_model->password = Yii::$app->security->generatePasswordHash($model->phone_number);
+                    $userAccount_model->email = $model->email;
+                    $userAccount_model->category = 'staff';
+                    //$userAccount_model->designation_abbr=Designation::find()->where(['id'=>$model->designation_id])->one()->abbreviation;
+                    $userAccount_model->created_by = Yii::$app->user->identity->getId();
+                    $userAccount_model->save();
+                    if (!empty($model->photo)) {
+                        $model->photo->saveAs('staff_photo/' . $model->photo->baseName . '.' . $model->photo->extension);
+                    }
+
+                    //SAVING ALLOWANCE
+                    if (!empty($model->allowance_id)) {
+                        foreach ($model->allowance_id as $allowance) {
+                            $alowance_model = new StaffAllowance();
+                            $alowance_model->staff_id = $model->id;
+                            $alowance_model->allowance_id = $allowance;
+                            $alowance_model->created_by = Yii::$app->user->identity->getId();
+                            $alowance_model->save();
+                        }
+                    }
+
+                    //SAVING DEPENDANT INFO
+                    if (!empty($model->dependant_information)) {
+                        foreach ($model->dependant_information as $dependant) {
+                            $dependant_model = new Dependants();
+                            $dependant_model->name = $dependant['dependant_name'];
+                            $dependant_model->staff_id = $model->id;
+                            $dependant_model->gender = $dependant['dependant_gender'];
+                            $dependant_model->dob = $dependant['date_of_birth'];
+                            $dependant_model->save(false);
+                        }
+                    }
+                    //SAVING NEXT OF KIN
+                    $next_of_kin = new NextOfKin();
+                    $next_of_kin->name = $model->next_of_kin_name;
+                    $next_of_kin->relationship = $model->relationship;
+                    $next_of_kin->staff_id = $model->id;
+                    $next_of_kin->phone_number = $model->phone;
+                    $next_of_kin->physical_address = $model->next_of_kin_address;
+                    $next_of_kin->save(false);
+                    //SPOUSE INFO
+                    $spouse_model = new EmployeeSpouse();
+                    $spouse_model->name = $model->spouse_name;
+                    $spouse_model->phone_number = $model->spouse_phone_number;
+                    $spouse_model->staff_id = $model->id;
+                    $spouse_model->save(false);
+
+
+                    //SAVING ATTACHMENTS
+                    foreach (UploadedFile::getInstances($model,'attachments') as $key=>$val){
+                        $attachment_model = new EmployeeAttachments();
+                        $attachment_types_id=$_POST['Staff']['attachments'][$key]['attachments_type_id'];
+                        $attachment_model->staff_id=$model->id;
+                        $attachment_model->attachment_type_id=(int)$attachment_types_id;
+                        $attachment_model->attached_file=$val->baseName.'.'.$val->extension;
+                        $val->saveAs('employee_attachments/'.$val->baseName.'.'.$val->extension);
+                        $attachment_model->save(false);
+                    }
+
+
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('getSuccess', 'Staff added Successfully!');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
+            catch (\Exception $e){
+             // Roll back the transaction
+                $transaction->rollBack();
+                var_dump($e);
+                Yii::$app->session->setFlash('error', 'Transaction failed: ' . $e->getMessage());
+            }
+
+var_dump($model->getErrors());
+            die();
         }
 
         return $this->render('create', [
@@ -375,6 +440,87 @@ class StaffController extends Controller
             ]);
         }
     }
+
+
+    public function actionAddAttachment($id){
+
+
+        $model = new EmployeeAttachments();
+        $exclude =array_column(
+            EmployeeAttachments::find()->where(['staff_id'=>$id])
+                ->innerJoinWith('attachmentsType')
+                ->select(['attachment_type_id'])
+                ->asArray()
+                ->all(),
+            'attachment_type_id'
+        );
+
+        $attachment_types = AttachmentsType::find()
+            ->where(['NOT IN','id',$exclude])
+            ->all();
+
+
+        if ($this->request->isPost && $model->load($this->request->post())) {
+
+
+            $model->staff_id=$id;
+            $model->attached_file=UploadedFile::getInstance($model,'attached_file');
+            $model->attached_file->saveAs('employee_attachments/'. $model->attached_file->baseName. '.' . $model->attached_file->extension);
+
+            if ($model->save(false)){
+                Yii::$app->session->setFlash('getSuccess',Yii::t('app',' <span class="fa fa-check"> Attachment added Successfully!'));
+                return $this->redirect(['staff/view', 'id' => $id]);
+            }
+
+        }
+
+
+        return $this->render('_addattachment', [
+            'model' => $model,
+            'attachment_types'=>$attachment_types
+        ]);
+    }
+
+    //DELETE ATTACHMENT
+    public function actionRemoveFile(){
+
+        $model = EmployeeAttachments::findOne(Yii::$app->request->post('id'));
+        $staff_id = $model->staff_id;
+        if(file_exists($model->attached_file)){
+            unlink($model->attached_file);
+            $model->delete();
+        }else{
+            $model->delete();
+        }
+        Yii::$app->session->setFlash('getSuccess',Yii::t('app',' <span class="fa fa-check"> Attachment Removed Successfully!'));
+        return $this->redirect(['view', 'id' => $staff_id]);
+
+    }
+
+
+    //RE ATTACHING
+
+    public  function actionReattachFile($id){
+        $model = EmployeeAttachments::findOne(['id'=>$id]);
+        $staff_id = $model->staff_id;
+        if ($this->request->isPost && $model->load($this->request->post())) {
+
+            $model->attached_file=UploadedFile::getInstance($model,'attached_file');
+            $model->attached_file->saveAs('employee_attachments/'. $model->attached_file->baseName. '.' . $model->attached_file->extension);
+
+            if ($model->save(false)){
+                // unlink($model->getOldAttribute('attachment')); BADO KU UNLINK OLD FILE
+                Yii::$app->session->setFlash('getSuccess',Yii::t('app',' <span class="fa fa-check"> Attachment Edited Successfully!'));
+                return $this->redirect(['view', 'id' => $staff_id]);
+            }
+
+        }
+        return $this->render('_reattach', [
+            'model' => $model,
+        ]);
+
+    }
+
 
 
 }

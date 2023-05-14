@@ -1,6 +1,7 @@
 <?php
 
 use common\models\Allowance;
+use common\models\AttachmentsType;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -89,7 +90,7 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                   <?= $form->field($model, 'marital_status',['options'=>['class'=>'required']])->dropDownList([ 'Married' => 'Married', 'Single' => 'Single', 'Divorced' => 'Divorced', ], ['prompt' => '']) ?>
                   <?= $form->field($model, 'email',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
                   <?= $form->field($model, 'alternate_phone_number')->textInput() ?>
-                  <?= $form->field($model, 'home_address',['options'=>['class'=>'required']])->textInput(['maxlength' => true])->label('Street') ?>
+                  <?= $form->field($model, 'home_address')->textInput(['maxlength' => true])->label('Street') ?>
 
 
                 </div>
@@ -108,27 +109,27 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
    <fieldset>
        <?php if ($hr ||$admin){?>
        <legend style="font-weight: bold;color: #0d6aad">Employment Information:</legend>
-
        <div class="col-md-3">
            <?= $form->field($model, 'employee_number',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
            <?= $form->field($model, 'designation_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::className(), ['data'=> ArrayHelper::map(\common\models\Designation::find()->all(),'id','name'),             'options'=>['placeholder'=>'--Select--']]) ?>
-           <?= $form->field($model, 'paye',['options'=>['class'=>'required']])->textInput() ?>
+           <?= $form->field($model, 'paye',['options'=>['class'=>'money required']])->textInput(['id'=>'money-value1']) ?>
            <?= $form->field($model, 'account_name',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
        </div>
 
        <div class="col-md-3">
 
            <?= $form->field($model, 'date_employed',['options'=>['class'=>'required']])->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
-           <?= $form->field($model, 'salary_scale',['options'=>['class'=>'required']])->textInput(['placeholder' =>'e.g TGS,TGTS,TPSW,PHTS, etc']) ?>
-           <?= $form->field($model, 'nssf')->textInput() ?>
+           <?= $form->field($model, 'contract_end_date',['options'=>['class'=>'required']])->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
+
+           <?= $form->field($model, 'nssf')->textInput(['id'=>'money-value2']) ?>
            <?= $form->field($model, 'bank_account_number',['options'=>['class'=>'required']])->textInput() ?>
        </div>
 
        <div class="col-md-3">
            <?= $form->field($model, 'name_of_high_education_level',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
-           <?= $form->field($model, 'basic_salary'  ,['options'=>['class'=>'required']])->textInput() ?>
-           <?= $form->field($model, 'nhif',['options'=>['class'=>'required']])->textInput() ?>
-           <?= $form->field($model, 'category',['options'=>['class'=>'required']])->dropDownList([ 'Academic Staff' => 'Academic Staff', 'Non Academic Staff' => 'Non Academic Staff', ], ['prompt' => '']) ?>
+           <?= $form->field($model, 'basic_salary'  ,['options'=>['class'=>'required']])->textInput(['id'=>'money-value']) ?>
+           <?= $form->field($model, 'nhif',['options'=>['class'=>'required']])->textInput(['id'=>'money-value3']) ?>
+           <?= $form->field($model, 'category',['options'=>['class'=>'required']])->dropDownList([ 'Permanent' => 'Permanent', 'Temporary' => 'Temporary', ], ['prompt' => '']) ->label('Contract Category')?>
        </div>
 
        <div class="col-md-3">
@@ -152,9 +153,112 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                    ],
                ]
            ])->label(false)?>
-           <?= $form->field($model, 'helsb')->textInput() ?>
-           <?= $form->field($model, 'TUGHE')->textInput() ?>
+           <?= $form->field($model, 'helsb')->textInput(['id'=>'money-value4']) ?>
+           <?= $form->field($model, 'contract_termination_date')->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
+
        </div>
+
+           <legend style="font-weight: bold;color: #0d6aad">Employee Family Info:</legend>
+           <div class="col-md-3">
+               <?= $form->field($model, 'next_of_kin_name',['options'=>['class'=>'required']])->textInput(['maxlength' => true])->label('Next of Kin Name') ?>
+           </div>
+       <div class=" col-md-3">
+           <?= $form->field($model, 'relationship',['options'=>['class'=>'required']])->textInput() ?>
+           </div>
+           <div class=" col-md-3">
+               <?= $form->field($model, 'phone',['options'=>['class'=>'required']])->textInput() ?>
+           </div>
+           <div class=" col-md-3">
+               <?= $form->field($model, 'next_of_kin_address',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
+           </div>
+
+           <div class="col-md-3">
+               <?= $form->field($model, 'spouse_name')->textInput() ?>
+           </div>
+           <div class="col-md-3">
+               <?= $form->field($model, 'spouse_phone_number',['options'=>['class'=>'required']])->textInput() ?>
+           </div>
+
+           <div class="col-md-12">
+               <legend style="font-weight: bold;color: #0d6aad">Dependants Info:</legend>
+
+               <?=  $form->field($model,'dependant_information')->widget(multipleinput\MultipleInput::className(),[
+                   'max' => 4,
+                   'columns'=>[
+                       ['name'=>'dependant_name',
+                           'title'=>'Dependent Name',
+
+                           'options'=>[
+                               'options' => [ 'prompt' =>'----Select-----',
+
+                               ],
+                           ]
+                       ],
+
+                       [
+                           'name'     => 'date_of_birth',
+                           'title'    => 'Date of birth',
+                           'type'     => \dosamigos\datepicker\DatePicker::className(),
+                           'options'  => [
+                               'clientOptions' => [
+                                   'autoclose' => true,
+                                   'format'    => 'yyyy-mm-dd'
+                               ]
+                           ]
+                       ],
+                       ['name'=>'dependant_gender',
+                           'type'=>Select2::className(),
+                           'title'=>'Gender',
+                           'options'=>[
+                               'data'=>['Male'=>'Male','Female'=>'Female'],
+                               'options' => [ 'prompt' =>'----Select-----',
+
+                               ],
+                           ]
+                       ],
+                   ]
+               ])->label(false)?>
+           </div>
+           <div class="col-md-12">
+               <legend  style="font-weight: bold;font-family: Lucida Bright;color: #0d6aad">Employee Attachments</legend>
+
+               <?=  $form->field($model,'attachments')->widget(multipleinput\MultipleInput::className(),[
+                   'max' => 10,
+                   'addButtonOptions' => [
+                       'class' => 'btn btn-primary cart-btn',
+                       'label' => '<span class=" fa fa-plus-circle"></span>'
+                   ],
+                   'removeButtonOptions' => [
+                       'class' => 'btn btn-danger',
+                       'label' => '<span class=" fa fa-minus"></span>'
+                   ],
+
+                   'columns'=>[
+                       ['name'=>'attachments_type_id',
+                           'type'=>Select2::className(),
+                           'title'=>'Attachment Name',
+                           'options'=>[
+                               'data'=> ArrayHelper::map(AttachmentsType::find()->where(['status'=>'active'])->all(),'id','name'),'options' => [ 'prompt' =>'----Select Attachment Type-----',
+
+                               ],
+                           ]
+                       ],
+
+                       [
+                           'name'=>'attachment',
+                           'title'=>'Attached File',
+                           'type'=>'fileInput',
+                           'options' => [
+                               'accept' => 'application/pdf',
+                           ],
+                       ],
+
+                   ]
+               ])->label(false)?>
+
+           </div>
+
+
        <?php }?>
    </fieldset>
 
@@ -172,3 +276,91 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
     <?php ActiveForm::end(); ?>
 
 </div>
+
+
+<?php
+
+$script=<<< JS
+$(function() {
+    // Get the input field by its ID
+    var input = $('#money-value');
+
+    // Set up a keyup event listener to format the input value as the user types
+    input.on('keyup', function() {
+        // Remove any existing commas from the input value
+        var value = input.val().replace(/,/g, '');
+
+        // Format the input value with commas every three digits
+        value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+        // Set the formatted value back into the input field
+        input.val(value);
+    });
+});
+$(function() {
+    // Get the input field by its ID
+    var input = $('#money-value1');
+
+    // Set up a keyup event listener to format the input value as the user types
+    input.on('keyup', function() {
+        // Remove any existing commas from the input value
+        var value = input.val().replace(/,/g, '');
+
+        // Format the input value with commas every three digits
+        value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+        // Set the formatted value back into the input field
+        input.val(value);
+    });
+});
+$(function() {
+    // Get the input field by its ID
+    var input = $('#money-value2');
+
+    // Set up a keyup event listener to format the input value as the user types
+    input.on('keyup', function() {
+        // Remove any existing commas from the input value
+        var value = input.val().replace(/,/g, '');
+
+        // Format the input value with commas every three digits
+        value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+        // Set the formatted value back into the input field
+        input.val(value);
+    });
+});
+$(function() {
+    // Get the input field by its ID
+    var input = $('#money-value3');
+
+    // Set up a keyup event listener to format the input value as the user types
+    input.on('keyup', function() {
+        // Remove any existing commas from the input value
+        var value = input.val().replace(/,/g, '');
+
+        // Format the input value with commas every three digits
+        value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+        // Set the formatted value back into the input field
+        input.val(value);
+    });
+});
+$(function() {
+    // Get the input field by its ID
+    var input = $('#money-value4');
+
+    // Set up a keyup event listener to format the input value as the user types
+    input.on('keyup', function() {
+        // Remove any existing commas from the input value
+        var value = input.val().replace(/,/g, '');
+
+        // Format the input value with commas every three digits
+        value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+        // Set the formatted value back into the input field
+        input.val(value);
+    });
+});
+JS;
+$this->registerJs($script);
+?>

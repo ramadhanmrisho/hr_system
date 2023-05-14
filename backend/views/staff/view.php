@@ -1,5 +1,7 @@
 <?php
 
+use common\models\AttachmentsType;
+use common\models\EmployeeSpouse;
 use yii\bootstrap\Modal;
 use yii\bootstrap\Tabs;
 use yii\helpers\Html;
@@ -39,7 +41,7 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
 
 
 <br>
-<div class="staff-view">
+<div class="staff-view" style="font-family: 'Lucida Bright'">
 
     <p>
         <?php if (\common\models\UserAccount::userHas(['ADMIN','HR']) || Yii::$app->user->identity->user_id==$model->id):?>
@@ -76,7 +78,7 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="col-sm-6">
-                <h4 class="btn-primary" style="font-weight: bold;font-family: 'Bell MT';color: whitesmoke; ">Personal Information </h4>
+                <h4 class="badge bg-aqua-active" style="font-weight: bold;color: whitesmoke; ">Personal Information </h4>
                 <?= DetailView::widget([
                     'model' => $model,
                     'attributes' => [
@@ -98,11 +100,8 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
                         ['attribute'=>'district_id','value'=>function($model){
                             return $model->district->name;
                         }],
-                        'ward',
-                        'village',
-                        'division',
-                        'home_address',
-                        'house_number',
+
+                        'home_address:text:Street',
                         'created_at',
                         'updated_at',
                     ],
@@ -118,7 +117,7 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
             </div>
 
             <div class="col-sm-6">
-                <h4 class="btn-primary" style="font-weight: bold;font-family: 'Bell MT';color: whitesmoke; ">Employment Details </h4>
+                <h4 class="badge bg-aqua-active" style="font-weight: bold;color: whitesmoke; ">Employment Details </h4>
                 <?= DetailView::widget([
                     'model' => $model,
                     'attributes' => [
@@ -126,24 +125,20 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
                         'name_of_high_education_level',
                         ['attribute'=>'designation_id','value'=>$model->designation->name],
                         ['attribute'=>'department_id','value'=>$model->department->name],
-                        'salary_scale',
                         ['attribute'=>'basic_salary','value'=>function($model){
-                            return  Yii::$app->formatter->asDecimal($model->basic_salary,2);
+                            return  Yii::$app->formatter->asDecimal(intval($model->basic_salary),2);
                         }],
                         ['attribute'=>'helsb','format'=>'html','value'=>function($model){
-                            return  Yii::$app->formatter->asDecimal($model->helsb,2);
+                            return  Yii::$app->formatter->asDecimal(intval($model->helsb),2);
                         }],
                         ['attribute'=>'paye','format'=>'html','value'=>function($model){
-                            return  Yii::$app->formatter->asDecimal($model->paye,2);
+                            return  Yii::$app->formatter->asDecimal(intval($model->paye),2);
                         }],
                         ['attribute'=>'nssf','format'=>'html','value'=>function($model){
-                            return  Yii::$app->formatter->asDecimal($model->nssf,2);
+                            return  Yii::$app->formatter->asDecimal(intval($model->nssf),2);
                         }],
                         ['attribute'=>'nhif','format'=>'html','value'=>function($model){
-                            return  Yii::$app->formatter->asDecimal($model->nhif,2);
-                        }],
-                        ['attribute'=>'TUGHE','format'=>'html','value'=>function($model){
-                            return  Yii::$app->formatter->asDecimal($model->TUGHE,2);
+                            return  Yii::$app->formatter->asDecimal(intval($model->nhif),2);
                         }],
                         'date_employed',
                         'account_name',
@@ -164,7 +159,6 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
 
 
 
-<?php ob_start()?>
 
 <?php $this->beginBlock('allowance')?>
 <?php $dataProvider=new \yii\data\ActiveDataProvider(['query'=>\common\models\StaffAllowance::find()->where(['staff_id'=>$model->id])]);
@@ -202,9 +196,127 @@ if (!empty($dataProvider)){
 }
 
 ?>
+<?php $this->endBlock()?>
+
+<?php $this->beginBlock('family_info')?>
+
+<div class="panel panel-default" style="font-family: Lucida Bright">
+    <div class="panel-body">
+        <div class="col-sm-6">
+<?php $dataProvider=new \yii\data\ActiveDataProvider(['query'=>\common\models\Dependants::find()->where(['staff_id'=>$model->id])]);
+if (!empty($dataProvider)) {
+echo ' <h4 class="badge btn-success"  style=" font-family:Lucida Bright ;color: whitesmoke;">Employee Dependants</h4>';
+    echo GridView::widget([
+        'dataProvider' => $dataProvider,
+       // 'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            'name',
+            'gender',
+            'dob',
+        ],
+    ]);
+}
+else{
+    echo 'No results found...';
+}
+           ?>
+        </div>
+        <div class="col-sm-6">
+           <h4 class="badge btn-success" style=" font-family:Lucida Bright ;color: whitesmoke;">Employee Spouse</h4>
+
+            <?php
+            $spouse_exists= EmployeeSpouse::find()->where(['staff_id'=>$model->id])->exists();
+            if ($spouse_exists):
+            $spouse=EmployeeSpouse::find()->where(['staff_id'=>$model->id])->one();
+            ?>
+            <?= DetailView::widget([
+                'model' => $spouse,
+                'attributes' => [
+                    'name',
+                    'phone_number',
+
+                ],
+            ]) ?>
+<?php endif;?>
+        </div>
+        <div class="col-sm-6">
+            <h4 class="badge btn-success" style=" font-family:Lucida Bright ;color: whitesmoke;">Next of Kin</h4>
+
+            <?php
+            $next_of_kin_exists= \common\models\NextOfKin::find()->where(['staff_id'=>$model->id])->exists();
+            if ($next_of_kin_exists):
+                $next_of_kin=\common\models\NextOfKin::find()->where(['staff_id'=>$model->id])->one();
+                ?>
+                <?= DetailView::widget([
+                'model' => $next_of_kin,
+                'attributes' => [
+                    'name',
+                    'relationship',
+                    'phone_number',
+                    'physical_address',
+                ],
+            ]) ?>
+            <?php endif;?>
+        </div>
+
+
+    </div>
+</div>
+
 
 <?php $this->endBlock()?>
 
+
+<?php $this->beginBlock('attachments')?>
+<?php
+$attachment_exist= \common\models\EmployeeAttachments::find()->where(['staff_id'=>$model->id])->exists();
+
+echo   Html::a(' <span class="fa fa-edit"></span> Add Attachment', ['staff/add-attachment', 'id' => $model->id], ['class' => 'btn btn-success pull-right']).'<br>';
+
+
+if($attachment_exist){
+    $attachments=new yii\data\ActiveDataProvider(['query' => \common\models\EmployeeAttachments::find()->where(['staff_id'=>$model->id])]);
+
+    $attachment_model= \common\models\EmployeeAttachments::find()->where(['staff_id'=>$model->id])->one();
+
+    echo GridView::widget([
+        'dataProvider' => $attachments,'summary'=>'',
+        'tableOptions' => ['class' => 'table table-borderless table-striped'],
+        'columns' => [
+            ['attribute' => 'attached_file','format'=>'raw', 'value' => function($model){ return Html::a('<i class="glyphicon glyphicon-paperclip"></i> '. AttachmentsType::findOne($model->attachment_type_id)->name,Yii::getAlias('@web').'/employee_attachments/'.$model->attached_file,['target'=>'blank']);}],
+            ['class' => 'yii\grid\ActionColumn','template'=>'{delete} {reattach}','buttons'=>[
+
+                'reattach'=>function($modell,$key,$index){
+                    return  Html::a('<i class="glyphicon glyphicon-edit"></i> '.Yii::t('app','Re-attach'),['reattach-file','id'=>$key['id']],['class' => 'btn btn-primary btn-sm','style'=>'float:right',
+                        'data'=>[
+                            'method' => 'post',
+                            'confirm' => Yii::t('app','Are you sure you want to Re attach this attachment '),
+                            //'params' => ['id'=>$key['id']]
+                        ]
+                    ]);
+                },
+                'delete'=>function($model,$key,$index){
+                    return Html::a('<i class="glyphicon glyphicon-trash"></i> '.Yii::t('app','Remove'),['remove-file'],['class' => 'btn btn-danger btn-sm','style'=>'float:right',
+                        'data'=>[
+                            'method' => 'post',
+                            'confirm' => Yii::t('app','Are you sure you want to remove this attachment '),
+                            'params' => ['id'=>$key['id']]
+                        ]
+                    ]);
+                }
+
+            ],],
+        ]
+    ]);
+}else{
+    echo '<br><div class="alert alert-warning alert-sm">No file is attached</div>';
+}
+
+?>
+
+<?php $this->endBlock()?>
 
 
 
@@ -232,6 +344,14 @@ echo Tabs::widget([
         [
             'label' => 'ALLOWANCES',
             'content' =>$this->blocks['allowance'],
+        ],
+        [
+            'label' => 'EMPLOYEE ATTACHMENTS',
+            'content' =>$this->blocks['attachments'],
+        ],
+        [
+            'label' => 'EMPLOYEE FAMILY INFO',
+            'content' =>$this->blocks['family_info'],
         ],
 
     ]

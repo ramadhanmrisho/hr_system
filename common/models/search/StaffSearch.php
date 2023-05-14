@@ -18,8 +18,9 @@ class StaffSearch extends Staff
     public function rules()
     {
         return [
-            [['id', 'identity_type_id', 'region_id', 'district_id', 'house_number', 'designation_id', 'department_id', 'basic_salary', 'allowance_id', 'helsb', 'paye', 'nssf', 'nhif', 'bank_account_number', 'alternate_phone_number', 'created_by'], 'integer'],
-            [['fname', 'mname', 'lname', 'dob', 'place_of_birth', 'phone_number', 'id_number', 'marital_status', 'email', 'gender', 'employee_number', 'category', 'ward', 'village', 'division', 'home_address', 'name_of_high_education_level', 'salary_scale', 'date_employed', 'account_name', 'created_at', 'updated_at','TUGHE'], 'safe'],
+            [['id', 'identity_type_id', 'region_id', 'district_id', 'designation_id', 'department_id', 'allowance_id','bank_account_number', 'alternate_phone_number', 'created_by'], 'integer'],
+            [[ 'helsb', 'paye', 'nssf', 'nhif'], 'string'],
+            [['fname', 'mname', 'lname', 'dob', 'place_of_birth', 'phone_number', 'id_number', 'marital_status', 'email', 'gender', 'employee_number', 'category',  'village', 'programme_pursued', 'home_address', 'name_of_high_education_level','date_employed', 'account_name', 'created_at', 'updated_at','contract_end_date','contract_termination_date'], 'safe'],
         ];
     }
 
@@ -64,15 +65,12 @@ class StaffSearch extends Staff
             'identity_type_id' => $this->identity_type_id,
             'region_id' => $this->region_id,
             'district_id' => $this->district_id,
-            'house_number' => $this->house_number,
+
             'designation_id' => $this->designation_id,
             'department_id' => $this->department_id,
             'basic_salary' => $this->basic_salary,
             'allowance_id' => $this->allowance_id,
-            'helsb' => $this->helsb,
-            'paye' => $this->paye,
-            'nssf' => $this->nssf,
-            'nhif' => $this->nhif,
+
             'date_employed' => $this->date_employed,
             'bank_account_number' => $this->bank_account_number,
             'alternate_phone_number' => $this->alternate_phone_number,
@@ -81,13 +79,6 @@ class StaffSearch extends Staff
             'updated_at' => $this->updated_at,
         ]);
         
-               if (\Yii::$app->request->get('category')=='academic'){
-            $query->andFilterWhere(['like','category','Academic Staff']);
-        }
-
-        if (\Yii::$app->request->get('category')=='non_academic'){
-            $query->andFilterWhere(['like','category','Non Academic Staff']);
-        }
 
         $query->andFilterWhere(['like', 'fname', $this->fname])
             ->andFilterWhere(['like', 'mname', $this->mname])
@@ -100,12 +91,10 @@ class StaffSearch extends Staff
             ->andFilterWhere(['like', 'gender', $this->gender])
             ->andFilterWhere(['like', 'employee_number', $this->employee_number])
             ->andFilterWhere(['like', 'category', $this->category])
-            ->andFilterWhere(['like', 'ward', $this->ward])
+
             ->andFilterWhere(['like', 'village', $this->village])
-            ->andFilterWhere(['like', 'division', $this->division])
             ->andFilterWhere(['like', 'home_address', $this->home_address])
             ->andFilterWhere(['like', 'name_of_high_education_level', $this->name_of_high_education_level])
-            ->andFilterWhere(['like', 'salary_scale', $this->salary_scale])
             ->andFilterWhere(['like', 'account_name', $this->account_name]);
 
         return $dataProvider;

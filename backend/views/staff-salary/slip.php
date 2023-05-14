@@ -2,14 +2,14 @@
 
 <div>
     <div class="col-xs-1">
-        <img src="images/logo.png" width="80px" align="left">
+        <img src="images/pay.jpeg" width="80px" align="left">
     </div>
     <div class="col-sm-6" align="left">
         <h5 style="color: purple;">
-            Kabanga College of Health and Allied Sciences
+            Human Resource MIS & Payroll System
         </h5>
         <h6 style="">
-            P.O BOX 42, Kasulu, Kigoma ,Tanzania
+            P.O BOX 33, Ubungo, Dar es Salaam ,Tanzania
         </h6>
     </div>
 </div>
@@ -39,8 +39,8 @@
         <td   style="border:1px solid black;"> Basic Salary <br><br><?php if($hod_allowance_amount==0){echo  '';}else{echo 'HOD Allowance'; }?><br><br><?php if($transport_allowance_amount==0){echo  '';}else{echo 'Transport Allowance'; }?> <br><br><?php  if($house_allowance_amount==0){echo  '';}else{echo 'House Allowance'; }?><br><?php  if($teaching_allowance_amount==0){echo  '';}else{echo 'Teaching Allowance'; }?><br><br><?php  if($cooking_allowance_amount==0){echo  '';}else{echo 'Cook  Allowance'; }?><br><br><?php  if($driver_allowance_amount==0){echo  '';}else{echo 'Driver  Allowance'; }?><br><br><b> Total Earnings</td>
         <td style="border:1px solid black;"><?php echo ' '. $basic_salary.'  '?><br><br><?php if ( $hod_allowance_amount==0){echo ' ';}else{ echo Yii::$app->formatter->asDecimal($hod_allowance_amount,2);}?><br><br><?php if ( $transport_allowance_amount==0){echo ' ';}else{ echo Yii::$app->formatter->asDecimal($transport_allowance_amount,2);}?><br><br><?php if ( $house_allowance_amount==0){echo ' ';}else{ echo Yii::$app->formatter->asDecimal($house_allowance_amount,2);}?><br><?php if ( $teaching_allowance_amount==0){echo ' ';}else{ echo Yii::$app->formatter->asDecimal($teaching_allowance_amount,2);}?><br><br><?php if ($cooking_allowance_amount==0){echo ' ';}else{ echo Yii::$app->formatter->asDecimal($cooking_allowance_amount,2);}?><br><br><?php if ($driver_allowance_amount==0){echo ' ';}else{ echo Yii::$app->formatter->asDecimal($driver_allowance_amount,2);}?><br><br><?php echo '<b>'.Yii::$app->formatter->asDecimal($total_earnings,2).'  '?></td>
 
-        <td style="border:1px solid black;"> NHIF<br><br> NSSF<br><br> PAYE<br><br>HESLB<br><br>TUGHE<br><br><b> Total Deductions</td>
-        <td style="border:1px solid black;"><?php echo $nhif;?><br><br><?php echo  !empty($nssf)? $nssf:0?><br><br><?php echo  $paye;?><br><br><?php echo $helsb!=0? $helsb:0?><br><br><?php echo $TUGHE!=0? $TUGHE:0?><br><br><?php echo '<b>'.Yii::$app->formatter->asDecimal($total_deduction,2)?></td>
+        <td style="border:1px solid black;"> NHIF<br><br> NSSF<br><br> PAYE<br><br>HESLB<br><br><b> Total Deductions</td>
+        <td style="border:1px solid black;"><?php echo $nhif;?><br><br><?php echo  !empty($nssf)? $nssf:0?><br><br><?php echo  $paye;?><br><br><?php echo $helsb!=0? $helsb:0?><br><br><?php echo '<b>'.Yii::$app->formatter->asDecimal($total_deduction,2)?></td>
     </tr>
 
     <tr   style="border:1px solid black;">

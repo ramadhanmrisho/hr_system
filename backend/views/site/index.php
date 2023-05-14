@@ -97,16 +97,7 @@ if(Yii::$app->session->hasFlash('reqDanger')):?>
             <br>
             <br>
 
-            <?php
-             $nm1=Course::find()->where(['abbreviation'=>'NTA4_NM'])->one()->id;
-             $nm2=Course::find()->where(['abbreviation'=>'NTA5_NM'])->one()->id;
-             $nm3=Course::find()->where(['abbreviation'=>'NTA6_NM'])->one()->id;
 
-              $cm1=Course::find()->where(['abbreviation'=>'NTA4_CM'])->one()->id;
-              $cm2=Course::find()->where(['abbreviation'=>'NTA5_CM'])->one()->id;
-              $cm3=Course::find()->where(['abbreviation'=>'NTA6_CM'])->one()->id;
-            $current_academic_year=AcademicYear::find()->where(['status'=>'Active'])->one()->id;
-            ?>
 
         </div>
 
