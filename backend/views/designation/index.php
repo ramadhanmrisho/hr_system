@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ]
 )
 ?>
-<div class="designation-index">
+<div class="designation-index" style="font-family: 'Lucida Bright'">
 
 
     <?php Pjax::begin(); ?>
@@ -37,8 +37,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'abbreviation',
             'created_at',
-            'created_by',
-
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -28,7 +28,7 @@ $fieldOptions1 = [
         <div class="login-box-body" style="height: 500px" >
 
             <div style="text-align: center">
-                <img src="images/logo.png" width="180px">
+                <img src="images/pay.jpeg" width="180px">
             </div>
 
             <div class="login-box-msg" style="color:steelblue"><b style="font-family: 'Bell MT'">Change Password</b></div>

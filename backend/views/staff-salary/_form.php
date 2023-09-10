@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="staff-salary-form" style="font-family: 'Lucida Bright'">
+<div class="staff-salary-form" style="font-family: Lucida Bright">
 
 
     <?php $form = ActiveForm::begin(); ?>
@@ -20,7 +20,9 @@ use yii\widgets\ActiveForm;
             <div class="panel-body" style="font-weight: bold;">
                 <div class="col-md-4">
 
-    <?= $form->field($model, 'staff_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::className(), ['data'=> ArrayHelper::map(\common\models\Staff::find()->all(),'id','fname'),             'options'=>['placeholder'=>'--Select Staff--']]) ?>
+    <?= $form->field($model, 'staff_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::className(), ['data'=> ArrayHelper::map(\common\models\Staff::find()->all(),'id',function ($model){
+        return $model->fname.' '.$model->lname;
+    }),             'options'=>['placeholder'=>'--Select Staff--']]) ?>
 
                 </div>
     <div class="col-md-4">
@@ -31,7 +33,7 @@ use yii\widgets\ActiveForm;
 
 </fieldset>
     <div class="form-group">
-        <?= Html::submitButton('Generate Slip', ['class' => 'btn btn-success',
+        <?= Html::submitButton('Generate Slip', ['class' => 'btn btn-success pull-center',
 
             'data' => [
                 'confirm' => 'Are you sure you want to Generate Payslip?',

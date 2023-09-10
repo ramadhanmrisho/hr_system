@@ -13,7 +13,7 @@ yiister\adminlte\assets\Asset::register($this);
     <html lang="<?= Yii::$app->language ?>"
     <head>
         <meta charset="<?= Yii::$app->charset ?>"/>
-        <link rel="icon" type="image/png" href="<?= Yii::$app->request->baseUrl ?>/images/logo.png">
+        <link rel="icon" type="image/png" class="img-circle" href="<?= Yii::$app->request->baseUrl ?>/images/pay.jpeg">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?= Html::csrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
@@ -25,7 +25,7 @@ yiister\adminlte\assets\Asset::register($this);
      
   
     <body class="login-page" style='background-image: url("images/t1.png")' style="overflow:hidden" >
-           <h2 align="center"  style="color:white;font-family:'Cambria';" >Human Resource & Payroll System</h2>
+           <h2 align="center"  style="color:white;font-family:Lucida Bright;" >Human Resource & Payroll System</h2>
 
     <?php $this->beginBody()?>
     <?=$content?>
@@ -34,3 +34,9 @@ yiister\adminlte\assets\Asset::register($this);
     </body>
     </html>
 <?php $this->endPage() ?>
+<div>
+</div>
+<!--<div class="footer text-center">-->
+<!--    <strong style="color: whitesmoke" >Copyright &copy; <b style="color: whitesmoke">HR & PAYROLL MIS</b> --><?php //= date("Y") ?>
+<!--    </strong>-->
+<!--</div>-->

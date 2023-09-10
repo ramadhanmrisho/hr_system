@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel common\models\search\StaffSalarySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Staff Salary Slip';
+$this->title = 'Employee Salary Slip';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

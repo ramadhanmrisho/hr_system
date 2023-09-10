@@ -10,11 +10,11 @@ use fedemotta\datatables\DataTables;
 /* @var $searchModel common\models\search\StaffSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Staff';
+$this->title = 'Employees List';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php
-if(Yii::$app->session->hasFlash('getSuccessgetSuccess')):?>
+if(Yii::$app->session->hasFlash('getSuccess')):?>
     <div class="alert alert-sm alert-success zoomIn" align="center">
         <?= Yii::$app->session->getFlash('getSuccess');?>
     </div>
@@ -26,14 +26,14 @@ if(Yii::$app->session->hasFlash('getSuccessgetSuccess')):?>
     ]
 )
 ?>
-<div class="staff-index">
+<div class="staff-index" style="font-family: Lucida Bright">
 
 
     <?php Pjax::begin(); ?>
 
     <?php if (\common\models\UserAccount::userHas(['HR','ADMIN'])){?>
     <p>
-        <?= Html::a('<span class="fa fa-user-plus"></span> Add New Staff', ['create'], ['class' => 'btn btn-success ']) ?>
+        <?= Html::a('<span class="fa fa-user-plus"></span> Add New Employee', ['create'], ['class' => 'btn btn-success ']) ?>
     </p>
 <?php }?>
     <?= DataTables::widget([
@@ -66,9 +66,10 @@ if(Yii::$app->session->hasFlash('getSuccessgetSuccess')):?>
         ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'fname',
-            'lname',
+            'employee_number',
+            ['attribute'=> 'fname','value'=>function($model){
+                return $model->fname.' '.$model->mname.' '.$model->lname;
+            },'label'=>'Full Name'],
          
             'phone_number',
              ['attribute'=> 'designation_id','value'=>function($model){
@@ -77,8 +78,10 @@ if(Yii::$app->session->hasFlash('getSuccessgetSuccess')):?>
             }],
          
             'gender',
-            'employee_number',
-            'category',
+            ['attribute'=> 'category','value'=>function($model){
+
+                return $model->category;
+            },'label'=>'Contract Category'],
 
             ['class' => 'yii\grid\ActionColumn',
 

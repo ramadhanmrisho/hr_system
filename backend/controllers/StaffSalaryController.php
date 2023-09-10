@@ -109,10 +109,11 @@ class StaffSalaryController extends Controller
         if ($model->load(Yii::$app->request->post()) ) {
 
 
+
             $check_salary_slip=StaffSalary::find()->where(['month'=>$model->month,'staff_id'=>$model->staff_id, 'date_format(created_at,"%Y")' => date('Y')])->exists();
             if($check_salary_slip){
 
-                Yii::$app->session->setFlash('getDanger','<span class="fa fa-warning">This Payslip is already exists! Please review the  generated slips</span>');
+                Yii::$app->session->setFlash('getDanger','<span class="fa fa-warning"> This Payslip is already exists! Please review the  generated slips</span>');
                 return $this->render('create', ['model' => $model,]);
             }
 
@@ -135,7 +136,6 @@ class StaffSalaryController extends Controller
                 $staff_allowances=StaffAllowance::find()->where(['staff_id'=>$model->staff_id])->all();
                 foreach ($staff_allowances as $posho){
                     $allowance_name=Allowance::find()->where(['id'=>$posho['allowance_id']])->one()->name;
-
                     if($allowance_name=='HOD Allowance'){
                         $hod_allowance_id=Allowance::find()->where(['name'=>$allowance_name,'id'=>$posho['allowance_id']])->one()->id;
                         $hod_allowance=StaffAllowance::find()->where(['staff_id'=>$model->staff_id,'allowance_id'=>$hod_allowance_id])->exists();
@@ -166,19 +166,6 @@ class StaffSalaryController extends Controller
                             $house_allowance_amount=0;
                         }
                     }
-
-                    if($allowance_name=='Teaching Allowance'){
-                        $teaching_allowance_id=Allowance::find()->where(['name'=>$allowance_name,'id'=>$posho['allowance_id']])->one()->id;
-                        $teaching_allowance=StaffAllowance::find()->where(['staff_id'=>$model->staff_id,'allowance_id'=>$teaching_allowance_id])->exists();
-                        if ($teaching_allowance){
-                            $teaching_allowance_amount=Allowance::find()->where(['id'=>$teaching_allowance_id])->sum('amount');
-                        }
-                        else{
-                            $teaching_allowance_amount=0;
-                        }
-
-                    }
-
                     if($allowance_name=='COOK ALLOWANCE'){
                         $cooking_allowance_id=Allowance::find()->where(['name'=>$allowance_name,'id'=>$posho['allowance_id']])->one()->id;
                         $cooking_allowance=StaffAllowance::find()->where(['staff_id'=>$model->staff_id,'allowance_id'=>$cooking_allowance_id])->exists();
@@ -202,41 +189,29 @@ class StaffSalaryController extends Controller
 
                     }
 
-
-
-
                 }
             }
 
 
-
-
             $paye=$staff->paye;
-            $helsb=$staff->helsb;
+            $helsb=!empty($staff->helsb)?$staff->helsb:0;
             $nssf=$staff->nssf;
             $nhif=$staff->nhif;
+
             $helsb1=!empty($helsb)?$helsb:0;
             $nssf1=!empty($nssf)?$nssf:0;
-            $TUGHE1=!empty($TUGHE)?$TUGHE:0;
-            $total_deduction=$paye+$nhif+$helsb1+$nssf1+ $TUGHE1;
+            $total_deduction=$paye+$nhif+$helsb1+$nssf1;
+//
+//            $hod_allowance_amount=isset($hod_allowance_amount)?$hod_allowance_amount:0;
+//            $transport_allowance_amount=isset($transport_allowance_amount)?$transport_allowance_amount:0;
+//            $house_allowance_amount=isset($house_allowance_amount)?$house_allowance_amount:0;
+//            $driver_allowance_amount=isset($driver_allowance_amount)?$driver_allowance_amount:0;
 
-
-
-
-
-
-
-            $hod_allowance_amount=isset($hod_allowance_amount)?$hod_allowance_amount:0;
-            $transport_allowance_amount=isset($transport_allowance_amount)?$transport_allowance_amount:0;
-            $house_allowance_amount=isset($house_allowance_amount)?$house_allowance_amount:0;
-            $teaching_allowance_amount=isset($teaching_allowance_amount)?$teaching_allowance_amount:0;
-            $cooking_allowance_amount=isset($cooking_allowance_amount)?$cooking_allowance_amount:0;
-            $driver_allowance_amount=isset($driver_allowance_amount)?$driver_allowance_amount:0;
-
-            $total_earnings=$staff->basic_salary+$hod_allowance_amount+$transport_allowance_amount+$house_allowance_amount+$teaching_allowance_amount+$cooking_allowance_amount+$driver_allowance_amount;
+            //$total_earnings=$staff->basic_salary+$hod_allowance_amount+$transport_allowance_amount+$house_allowance_amount+$driver_allowance_amount;
             $pdf = new Pdf([
                 'mode' => Pdf::MODE_CORE, // leaner size using standard fonts
                 'destination' => Pdf::DEST_DOWNLOAD,
+                'format' => [200, 150],
                 'content' =>$this->renderPartial('slip',[
                     'model'=>$model,
                     'staff'=>$staff_name,
@@ -252,40 +227,40 @@ class StaffSalaryController extends Controller
                     'nhif'=>Yii::$app->formatter->asDecimal($nhif,2),
                     'total_deduction'=>$total_deduction,
                     'month'=>$month,
-                    'hod_allowance_amount'=>!is_null($hod_allowance_amount)?$hod_allowance_amount:0,
-                    'transport_allowance_amount'=>!is_null($transport_allowance_amount)?$transport_allowance_amount:0,
-                    'house_allowance_amount'=>!is_null($house_allowance_amount)?$house_allowance_amount:0,
-                    'teaching_allowance_amount'=>!is_null($teaching_allowance_amount)?$teaching_allowance_amount:0,
-                    'cooking_allowance_amount'=>!is_null($cooking_allowance_amount)?$cooking_allowance_amount:0,
-                    'driver_allowance_amount'=>!is_null($driver_allowance_amount)?$driver_allowance_amount:0,
-                    'total_earnings'=>$total_earnings
+                    'staff_allowances'=>$staff_allowances_exists?$staff_allowances:'',
+                    'staff_allowances_exists'=>$staff_allowances_exists,
+
+//                    'hod_allowance_amount'=>!is_null($hod_allowance_amount)?$hod_allowance_amount:0,
+//                    'transport_allowance_amount'=>!is_null($transport_allowance_amount)?$transport_allowance_amount:0,
+//                    'house_allowance_amount'=>!is_null($house_allowance_amount)?$house_allowance_amount:0,
+//                    'driver_allowance_amount'=>!is_null($driver_allowance_amount)?$driver_allowance_amount:0,
+//                    'total_earnings'=>$total_earnings
 
                 ]),
 
 
                 'options' => [
                     'target'=>'_blank',
-//                    'showWatermarkImage' => true,
+                   'showWatermarkImage' => true,
                 ],
-
-
                 'filename'=>$staff_name.' '.date("F, Y"),
-                'cssInline' => '*,body{font-family:Times New Roman;font-size:11pt}',
+                'cssInline' => '*,body{font-family:Lucida Bright;font-size:10pt}',
 
                 'methods' => [
-                    'SetTitle' => 'KCOHAS Salary Slip',
-//                    'SetWatermarkImage' => [\yii\helpers\Url::to(['images/logo.png'])],
+                    'SetTitle' => 'Salary Slip',
+                    'SetWatermarkImage' => [\yii\helpers\Url::to(['../web/images/logo.png'])],
+                    //'SetWatermarkImage' => [Yii::getAlias('@web/images/pay.jpeg')],
                     'SetSubject' => 'Generating PDF files via yii2-mpdf extension has never been easy',
-                    'SetHeader' => ['Generated On: ' . date("r")],
-                    'SetFooter' => ['|Page {PAGENO}|'],
-                    'SetAuthor' => 'KCOHAS',
-                    'SetCreator' => 'KCOHAS',
+                    'SetHeader' => ['Generated On: ' . date("Y-m-d")],
+                   // 'SetFooter' => ['|Page {PAGENO}|'],
+                    'SetAuthor' => 'HR MIS',
+                    'SetCreator' => 'HR MIS',
                     'SetKeywords' => 'Krajee, Yii2, Export, PDF, MPDF, Output, Privacy, Policy, yii2-mpdf',
                 ]
             ]);
 
 
-            $folderPath = "kcohas/backend/web/slips/";
+            $folderPath = "../web/slips/";
             $fileName=strtotime(date('Y-m-d H:i:s'));
             $file = $folderPath . $fileName.'.'.'pdf';
             file_put_contents($file, $pdf->render());
@@ -294,7 +269,7 @@ class StaffSalaryController extends Controller
             //SAVING SALARY SLIPS INFO
             $model->created_by=Yii::$app->user->identity->getId();
             $model->salary_slip=$fileName;
-            $model->save();
+            $model->save(false);
 
             return $this->redirect(['view', 'id' => $model->id]);
 

@@ -19,7 +19,7 @@ class StaffSearch extends Staff
     {
         return [
             [['id', 'identity_type_id', 'region_id', 'district_id', 'designation_id', 'department_id', 'allowance_id','bank_account_number', 'alternate_phone_number', 'created_by'], 'integer'],
-            [[ 'helsb', 'paye', 'nssf', 'nhif'], 'string'],
+            [[ 'helsb', 'paye', 'nssf', 'nhif'], 'safe'],
             [['fname', 'mname', 'lname', 'dob', 'place_of_birth', 'phone_number', 'id_number', 'marital_status', 'email', 'gender', 'employee_number', 'category',  'village', 'programme_pursued', 'home_address', 'name_of_high_education_level','date_employed', 'account_name', 'created_at', 'updated_at','contract_end_date','contract_termination_date'], 'safe'],
         ];
     }

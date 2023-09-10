@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="designation-form">
-    <div class="panel panel-default fadeIn" style="border-top:4px solid dodgerblue; border-radius: 20px; padding:20px;">
+    <div class="panel panel-default fadeIn" style="border-top:4px solid dodgerblue; padding:20px;">
         <div class="panel-body" style="font-weight: bold;">
     <?php $form = ActiveForm::begin(); ?>
 <fieldset>

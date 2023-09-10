@@ -113,7 +113,8 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
            <?= $form->field($model, 'employee_number',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
            <?= $form->field($model, 'designation_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::className(), ['data'=> ArrayHelper::map(\common\models\Designation::find()->all(),'id','name'),             'options'=>['placeholder'=>'--Select--']]) ?>
            <?= $form->field($model, 'paye',['options'=>['class'=>'money required']])->textInput(['id'=>'money-value1']) ?>
-           <?= $form->field($model, 'account_name',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
+           <?= $form->field($model, 'account_name',['options'=>['class'=>'required']])->dropDownList([ 'NMB' => 'NMB', 'CRDB' => 'CRDB','NBC'=>'NBC','AMANA BANK'=>'AMANA BANK','AZANIA'=>'AZANIA' ], ['prompt' => '']) ?>
+
        </div>
 
        <div class="col-md-3">
@@ -153,7 +154,6 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                    ],
                ]
            ])->label(false)?>
-           <?= $form->field($model, 'helsb')->textInput(['id'=>'money-value4']) ?>
            <?= $form->field($model, 'contract_termination_date')->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
 
        </div>

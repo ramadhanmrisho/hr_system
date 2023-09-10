@@ -17,14 +17,14 @@ $this->params['breadcrumbs'][] = $this->title;
     ]
 )
 ?>
-<div class="allowance-index">
+<div class="allowance-index" style="font-family: LUcida Bright">
 
 
     <?php Pjax::begin(); ?>
 
 
     <p>
-        <?= Html::a('<span class="fa fa-plus">Create Allowance</span>', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('<span class="fa fa-plus">Add New Allowance</span>', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= \fedemotta\datatables\DataTables::widget([
@@ -34,7 +34,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'name',
-            'amount',
+
+            ['attribute'=>'amount','format'=>'html','value'=>function($model){
+                return  Yii::$app->formatter->asDecimal(intval($model->amount),2);
+            },'label'=>'Amount [Tsh.]'],
             'created_at',
             'updated_at',
 

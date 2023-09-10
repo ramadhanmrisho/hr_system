@@ -24,19 +24,19 @@ $fieldOptions1 = [
 
     </strong>
 
-    <div class="login-box" style="height: 60px">
+    <div class="login-box" style="height: 60px;font-family: Lucida Bright" >
         <div class="login-logo">
 
         </div>
         <!-- /.login-logo -->
-        <div class="panel panel-default fadeIn" style="border-bottom:5px solid purple; border-radius: 25px; padding:10px;">
+        <div class="panel panel-default fadeIn" style="border-bottom:5px solid dodgerblue; border-radius: 25px; padding:10px;">
             <div class="panel-body ">
-                <div class="wrap-inner" style="border-top: 5px solid  #b300b3;">
+                <div class="wrap-inner" style="border-top: 5px solid  dodgerblue;">
                     <div class="login-box-body"  style="height: 450px"  style="alignment:left">
         <div class="login-box-body" style="height: 450px" >
 
             <div style="text-align: center">
-                <img src="images/logo.png" width="150px">
+                <img src="images/pay.jpeg" width="100px"  height="100px" class="img-circle">
             </div>
 
             <div class="login-box-msg" style="color:steelblue"><b style="font-family: 'Bell MT'">Request Password Reset</b></div>
@@ -48,7 +48,7 @@ $fieldOptions1 = [
 
 
                     <?= $form->field($model, 'email',['template'=>'{beginLabel}{labelTitle}{endLabel}<div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-envelope" style="color:purple;"></i></span>{input}</div>{error}{hint}'])->textInput(['placeholder'=>'Email'])->label(false) ?>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-envelope" style="color:dodgerblue;"></i></span>{input}</div>{error}{hint}'])->textInput(['placeholder'=>'Email'])->label(false) ?>
 
 
 
@@ -89,6 +89,6 @@ $fieldOptions1 = [
 </div>
 
         <div class="text-center">
-            <strong style="color: whitesmoke" >Copyright &copy; <b style="color: whitesmoke">KABANGA COHAS</b> <?= date("Y") ?>
+            <strong style="color: whitesmoke" >Copyright &copy; <b style="color: whitesmoke">HR & PAYROLL MIS</b> <?= date("Y") ?>
             </strong>
         </div>

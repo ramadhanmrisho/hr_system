@@ -30,13 +30,13 @@ $this ->beginBody();
 
 </strong>
 
-<div class="login-box" style="height:60px; width:600px; overflow:unset">
+<div class="login-box" style="height:65px; width:358px;font-family: Lucida Bright overflow:unset">
    
     <div class="login-logo">
 
     </div>
     <!-- /.login-logo -->
-    <div class="panel panel-default fadeIn" style="padding:20px;">
+    <div class="panel panel-default fadeIn" style="padding:20px;border-radius: 25px;">
         <div class="panel-body ">
     <div class="wrap-inner" style="border-bottom: 5px solid dodgerblue;border-top: 5px solid  dodgerblue;">
     <!--kibox cha ndani-->
@@ -90,7 +90,9 @@ $this ->beginBody();
 </div><!-- /.login-box -->
 
 <?php  $this->endBody() ?>
-   
+
+</div>
+
 
 
 

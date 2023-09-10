@@ -123,11 +123,11 @@ class StaffController extends Controller
             $model->fname=strtoupper($model->fname);
             $model->mname=strtoupper($model->mname);
             $model->lname=strtoupper($model->lname);
-            $model->basic_salary=str_replace(',','',$model->basic_salary);
-            $model->nhif=str_replace(',','',$model->nhif);
-            $model->paye=str_replace(',','',$model->paye);
-            $model->helsb=str_replace(',','',$model->helsb);
-            $model->nssf=str_replace(',','',$model->nssf);
+            $model->basic_salary=(int)str_replace(',','',$model->basic_salary);
+            $model->nhif=(int)str_replace(',','',$model->nhif);
+            $model->paye=(int)str_replace(',','',$model->paye);
+            $model->helsb=(int)str_replace(',','',$model->helsb);
+            $model->nssf=(int)str_replace(',','',$model->nssf);
 
 
             //SAVING STAFF DETAILS
@@ -237,7 +237,7 @@ var_dump($model->getErrors());
 
             $model->photo = Uploadedfile::getInstance($model, 'photo');
             if (!empty($model->photo)) {
-                $model->photo->saveAs('kcohas/backend/web/staff_photo/' . $model->photo->baseName. '.' . $model->photo->extension);
+                $model->photo->saveAs('../web/staff_photo/' . $model->photo->baseName. '.' . $model->photo->extension);
             }
 
             if (empty($model->photo)){
@@ -254,9 +254,8 @@ var_dump($model->getErrors());
 
                 }
             }
-          if ($model->save()){
-
-                $user=UserAccount::findOne(['user_id' =>$model->id,'category'=>'staff']);
+          if ($model->save(false)){
+                $user=UserAccount::findOne(['user_id' =>$model->id]);
                 $user->username=$model->employee_number;
                 $user->password=Yii::$app->security->generatePasswordHash($model->phone_number);
                 $user->save(false);

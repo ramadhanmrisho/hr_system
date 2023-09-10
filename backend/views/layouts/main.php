@@ -139,7 +139,7 @@ desired effect
                         </ul>
                     </li>
                     <!-- User Account Menu -->
-                    <li class="dropdown user user-menu">
+                    <li class="dropdown user user-menu" style="font-family: Lucida Bright">
 
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -259,11 +259,7 @@ desired effect
                         ["label" => "Home", "url" => ["site/index"], "icon" => "home"],
                         ["label" => "Manage Employees", "url" =>"#", "icon" => "fa fa-users",'visible'=> UserAccount::userHas(['HR','ADMIN','PR','ACC','HOD']),
                             'items'=>[
-                                ["label"=>"View Employees","url"=>"#","icon"=>"fa fa-user-plus",
-                                    "items"=>[
-                                        ["label" => "All Employees", "url" => ["staff/index"], "icon" => "users"],
-//                                        ["label" => "Non Academic Staff", "url" => ["staff/index",'category'=>'non_academic'], "icon" => "users"],
-                                    ]],
+                                ["label" => "All Employees", "url" => ["staff/index"], "icon" => "users"],
                                 ["label"=>"Employee Designation","url"=>["designation/index"],"icon"=>"fa fa-linux"],
                                 ["label"=>"Employee Allowances","url"=>["allowance/index"],"icon"=>"money",'visible'=> UserAccount::userHas(['HR','ADMIN','PR','ACC']),],
                             ],
@@ -275,9 +271,9 @@ desired effect
 
 
 
-                        ["label" => "Payroll", "url" => "#", "icon" => "book",
+                        ["label" => "Manage Payroll", "url" => "#", "icon" => "book",
                             "items"=>[
-                                ["label"=>"Salary Generate","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],
+                                ["label"=>"Employee Salary Slips","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],
                                 ["label" => "Salary Advance", "url" => ["department/index"], "icon" => "institution"],
                             ],
                             ],

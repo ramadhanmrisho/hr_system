@@ -13,7 +13,7 @@ use yii\grid\GridView;
 /* @var $model common\models\Staff */
 
 $this->title = 'Employee Number :'.$model->employee_number;
-$this->params['breadcrumbs'][] = ['label' => 'Staff', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Employees List', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php
@@ -285,6 +285,7 @@ if($attachment_exist){
         'dataProvider' => $attachments,'summary'=>'',
         'tableOptions' => ['class' => 'table table-borderless table-striped'],
         'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
             ['attribute' => 'attached_file','format'=>'raw', 'value' => function($model){ return Html::a('<i class="glyphicon glyphicon-paperclip"></i> '. AttachmentsType::findOne($model->attachment_type_id)->name,Yii::getAlias('@web').'/employee_attachments/'.$model->attached_file,['target'=>'blank']);}],
             ['class' => 'yii\grid\ActionColumn','template'=>'{delete} {reattach}','buttons'=>[
 
@@ -335,7 +336,7 @@ echo "<div id='modalContent'></div>";
 Modal::end(); ?>
 
 <?php
-echo Tabs::widget([
+echo '<h5 style="font-family: Lucida Bright">'. Tabs::widget([
     'items' => [
         [
             'label' => 'STAFF DETAILS',

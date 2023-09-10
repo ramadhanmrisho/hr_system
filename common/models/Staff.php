@@ -89,7 +89,8 @@ class Staff extends \yii\db\ActiveRecord
             [['fname', 'lname', 'dob', 'place_of_birth', 'phone_number', 'identity_type_id', 'id_number', 'marital_status', 'email', 'gender', 'employee_number', 'category', 'region_id', 'district_id',  'home_address', 'name_of_high_education_level', 'designation_id', 'department_id', 'salary_scale', 'basic_salary', 'paye', 'nhif', 'date_employed', 'account_name', 'bank_account_number', 'created_by'], 'required'],
             [['dob', 'date_employed', 'created_at', 'updated_at','allowances','photo','allowance_id','village','TUGHE'], 'safe'],
             [['identity_type_id', 'region_id', 'district_id', 'designation_id', 'department_id', 'alternate_phone_number', 'created_by'], 'integer'],
-            [[ 'basic_salary', 'paye', 'nssf', 'nhif'], 'string'],
+            [[ 'basic_salary','nssf'], 'safe'],
+           // [[ 'basic_salary', 'paye', 'nssf', 'nhif'], 'safe'],
             [['marital_status', 'gender', 'category'], 'string'],
             [['fname', 'mname', 'lname', 'place_of_birth', 'bank_account_number',], 'string', 'max' => 255],
             [['phone_number'], 'string', 'max' => 14],
@@ -98,6 +99,7 @@ class Staff extends \yii\db\ActiveRecord
             [['employee_number'], 'unique'],
             //NEXT OF KIN
             [['next_of_kin_name', 'relationship', 'phone', 'next_of_kin_address','spouse_name','spouse_phone_number','dependant_information','attachments'], 'safe'],
+
             //DEPENDANT INFO
             //[['dependant_name', 'dependant_gender', 'date_of_birth','dependant_information'], 'safe'],
 
@@ -143,13 +145,9 @@ class Staff extends \yii\db\ActiveRecord
             'department_id' => 'Department Name',
             'basic_salary' => 'Basic Salary',
             'allowance_id' => 'Allowance',
-
-            'paye' => 'PAYE',
-            'nssf' => 'NSSF',
-            'nhif' => 'NHIF',
-            'TUGHE' => 'TUGHE',
+            'nssf' => 'NSSF Number',
             'date_employed' => 'Date Employed',
-            'account_name' => 'Account Name',
+            'account_name' => 'Bank Name',
             'bank_account_number' => 'Bank Account Number',
             'alternate_phone_number' => 'Alternate Phone Number',
             'created_by' => 'Created By',
