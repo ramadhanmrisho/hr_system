@@ -462,6 +462,7 @@ var_dump($model->getErrors());
         if ($this->request->isPost && $model->load($this->request->post())) {
 
 
+            $model->created_by=Yii::$app->user->getId();
             $model->staff_id=$id;
             $model->attached_file=UploadedFile::getInstance($model,'attached_file');
             $model->attached_file->saveAs('employee_attachments/'. $model->attached_file->baseName. '.' . $model->attached_file->extension);

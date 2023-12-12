@@ -146,6 +146,7 @@ class Staff extends \yii\db\ActiveRecord
             'basic_salary' => 'Basic Salary',
             'allowance_id' => 'Allowance',
             'nssf' => 'NSSF Number',
+            'nhif' => 'Has NHIF',
             'date_employed' => 'Date Employed',
             'account_name' => 'Bank Name',
             'bank_account_number' => 'Bank Account Number',
@@ -282,5 +283,21 @@ class Staff extends \yii\db\ActiveRecord
     public function setPassword($password)
     {
         $this->password = Yii::$app->security->generatePasswordHash($password);
+    }
+
+
+
+    public static function calculatePAYE($totalEarnings) {
+        if ($totalEarnings <= 270000) {
+            return 0;
+        } elseif ($totalEarnings <= 520000) {
+            return ($totalEarnings - 270000) * 0.08;
+        } elseif ($totalEarnings <= 760000) {
+            return 20000 + (($totalEarnings - 520000) * 0.2);
+        } elseif ($totalEarnings <= 1000000) {
+            return 68000 + (($totalEarnings - 760000) * 0.25);
+        } else {
+            return 128000 + (($totalEarnings - 1000000) * 0.3);
+        }
     }
 }

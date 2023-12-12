@@ -107,51 +107,99 @@ if(Yii::$app->session->hasFlash('reqDanger')):?>
 
 
                             <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-                            <script type="text/javascript">
-                                google.charts.load("current", {packages:["corechart"]});
-                                google.charts.setOnLoadCallback(drawChart);
-                                function drawChart() {
-                                    var data = google.visualization.arrayToDataTable([
+<!--                            <script type="text/javascript">-->
+<!--                                google.charts.load("current", {packages:["corechart"]});-->
+<!--                                google.charts.setOnLoadCallback(drawChart);-->
+<!--                                function drawChart() {-->
+<!--                                    var data = google.visualization.arrayToDataTable([-->
+<!---->
+<!--                                        ['Department', 'Number of Staff'],-->
+<!--                                        ['Administration',     11],-->
+<!--                                        ['Human Resource',      2],-->
+<!--                                        ['ICT',  2],-->
+<!--                                        ['Procurement', 2],-->
+<!--                                        ['Other',    7]-->
+<!--                                    ]);-->
+<!---->
+<!--                                    var options = {-->
+<!--                                        title: 'Employee by Departments',-->
+<!--                                        is3D: true,-->
+<!--                                    };-->
+<!---->
+<!--                                    var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));-->
+<!--                                    chart.draw(data, options);-->
+<!--                                }-->
+<!--                            </script>-->
+                    <script type="text/javascript">
+                        google.charts.load("current", { packages: ["corechart"] });
+                        google.charts.setOnLoadCallback(drawChart);
 
-                                        ['Department', 'Number of Staff'],
-                                        ['Administration',     11],
-                                        ['Human Resource',      2],
-                                        ['ICT',  2],
-                                        ['Procurement', 2],
-                                        ['Other',    7]
-                                    ]);
-
-                                    var options = {
-                                        title: 'Employee by Departments',
-                                        is3D: true,
-                                    };
-
-                                    var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
-                                    chart.draw(data, options);
+                        function drawChart() {
+                            var jsonData = [
+                                ['Department', 'Number of Staff'],
+                                <?php
+                                // Fetch data directly using Yii2 Active Record
+                                $data = \common\models\Staff::find()
+                                    ->select(['department.name as Department', 'COUNT(*) as `Number of Staff`'])
+                                    ->leftJoin('department', 'staff.department_id = department.id')
+                                    ->groupBy('staff.department_id')
+                                    ->asArray()
+                                    ->all();
+                                foreach ($data as $row) {
+                                    echo '["' . $row['Department'] . '", ' . (int)$row['Number of Staff'] . '],';
                                 }
-                            </script>
-                        <script type="text/javascript">
-                            google.charts.load("current", {packages:["corechart"]});
-                            google.charts.setOnLoadCallback(drawChart);
-                            function drawChart() {
-                                var data = google.visualization.arrayToDataTable([
-                                    ['Gender', 'Number'],
-                                    ['Male',     22],
-                                    ['Female',      12],
-                                ]);
+                                ?>
+                            ];
 
-                                var options = {
-                                    title: 'Employees by Gender',
-                                    is3D: true,
-                                };
+                            var data = google.visualization.arrayToDataTable(jsonData);
 
-                                var chart = new google.visualization.PieChart(document.getElementById('piechart_3c'));
-                                chart.draw(data, options);
-                            }
-                        </script>
+                            var options = {
+                                title: 'Employee by Departments',
+                                is3D: true,
+                            };
+
+                            var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+                            chart.draw(data, options);
+                        }
+                    </script>
+
+                    <script type="text/javascript">
+                        google.charts.load("current", {packages:["corechart"]});
+                        google.charts.setOnLoadCallback(drawChart);
+
+                        function drawChart() {
+                            var jsonData = [
+                                ['Gender', 'Number'],
+                                <?php
+                                // Fetch data directly using Yii2 Active Record
+                                $data = \common\models\Staff::find()
+                                    ->select(['gender', 'COUNT(*) as `Number`'])
+                                    ->groupBy('gender')
+                                    ->asArray()
+                                    ->all();
+
+                                foreach ($data as $row) {
+                                    $gender = ($row['gender'] === 'Male') ? 'Male' : 'Female'; // Assuming 'M' for Male and 'F' for Female, update accordingly
+                                    echo '["' . $gender . '", ' . (int)$row['Number'] . '],';
+                                }
+                                ?>
+                            ];
+
+                            var data = google.visualization.arrayToDataTable(jsonData);
+
+                            var options = {
+                                title: 'Employees by Gender',
+                                is3D: true,
+                            };
+
+                            var chart = new google.visualization.PieChart(document.getElementById('piechart_3c'));
+                            chart.draw(data, options);
+                        }
+                    </script>
 
 
-                    </div>
+
+                </div>
     <div class="box box-info" >
                 <div class="box-body">
                     <div class="col-lg-6 col-xs-6">

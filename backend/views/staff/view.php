@@ -74,7 +74,10 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
     <?php echo '</div>'; ?>
     <?php Modal::end();?>
     <!-- Edit photo -->
+<?php
 
+echo \common\models\Staff::calculatePAYE(760000);
+?>
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="col-sm-6">
@@ -135,10 +138,10 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
                             return  Yii::$app->formatter->asDecimal(intval($model->paye),2);
                         }],
                         ['attribute'=>'nssf','format'=>'html','value'=>function($model){
-                            return  Yii::$app->formatter->asDecimal(intval($model->nssf),2);
+                            return  $model->nssf;
                         }],
                         ['attribute'=>'nhif','format'=>'html','value'=>function($model){
-                            return  Yii::$app->formatter->asDecimal(intval($model->nhif),2);
+                        return  $model->nhif==1?"Yes":"No";
                         }],
                         'date_employed',
                         'account_name',

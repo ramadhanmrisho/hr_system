@@ -30,7 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'student_id',
-           ['attribute':'academic_year_id','value':'academicYear.name']
             'course_id',
             'createdBy.fullName',
             'created_at:datetime',

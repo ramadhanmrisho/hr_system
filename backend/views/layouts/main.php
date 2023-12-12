@@ -267,12 +267,15 @@ desired effect
                         ["label"=>"My Profile","url"=>["staff/view",'id'=>Yii::$app->user->identity->user_id],"icon"=>"user"],
 
                         ["label"=>"My PaySlips","url"=>["staff-salary/index"],"icon"=>"fa fa-money"],
+                        ["label"=>"Departments","url"=>["department/index"],"icon"=>"fa fa-building"],
 
 
 
 
                         ["label" => "Manage Payroll", "url" => "#", "icon" => "book",
                             "items"=>[
+                                ["label"=>"Attendance","url"=>["attendance/index"],"icon"=>"calendar"],
+                                ["label"=>"General Deductions","url"=>["deductions-percentage/index"],"icon"=>"close"],
                                 ["label"=>"Employee Salary Slips","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],
                                 ["label" => "Salary Advance", "url" => ["department/index"], "icon" => "institution"],
                             ],
@@ -283,7 +286,8 @@ desired effect
 
 
 
-                          ["label"=>"Attendance","url"=>["time-table/index"],"icon"=>"calendar"],
+
+                          ["label"=>"Attachments Type","url"=>["attachments-type/index"],"icon"=>"file"],
                           ["label"=>"Leaves","url"=>["time-table/index"],"icon"=>"plane"],
 
 //                        ["label"=>"Continuous Assessment","url"=>'#',"icon"=>"file",'visible'=> UserAccount::userHas(['HOD','AS','PR','ADMIN','ACADEMIC','AO','EO']),

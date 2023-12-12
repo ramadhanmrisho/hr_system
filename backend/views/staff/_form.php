@@ -112,7 +112,7 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
        <div class="col-md-3">
            <?= $form->field($model, 'employee_number',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
            <?= $form->field($model, 'designation_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::className(), ['data'=> ArrayHelper::map(\common\models\Designation::find()->all(),'id','name'),             'options'=>['placeholder'=>'--Select--']]) ?>
-           <?= $form->field($model, 'paye',['options'=>['class'=>'money required']])->textInput(['id'=>'money-value1']) ?>
+<!--           --><?php //= $form->field($model, 'paye',['options'=>['class'=>'money required']])->textInput(['id'=>'money-value1']) ?>
            <?= $form->field($model, 'account_name',['options'=>['class'=>'required']])->dropDownList([ 'NMB' => 'NMB', 'CRDB' => 'CRDB','NBC'=>'NBC','AMANA BANK'=>'AMANA BANK','AZANIA'=>'AZANIA' ], ['prompt' => '']) ?>
 
        </div>
@@ -120,16 +120,15 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
        <div class="col-md-3">
 
            <?= $form->field($model, 'date_employed',['options'=>['class'=>'required']])->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
-           <?= $form->field($model, 'contract_end_date',['options'=>['class'=>'required']])->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
+           <?= $form->field($model, 'contract_end_date')->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
 
-           <?= $form->field($model, 'nssf')->textInput(['id'=>'money-value2']) ?>
            <?= $form->field($model, 'bank_account_number',['options'=>['class'=>'required']])->textInput() ?>
        </div>
 
        <div class="col-md-3">
            <?= $form->field($model, 'name_of_high_education_level',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
            <?= $form->field($model, 'basic_salary'  ,['options'=>['class'=>'required']])->textInput(['id'=>'money-value']) ?>
-           <?= $form->field($model, 'nhif',['options'=>['class'=>'required']])->textInput(['id'=>'money-value3']) ?>
+<!--           --><?php //= $form->field($model, 'nhif',['options'=>['class'=>'required']])->textInput(['id'=>'money-value3']) ?>
            <?= $form->field($model, 'category',['options'=>['class'=>'required']])->dropDownList([ 'Permanent' => 'Permanent', 'Temporary' => 'Temporary', ], ['prompt' => '']) ->label('Contract Category')?>
        </div>
 
@@ -154,7 +153,9 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                    ],
                ]
            ])->label(false)?>
-           <?= $form->field($model, 'contract_termination_date')->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
+<!--           --><?php //= $form->field($model, 'contract_termination_date')->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
+
+           <?= $form->field($model, 'nssf',['options'=>['class'=>'required']])->textInput() ?>
 
        </div>
 
@@ -183,7 +184,7 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                <legend style="font-weight: bold;color: #0d6aad">Dependants Info:</legend>
 
                <?=  $form->field($model,'dependant_information')->widget(multipleinput\MultipleInput::className(),[
-                   'max' => 4,
+                   'max' => 3,
                    'columns'=>[
                        ['name'=>'dependant_name',
                            'title'=>'Dependent Name',

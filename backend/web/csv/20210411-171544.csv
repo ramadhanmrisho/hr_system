@@ -1,4 +1,0 @@
-register_number,prisoner_name,criminal_case_number,occupation,residence,gender,date of birth,nationality,date_of_sentence,name_of_the_court,region,date_of_admission,date_of_discharge,period_of_remission,date_of_discharge_with_remission,prison_name,offence,sentence
-T546,omary Gabrilel,C/2020,Mwalim,Dar,M,24-12-2020,Bolivian,23-12-2019,KISUTU,Dodoma,23-12-2019,23-12-2018,3,23-12-2019,SEGEREA,Offences against the public,Miezi kumi
-T547,jUMA Gabrilel,C/2021,Mwalim,Dar,M,24-12-2021,Bolivian,23-12-2020,KISUTU,Arusha,23-12-2020,23-12-2019,3,23-12-2020,SEGEREA,Political Offences,miezi minne
-T548,Angelus Gabrilel,C/2022,Mwalim,Dar,M,24-12-2022,Bolivian,23-12-2021,KISUTU,Dodoma,23-12-2021,23-12-2020,3,23-12-2021,SEGEREA,Political Offences,Hana hatia

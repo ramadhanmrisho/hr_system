@@ -50,13 +50,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     'style' => 'color:red'
                 ],
                 'buttons' => [
-
-
                     //view button
                     'view' => function ($url, $model) {
                         return Html::a('<span class="fa fa-open-eye"></span>View More', $url, [
                             'title' => Yii::t('app', 'View'),
-                            'class'=>'btn btn-primary btn-xs',]);
+                            'class'=>'btn btn-primary btn-xs']);
 
 
                     },
