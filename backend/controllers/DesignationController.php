@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\UserAccount;
 use Yii;
 use common\models\Designation;
 use common\models\search\DesignationSearch;
@@ -78,7 +79,8 @@ class DesignationController extends Controller
     {
         $model = new Designation();
 
-        $model->created_by=Yii::$app->user->identity->getId();
+        $userID=UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
+        $model->created_by=$userID;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }

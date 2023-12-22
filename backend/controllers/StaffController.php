@@ -233,7 +233,8 @@ var_dump($model->getErrors());
 
         $model->created_by=Yii::$app->user->identity->getId();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+
 
             $model->photo = Uploadedfile::getInstance($model, 'photo');
             if (!empty($model->photo)) {
@@ -243,27 +244,62 @@ var_dump($model->getErrors());
             if (empty($model->photo)){
                 $model->photo = $model->getOldAttribute('photo');
             }
-            if (!empty($model->allowance_id)){
+
+            if (!in_array("", $model->allowance_id, true)){
                 foreach ($model->allowance_id as $allowance) {
                     $alowance_model = new StaffAllowance();
                     $alowance_model->staff_id = $model->id;
                     $alowance_model->allowance_id = $allowance;
                     $model->allowance_id = $allowance;
-                    $alowance_model->created_by = Yii::$app->user->identity->getId();
+                    $userID=UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
+                    $alowance_model->created_by = $userID;
                     $alowance_model->save(false);
-
                 }
             }
+
+
+            //SAVING DEPENDANT INFO
+            if (!empty($model->dependant_information)) {
+                foreach ($model->dependant_information as $dependant) {
+                    $dependant_model = new Dependants();
+                    $dependant_model->name = $dependant['dependant_name'];
+                    $dependant_model->staff_id = $model->id;
+                    $dependant_model->gender = $dependant['dependant_gender'];
+                    $dependant_model->dob = $dependant['date_of_birth'];
+                    $dependant_model->save(false);
+                }
+            }
+            //SAVING NEXT OF KIN
+            if(isset($model->next_of_kin_name)) {
+                $next_of_kin = new NextOfKin();
+                $next_of_kin->name = $model->next_of_kin_name;
+                $next_of_kin->relationship = $model->relationship;
+                $next_of_kin->staff_id = $model->id;
+                $next_of_kin->phone_number = $model->phone;
+                $next_of_kin->physical_address = $model->next_of_kin_address;
+                $next_of_kin->save(false);
+            }
+
+            if (isset($model->spouse_name)) {
+                //SPOUSE INFO
+                $spouse_model = new EmployeeSpouse();
+                $spouse_model->name = $model->spouse_name;
+                $spouse_model->phone_number = $model->spouse_phone_number;
+                $spouse_model->staff_id = $model->id;
+                $spouse_model->save(false);
+            }
+
           if ($model->save(false)){
-                $user=UserAccount::findOne(['user_id' =>$model->id]);
-                $user->username=$model->employee_number;
-                $user->password=Yii::$app->security->generatePasswordHash($model->phone_number);
-                $user->save(false);
+               $user=UserAccount::findOne(['user_id' =>$model->id]);
+              if ( $model->isAttributeChanged($model->employee_number))$user->username=$model->employee_number;
+              if ($model->isAttributeChanged($model->phone_number))$user->password=Yii::$app->security->generatePasswordHash($model->phone_number);
+              if ($model->isAttributeChanged($model->employee_number) || $model->isAttributeChanged($model->phone_number)){
+                  $user->save(false);
+              }
                 //Yii::$app->db->createCommand()->update('user_account', ['username' =>$model->employee_number], ['user_id' =>$model->id])->execute();
                 Yii::$app->session->setFlash('getSuccess','Staff Details Updated Successfully!');
                 return $this->redirect(['view', 'id' => $model->id]);
             }
-
         }
 
         return $this->render('update', [

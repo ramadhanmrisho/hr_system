@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\UserAccount;
 use Yii;
 use common\models\Department;
 use common\models\search\DepartmentSearch;
@@ -77,7 +78,8 @@ class DepartmentController extends Controller
     {
         $model = new Department();
 
-        $model->created_by=Yii::$app->user->identity->getId();
+        $userID=UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
+        $model->created_by=$userID;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }

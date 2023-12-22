@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'abbreviation',
               ['attribute'=>'created_by','value'=>function($model){
 
-            $staff_id=\common\models\UserAccount::find()->where(['id'=>$model->created_by])->one()->user_id;
+            $staff_id=\common\models\UserAccount::find()->where(['user_id'=>$model->created_by])->one()->user_id;
           
             $staff=\common\models\Staff::find()->where(['id'=>$staff_id])->one();
 

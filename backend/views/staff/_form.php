@@ -95,6 +95,7 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
 
                 </div>
 
+
                 <div class="col-md-3">
                     <?php if($model->isNewRecord){?>
                     <?= $form->field($model, 'photo',['options'=>['class'=>'required']])->widget(\kartik\file\FileInput::className(),[
@@ -102,7 +103,9 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                         'pluginOptions' => ['allowedFileExtensions' => ['jpg','png','jepg'], 'showUpload' => false]
                     ]); ?>
 <?php }?>
+
                 </div>
+
             </fieldset>
             <br>
 
@@ -114,14 +117,11 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
            <?= $form->field($model, 'designation_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::className(), ['data'=> ArrayHelper::map(\common\models\Designation::find()->all(),'id','name'),             'options'=>['placeholder'=>'--Select--']]) ?>
 <!--           --><?php //= $form->field($model, 'paye',['options'=>['class'=>'money required']])->textInput(['id'=>'money-value1']) ?>
            <?= $form->field($model, 'account_name',['options'=>['class'=>'required']])->dropDownList([ 'NMB' => 'NMB', 'CRDB' => 'CRDB','NBC'=>'NBC','AMANA BANK'=>'AMANA BANK','AZANIA'=>'AZANIA' ], ['prompt' => '']) ?>
-
        </div>
 
        <div class="col-md-3">
-
            <?= $form->field($model, 'date_employed',['options'=>['class'=>'required']])->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
            <?= $form->field($model, 'contract_end_date')->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
-
            <?= $form->field($model, 'bank_account_number',['options'=>['class'=>'required']])->textInput() ?>
        </div>
 
@@ -156,6 +156,8 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
 <!--           --><?php //= $form->field($model, 'contract_termination_date')->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
 
            <?= $form->field($model, 'nssf',['options'=>['class'=>'required']])->textInput() ?>
+           <?= $form->field($model, 'has_ot',['options'=>['class'=>'required']])->dropDownList([ 'Yes' => 'Yes', 'No' => 'No' ], ['prompt' => '']) ?>
+
 
        </div>
 

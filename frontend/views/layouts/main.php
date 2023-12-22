@@ -230,13 +230,7 @@ desired effect
                     <img src="images/logo.png" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p><?php
-
-                        if (!Yii::$app->user->isGuest) {
-                          echo 'STUDENT';
-
-
-                        }?></p>
+                    <p></p>
                     <!-- Status -->
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>

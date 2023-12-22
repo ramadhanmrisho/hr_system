@@ -76,7 +76,7 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
     <!-- Edit photo -->
 <?php
 
-echo \common\models\Staff::calculatePAYE(760000);
+
 ?>
     <div class="panel panel-default">
         <div class="panel-body">
@@ -165,7 +165,7 @@ echo \common\models\Staff::calculatePAYE(760000);
 
 <?php $this->beginBlock('allowance')?>
 <?php $dataProvider=new \yii\data\ActiveDataProvider(['query'=>\common\models\StaffAllowance::find()->where(['staff_id'=>$model->id])]);
-if (!empty($dataProvider)){
+if (isset($dataProvider)){
     echo   GridView::widget([
         'dataProvider' => $dataProvider,
         'layout' => '{items}',

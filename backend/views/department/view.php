@@ -10,6 +10,13 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Departments', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<?php
+\yiister\adminlte\widgets\Box::begin(
+    [
+        "type" => \yiister\adminlte\widgets\Box::TYPE_PRIMARY,
+    ]
+)
+?>
 <div class="department-view">
 
 

@@ -54,9 +54,9 @@ class Attendance extends \yii\db\ActiveRecord
             'signin_at' => 'Sign In ',
             'singout_at' => 'Sing Out',
             'hours_per_day' => 'Hours Per Day',
-            'created_at' => 'Created At',
+            'created_at' => 'Uploaded At',
             'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
+            'created_by' => 'Uploaded By',
         ];
     }
 }

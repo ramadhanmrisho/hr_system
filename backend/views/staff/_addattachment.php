@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="col-sm-6"><?= $form->field($model, 'attached_file')->fileInput()->label(false)?></div>
                         <div class="col-sm-6 text-right">
                             <?=  Html::submitButton('<i class="glyphicon glyphicon-cloud-upload"></i> '.Yii::t('app','Click to attach'),['class'=>'btn btn-success'])?>
-                            <?= Html::a('<i class="glyphicon glyphicon-ban-circle"></i> '.Yii::t('app', 'Cancel'),['staff/index'],['class' => 'btn btn-danger'])?>&emsp;
+                            <?= Html::a('<i class="glyphicon glyphicon-ban-circle"></i> '.Yii::t('app', 'Cancel'),['staff/view','id'=>Yii::$app->request->get('id')],['class' => 'btn btn-danger'])?>&emsp;
                         </div>
                     </div>
 

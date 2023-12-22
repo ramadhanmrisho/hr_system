@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\UserAccount;
 use Yii;
 use common\models\District;
 use common\models\search\DistrictSearch;
@@ -78,7 +79,8 @@ class DistrictController extends Controller
     {
         $model = new District();
 
-        $model->created_by=Yii::$app->user->identity->getId();
+        $userID=UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
+        $model->created_by=$userID;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }

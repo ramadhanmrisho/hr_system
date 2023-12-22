@@ -86,7 +86,7 @@ class Staff extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fname', 'lname', 'dob', 'place_of_birth', 'phone_number', 'identity_type_id', 'id_number', 'marital_status', 'email', 'gender', 'employee_number', 'category', 'region_id', 'district_id',  'home_address', 'name_of_high_education_level', 'designation_id', 'department_id', 'salary_scale', 'basic_salary', 'paye', 'nhif', 'date_employed', 'account_name', 'bank_account_number', 'created_by'], 'required'],
+            [['fname', 'lname', 'dob', 'place_of_birth', 'phone_number', 'identity_type_id', 'id_number', 'marital_status', 'email', 'gender', 'employee_number', 'category', 'region_id', 'district_id',  'home_address', 'name_of_high_education_level', 'designation_id', 'department_id', 'salary_scale', 'basic_salary', 'paye', 'nhif', 'date_employed', 'account_name', 'bank_account_number', 'created_by','has_ot'], 'required'],
             [['dob', 'date_employed', 'created_at', 'updated_at','allowances','photo','allowance_id','village','TUGHE'], 'safe'],
             [['identity_type_id', 'region_id', 'district_id', 'designation_id', 'department_id', 'alternate_phone_number', 'created_by'], 'integer'],
             [[ 'basic_salary','nssf'], 'safe'],
@@ -139,6 +139,7 @@ class Staff extends \yii\db\ActiveRecord
             'district_id' => 'District',
             'village' => 'Village',
             'home_address' => 'Home Address',
+            'has_ot' => 'Has Overtime?',
 
             'name_of_high_education_level' => 'Name Of High Education Level',
             'designation_id' => 'Designation',
@@ -174,25 +175,14 @@ class Staff extends \yii\db\ActiveRecord
         return $this->hasMany(AssignedModule::className(), ['staff_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[CarryOvers]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCarryOvers()
-    {
-        return $this->hasMany(CarryOver::className(), ['staff_id' => 'id']);
-    }
+
 
     /**
      * Gets query for [[Courseworks]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCourseworks()
-    {
-        return $this->hasMany(Coursework::className(), ['staff_id' => 'id']);
-    }
+
 
     /**
      * Gets query for [[StaffAllowance]].
@@ -287,17 +277,9 @@ class Staff extends \yii\db\ActiveRecord
 
 
 
-    public static function calculatePAYE($totalEarnings) {
-        if ($totalEarnings <= 270000) {
-            return 0;
-        } elseif ($totalEarnings <= 520000) {
-            return ($totalEarnings - 270000) * 0.08;
-        } elseif ($totalEarnings <= 760000) {
-            return 20000 + (($totalEarnings - 520000) * 0.2);
-        } elseif ($totalEarnings <= 1000000) {
-            return 68000 + (($totalEarnings - 760000) * 0.25);
-        } else {
-            return 128000 + (($totalEarnings - 1000000) * 0.3);
-        }
-    }
+    //Pass Taxable Income
+
+
+
+
 }

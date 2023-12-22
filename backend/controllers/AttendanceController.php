@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use common\models\Staff;
+use common\models\UserAccount;
 use Yii;
 use common\models\Attendance;
 use common\models\search\AttendanceSearch;
@@ -90,11 +92,12 @@ class AttendanceController extends Controller
                                 if ($line == 1) {
                                     $header = $row;
                                 } else {
-                                    $model2->staff_id=$row[0];
+                                    $userID=UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
+                                    $model2->staff_id=\common\helpers\ImportHelper::value2Id(Staff::className(), 'employee_number',$row[0]);
                                     $model2->date=$row[1];
                                     $model2->signin_at=date('Y-m-d H:i:s',strtotime($row[2]));
                                     $model2->singout_at=date('Y-m-d H:i:s',strtotime($row[3]));
-                                    $model2->created_by=Yii::$app->user->getId();
+                                    $model2->created_by=$userID;
                                     $dateTime1 = new \DateTime($model2->signin_at);
                                     $dateTime2 = new \DateTime($model2->singout_at);
                                     $interval = $dateTime1->diff($dateTime2);
