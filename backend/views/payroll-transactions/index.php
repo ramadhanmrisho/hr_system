@@ -18,6 +18,14 @@ if(Yii::$app->session->hasFlash('getSuccess')):?>
         <?= Yii::$app->session->getFlash('getSuccess');?>
     </div>
 <?php endif;?>
+
+<?php
+if(Yii::$app->session->hasFlash('getError')):?>
+    <div class="alert alert-sm alert-warning zoomIn" align="center">
+        <?= Yii::$app->session->getFlash('getError');?>
+    </div>
+<?php endif;?>
+
 <?php
 \yiister\adminlte\widgets\Box::begin(
     [

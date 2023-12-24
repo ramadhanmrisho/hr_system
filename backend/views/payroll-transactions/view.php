@@ -181,6 +181,7 @@ $this->params['breadcrumbs'][] = $this->title;
             $salary_adjustment_amount= !empty($model->salary_adjustiment_id)? SalaryAdjustments::find()->where(['id'=>$model->salary_adjustiment_id])->one()->amount:0;
             $union=is_null($model->union_contibution)?0:$model->union_contibution;
             $salary_advance=is_null($model->union_contibution)?0:$model->salary_advance;
+
             $total_deductions=$model->absent_amount+$union+$salary_advance+$model->nssf+$model->paye;
             ?>
 
@@ -243,6 +244,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     <tr>
                         <td>Special OT Amount:</td>
                         <td colspan="2"><?= Yii::$app->formatter->asDecimal($model->special_ot_amount,2)?></td>
+                        <td>Loan:</td>
+                        <td colspan="2">-</td>
+                    </tr>
+                    <tr>
+                        <td>Night Hours Amount:</td>
+                        <td colspan="2"><?= Yii::$app->formatter->asDecimal($model->night_allowance,2)?></td>
                         <td>Loan:</td>
                         <td colspan="2">-</td>
                     </tr>

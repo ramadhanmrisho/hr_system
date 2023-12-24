@@ -272,20 +272,20 @@ desired effect
 
 
 
-                        ["label" => "Manage Payroll", "url" => "#", "icon" => "book",
+                        ["label" => "Payroll Configurations", "url" => "#", "icon" => "book",
                             "items"=>[
                                 ["label"=>"Attendance","url"=>["attendance/index"],"icon"=>"calendar"],
                                 ["label"=>"General Deductions","url"=>["deductions-percentage/index"],"icon"=>"close"],
                                 ["label"=>"Roaster","url"=>["roster/index"],"icon"=>"calendar"],
                                 ["label"=>"OT Amounts","url"=>["overtime-amount/index"],"icon"=>"history"],
                                 ["label"=>"Salary Adjustments","url"=>["salary-adjustments/index"],"icon"=>"money"],
-                                ["label"=>"Payroll Records","url"=>["payroll/index"],"icon"=>"briefcase"],
                                 ["label"=>"Employee Salary Slips","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],
                                 ["label" => "Salary Advance", "url" => ["salary-advance/index"], "icon" => "institution"],
                                 ["label" => "Absent Days ", "url" => ["absentees/index"], "icon" => "user-times"],
                                 ["label" => "Union Contributions ", "url" => ["union-contribution/index"], "icon" => "briefcase"],
                             ],
                             ],
+                        ["label"=>"Payroll Records","url"=>["payroll/index"],"icon"=>"briefcase"],
 
                           ["label"=>"Attachments Type","url"=>["attachments-type/index"],"icon"=>"file"],
                           ["label"=>"Leaves","url"=>["time-table/index"],"icon"=>"plane"],

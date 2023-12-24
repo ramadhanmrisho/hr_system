@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
 
     <div class="card card-default">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-            View Sample Template Attendance
+            <span class="fa fa-file-excel-o"> View Sample Template Attendance</span>
         </button>
         <div class="card-body" style="padding:40px;">
             <center>
@@ -46,7 +46,7 @@ use yii\widgets\ActiveForm;
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Sample Template Attendance</h5>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="fa fa-close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!-- Embedding a sample table representing the Excel file -->

@@ -38,6 +38,8 @@ class PayrollController extends Controller
         $searchModel = new PayrollSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -52,9 +54,11 @@ class PayrollController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        $payroll_id=Payroll::findOne(['id'=>$id])->payroll_transaction_id;
+        return $this->redirect(['payroll-transactions/index','payroll_id'=>$payroll_id]);
+//        return $this->render('view', [
+//            'model' => $this->findModel($id),
+//        ]);
     }
 
     /**

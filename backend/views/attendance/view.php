@@ -25,7 +25,6 @@ if(Yii::$app->session->hasFlash('getSuccess')):?>
     ]
 );
 
-var_dump(\common\models\Staff::calculateWorkingDaysPerStaff(100));
 
 ?>
 <div class="attendance-view">
@@ -37,11 +36,16 @@ var_dump(\common\models\Staff::calculateWorkingDaysPerStaff(100));
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'staff_id',
+            ['attribute'=>'staff_id','value'=>function ($model) {
+                $user=\common\models\Staff::findOne(['id'=>$model->staff_id]);
+                return $user->fname.' '.$user->lname;
+            }],
             'date',
             'signin_at',
             'singout_at',
             'hours_per_day',
+            'normal_ot_hours',
+            'night_hours',
             'created_at',
             'updated_at',
             ['attribute'=>'created_by','value'=>function($model){

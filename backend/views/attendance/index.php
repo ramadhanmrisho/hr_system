@@ -25,6 +25,8 @@ if(Yii::$app->session->hasFlash('getSuccess')):?>
         <?= Yii::$app->session->getFlash('getSuccess');?>
     </div>
 <?php endif;?>
+
+
 <div class=" attendance-index">
     <p>
         <?= Html::a('Upload  Attendance', ['create'], ['class' => 'btn btn-success']) ?>
@@ -43,11 +45,16 @@ echo ExportMenu::widget([
             return $model->fname . ' ' . $model->lname;
 
         })],
+        ['attribute'=>'staff_id','value'=>function ($model) {
+            $user=\common\models\Staff::findOne(['id'=>$model->staff_id]);
+            return $user->employee_number;
+        },'filter'=>ArrayHelper::map(\common\models\Staff::find()->all(), 'id', 'employee_number')],
         'date',
         'signin_at',
         'singout_at',
         'hours_per_day',
-        'created_at',
+        'normal_ot_hours',
+        'night_hours',
         //'updated_at',
         //'created_by',
         ['class' => 'yii\grid\ActionColumn','template'=>'{view}{update}'],
@@ -68,10 +75,16 @@ echo ExportMenu::widget([
             },'filter'=>ArrayHelper::map(\common\models\Staff::find()->all(), 'id', function ($model) {
                 return $model->fname . ' ' . $model->lname;
             })],
+            ['attribute'=>'staff_id','value'=>function ($model) {
+                $user=\common\models\Staff::findOne(['id'=>$model->staff_id]);
+                return $user->employee_number;
+            },'label'=>'Staff Number','filter'=>ArrayHelper::map(\common\models\Staff::find()->all(), 'id', 'employee_number')],
             'date',
             'signin_at',
             'singout_at',
             'hours_per_day',
+            'normal_ot_hours',
+            'night_hours',
             'created_at',
             //'updated_at',
             //'created_by',
@@ -82,46 +95,4 @@ echo ExportMenu::widget([
 
 </div>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sample Table</title>
-</head>
-<body>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Age</th>
-        <th>City</th>
-        <th>Country</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>1</td>
-        <td>John Doe</td>
-        <td>30</td>
-        <td>New York</td>
-        <td>USA</td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>Jane Smith</td>
-        <td>25</td>
-        <td>London</td>
-        <td>UK</td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td>Alice Johnson</td>
-        <td>35</td>
-        <td>Paris</td>
-        <td>France</td>
-    </tr>
-    </tbody>
-</table>
-</body>
-</html>

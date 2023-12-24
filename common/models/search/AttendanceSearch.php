@@ -18,7 +18,7 @@ class AttendanceSearch extends Attendance
     {
         return [
             [['id', 'staff_id', 'hours_per_day', 'created_by'], 'integer'],
-            [['date', 'signin_at', 'singout_at', 'created_at', 'updated_at'], 'safe'],
+            [['date', 'signin_at', 'singout_at', 'created_at', 'updated_at','special_ot_hours','night_hours','normal_ot_hours'], 'safe'],
         ];
     }
 
