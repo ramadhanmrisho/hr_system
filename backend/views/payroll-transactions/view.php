@@ -213,7 +213,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <th style="text-align: center;" colspan="1">DEDUCTIONS</th>
                         <td colspan="1"></td>
                     </tr>
-                    <!-- Example row for Earnings -->
+
                     <tr>
                         <td>Basic Salary:</td>
                         <td colspan="2"><?= Yii::$app->formatter->asDecimal($staff->basic_salary,2)?></td>
