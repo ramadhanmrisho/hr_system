@@ -115,8 +115,8 @@ class StaffController extends Controller
                 return $this->render('create', ['model' => $model,]);
             }
 
-
-            $model->created_by=Yii::$app->getUser()->id;
+            $userID=UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
+            $model->created_by=$userID;
             $model->salary_scale='TPS';
 
             $model->photo = Uploadedfile::getInstance($model, 'photo');
@@ -124,10 +124,10 @@ class StaffController extends Controller
             $model->mname=strtoupper($model->mname);
             $model->lname=strtoupper($model->lname);
             $model->basic_salary=(int)str_replace(',','',$model->basic_salary);
-            $model->nhif=(int)str_replace(',','',$model->nhif);
-            $model->paye=(int)str_replace(',','',$model->paye);
-            $model->helsb=(int)str_replace(',','',$model->helsb);
-            $model->nssf=(int)str_replace(',','',$model->nssf);
+//            $model->nhif=(int)str_replace(',','',$model->nhif);
+//            $model->paye=(int)str_replace(',','',$model->paye);
+//            $model->helsb=(int)str_replace(',','',$model->helsb);
+//            $model->nssf=(int)str_replace(',','',$model->nssf);
 
 
             //SAVING STAFF DETAILS
@@ -191,15 +191,14 @@ class StaffController extends Controller
                         $attachment_model = new EmployeeAttachments();
                         $attachment_types_id=$_POST['Staff']['attachments'][$key]['attachments_type_id'];
                         $attachment_model->staff_id=$model->id;
+                        $attachment_model->created_by=$userID;
                         $attachment_model->attachment_type_id=(int)$attachment_types_id;
                         $attachment_model->attached_file=$val->baseName.'.'.$val->extension;
                         $val->saveAs('employee_attachments/'.$val->baseName.'.'.$val->extension);
                         $attachment_model->save(false);
                     }
-
-
                     $transaction->commit();
-                    Yii::$app->session->setFlash('getSuccess', 'Staff added Successfully!');
+                    Yii::$app->session->setFlash('getSuccess',' <span class="fa fa-check-square-o">Staff added Successfully!</span>');
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
             }
@@ -207,7 +206,7 @@ class StaffController extends Controller
              // Roll back the transaction
                 $transaction->rollBack();
                 var_dump($e);
-                Yii::$app->session->setFlash('error', 'Transaction failed: ' . $e->getMessage());
+                Yii::$app->session->setFlash('getDanger',$e->getMessage());
             }
 
 var_dump($model->getErrors());

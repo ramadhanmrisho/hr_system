@@ -141,7 +141,7 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
                             return  $model->nssf;
                         }],
                         ['attribute'=>'nhif','format'=>'html','value'=>function($model){
-                        return  $model->nhif==1?"Yes":"No";
+                        return  $model->nhif;
                         }],
                         'date_employed',
                         'account_name',

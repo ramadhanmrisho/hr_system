@@ -134,7 +134,13 @@ a.desc:after {
     }
 }
 
+@media print {
+    .printableContent {
+        border: 1px solid black; /* Set your border style */
+        padding: 10px; /* Optional: add some padding for spacing */
+    }
 
+}
 .nav > li > form > button.logout:focus,
 .nav > li > form > button.logout:hover {
     text-decoration: none;

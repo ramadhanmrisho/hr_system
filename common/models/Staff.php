@@ -24,7 +24,7 @@ use Yii;
  * @property int $region_id
  * @property int $district_id
  * @property string|null $ward
- * @property string $village
+
  * @property string|null $division
  * @property string $home_address
  * @property int|null $house_number
@@ -86,15 +86,15 @@ class Staff extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fname', 'lname', 'dob', 'place_of_birth', 'phone_number', 'identity_type_id', 'id_number', 'marital_status', 'email', 'gender', 'employee_number', 'category', 'region_id', 'district_id',  'home_address', 'name_of_high_education_level', 'designation_id', 'department_id', 'salary_scale', 'basic_salary', 'paye', 'nhif', 'date_employed', 'account_name', 'bank_account_number', 'created_by','has_ot'], 'required'],
-            [['dob', 'date_employed', 'created_at', 'updated_at','allowances','photo','allowance_id','village','TUGHE'], 'safe'],
+            [['fname', 'lname', 'dob', 'place_of_birth', 'phone_number', 'identity_type_id', 'id_number', 'marital_status', 'email', 'gender', 'employee_number', 'category', 'region_id', 'district_id',  'home_address', 'name_of_high_education_level', 'designation_id', 'department_id', 'basic_salary', 'date_employed', 'bank_account_number','has_ot'], 'required'],
+            [['dob', 'date_employed', 'created_at', 'updated_at','allowances','photo','allowance_id','TUGHE','salary_scale'], 'safe'],
             [['identity_type_id', 'region_id', 'district_id', 'designation_id', 'department_id', 'alternate_phone_number', 'created_by'], 'integer'],
-            [[ 'basic_salary','nssf'], 'safe'],
+            [[ 'basic_salary','nssf','nhif','created_by'], 'safe'],
            // [[ 'basic_salary', 'paye', 'nssf', 'nhif'], 'safe'],
             [['marital_status', 'gender', 'category'], 'string'],
             [['fname', 'mname', 'lname', 'place_of_birth', 'bank_account_number',], 'string', 'max' => 255],
             [['phone_number'], 'string', 'max' => 14],
-            [['id_number', 'email', 'village','home_address'], 'string', 'max' => 30],
+            [['id_number', 'email','home_address'], 'string', 'max' => 30],
             [['employee_number', 'name_of_high_education_level', 'account_name'], 'string', 'max' => 100],
             [['employee_number'], 'unique'],
             //NEXT OF KIN
@@ -110,7 +110,7 @@ class Staff extends \yii\db\ActiveRecord
             [['designation_id'], 'exist', 'skipOnError' => true, 'targetClass' => Designation::className(), 'targetAttribute' => ['designation_id' => 'id']],
             [['district_id'], 'exist', 'skipOnError' => true, 'targetClass' => District::className(), 'targetAttribute' => ['district_id' => 'id']],
             [['region_id'], 'exist', 'skipOnError' => true, 'targetClass' => Region::className(), 'targetAttribute' => ['region_id' => 'id']],
-            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => UserAccount::className(), 'targetAttribute' => ['created_by' => 'id']],
+            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => UserAccount::className(), 'targetAttribute' => ['created_by' => 'user_id']],
         ];
     }
 
@@ -137,7 +137,6 @@ class Staff extends \yii\db\ActiveRecord
             'category' => 'Category',
             'region_id' => 'Region',
             'district_id' => 'District',
-            'village' => 'Village',
             'home_address' => 'Home Address',
             'has_ot' => 'Has Overtime?',
 

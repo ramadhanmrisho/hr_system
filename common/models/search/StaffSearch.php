@@ -20,7 +20,7 @@ class StaffSearch extends Staff
         return [
             [['id', 'identity_type_id', 'region_id', 'district_id', 'designation_id', 'department_id', 'allowance_id','bank_account_number', 'alternate_phone_number', 'created_by'], 'integer'],
             [[ 'helsb', 'paye', 'nssf', 'nhif'], 'safe'],
-            [['fname', 'mname', 'lname', 'dob', 'place_of_birth', 'phone_number', 'id_number', 'marital_status', 'email', 'gender', 'employee_number', 'category',  'village', 'programme_pursued', 'home_address', 'name_of_high_education_level','date_employed', 'account_name', 'created_at', 'updated_at','contract_end_date','contract_termination_date'], 'safe'],
+            [['fname', 'mname', 'lname', 'dob', 'place_of_birth', 'phone_number', 'id_number', 'marital_status', 'email', 'gender', 'employee_number', 'category', 'programme_pursued', 'home_address', 'name_of_high_education_level','date_employed', 'account_name', 'created_at', 'updated_at','contract_end_date','contract_termination_date'], 'safe'],
         ];
     }
 
@@ -92,7 +92,6 @@ class StaffSearch extends Staff
             ->andFilterWhere(['like', 'employee_number', $this->employee_number])
             ->andFilterWhere(['like', 'category', $this->category])
 
-            ->andFilterWhere(['like', 'village', $this->village])
             ->andFilterWhere(['like', 'home_address', $this->home_address])
             ->andFilterWhere(['like', 'name_of_high_education_level', $this->name_of_high_education_level])
             ->andFilterWhere(['like', 'account_name', $this->account_name]);

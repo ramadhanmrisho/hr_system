@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ->exists();
     ?>
 
-    <?php if (!$payrollExists):?>
+<!--    --><?php //if ($payrollExists):?>
     <p align="right">
         <?= Html::a('<span class="fa fa-book"> Run Payroll</span>', ['payroll-transactions/create'],[
             'class' => 'btn btn-success',
@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
 
     </p>
-    <?php endif;?>
+<!--    --><?php //endif;?>
 
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>

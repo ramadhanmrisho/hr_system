@@ -11,8 +11,7 @@ use yii\widgets\DetailView;
 /* @var $model common\models\PayrollTransactions */
 
 $staff= Staff::findOne(['id'=>$model->staff_id]);
-$this->title = 'SALARY DETAILS FOR '.$staff->fname.' '.$staff->lname;
-$this->params['breadcrumbs'][] = ['label' => 'Staff Payroll', 'url' => ['index']];
+$this->title = $staff->fname.' '.$staff->lname;
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -102,6 +101,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             return Yii::$app->formatter->asDecimal($model->special_ot_amount);
                         },
                     ],
+                    [
+                        'attribute' => 'salary_advance',
+                        'value' => function ($model) {
+                            return Yii::$app->formatter->asDecimal($model->salary_advance);
+                        },
+                    ],
                     'absent_days',
                     [
                         'attribute' => 'absent_amount',
@@ -130,7 +135,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <!DOCTYPE html>
             <html>
             <head>
-                <title>Salary Slip</title>
+
                 <!-- Include CSS for styling -->
                 <style>
                     /* Add your CSS styling here */
@@ -148,17 +153,18 @@ $this->params['breadcrumbs'][] = $this->title;
                         text-align: center;
                         margin-bottom: 20px;
                     }
-                    .details-table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-bottom: 20px;
-                    }
-                    .details-table th, .details-table td {
+                    table.table-striped.table-bordered th,
+                    table.table-striped.table-bordered td {
+
                         border: 1px solid black;
+                    }
+
+                    .details-table th, .details-table td {
+                       ;
                         padding: 8px;
                     }
                     .details-table th {
-                        background-color: #f0f0f0;
+                        background-color: lightblue;
                     }
                     .signature {
                         text-align: right;
@@ -169,8 +175,15 @@ $this->params['breadcrumbs'][] = $this->title;
                         .printableContent {
                             border: 1px solid black; /* Set your border style */
                             padding: 10px; /* Optional: add some padding for spacing */
+                            background-color: green;
                         }
+                        .details-table th {
+                            background-color: lightblue;
+                        }
+                    }
                 </style>
+
+
             </head>
             <body>
 
@@ -180,14 +193,15 @@ $this->params['breadcrumbs'][] = $this->title;
             $designation=Designation::findOne(['id'=>$model->designation_id])->name;
             $salary_adjustment_amount= !empty($model->salary_adjustiment_id)? SalaryAdjustments::find()->where(['id'=>$model->salary_adjustiment_id])->one()->amount:0;
             $union=is_null($model->union_contibution)?0:$model->union_contibution;
-            $salary_advance=is_null($model->union_contibution)?0:$model->salary_advance;
+            $salary_advance=is_null($model->salary_advance)?0:$model->salary_advance;
+            $nhif=is_null($model->nhif)?0:$model->nhif;
 
-            $total_deductions=$model->absent_amount+$union+$salary_advance+$model->nssf+$model->paye;
+            $total_deductions=$model->absent_amount+$union+$salary_advance+$model->nssf+$model->paye+$nhif;
             ?>
 
             <div class="printableContent container" id="printableDiv">
-                <h4 class="heading" align="center"><strong>SALARY SLIP FOR THE MONTH OF<br><?=date('M-Y', strtotime($model->created_at))?> </strong></h4>
-                <table class="details-table">
+                <h4 class="heading" align="center" style="font-family: 'Bodoni 72'"><strong>SALARY SLIP FOR THE MONTH OF<br><?=date('M-Y', strtotime($model->created_at))?> </strong></h4>
+                <table class="table table-striped table-bordered details-table" style="font-family: 'Bodoni 72'">
                     <tbody>
                     <tr>
                         <th>Employee NO.:</th>
@@ -208,10 +222,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <!-- Add more rows for EARNINGS and DEDUCTIONS -->
                     <tr>
                         <th style="text-align: center;" colspan="3">EARNINGS</th>
-                        <td colspan="1"></td>
-
-                        <th style="text-align: center;" colspan="1">DEDUCTIONS</th>
-                        <td colspan="1"></td>
+                        <th style="text-align: center;" colspan="3">DEDUCTIONS</th>
                     </tr>
 
                     <tr>
@@ -221,9 +232,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         <td colspan="5"><?= Yii::$app->formatter->asDecimal($model->nssf,2)?></td>
                     </tr>
                     <tr>
-                        <td>Salary Advance:</td>
-                        <td colspan="2"><?= Yii::$app->formatter->asDecimal($salary_advance,2)?></td>
 
+                        <td>Salary Adjustment:</td>
+                        <td colspan="2"><?= Yii::$app->formatter->asDecimal($salary_adjustment_amount,2)?></td>
                         <td>PAYE .:</td>
                         <td colspan="2"><?= Yii::$app->formatter->asDecimal($model->paye,2)?></td>
 
@@ -232,8 +243,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     <tr>
                         <td>Allowance:</td>
                         <td colspan="2">-</td>
-                        <td>Salary Adjustment:</td>
-                        <td colspan="2"><?= Yii::$app->formatter->asDecimal($salary_adjustment_amount,2)?></td>
+                        <td>Salary Advance:</td>
+                        <td colspan="2"><?= Yii::$app->formatter->asDecimal($salary_advance,2)?></td>
+
                     </tr>
                     <tr>
                         <td>Normal OT Amount:</td>
@@ -250,8 +262,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     <tr>
                         <td>Night Hours Amount:</td>
                         <td colspan="2"><?= Yii::$app->formatter->asDecimal($model->night_allowance,2)?></td>
-                        <td>Loan:</td>
-                        <td colspan="2">-</td>
+                        <td>NHIF</td>
+                        <td colspan="2"><?= Yii::$app->formatter->asDecimal($nhif,2)?></td>
                     </tr>
                     <tr>
                         <td>Leave Travel Assistance:</td>
@@ -263,7 +275,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <th>Total Earnings:</th>
                         <td colspan="2"><?= Yii::$app->formatter->asDecimal($model->total_earnings,2)?></td>
                         <th>Total Deductions:</th>
-                        <td colspan="2"><?= Yii::$app->formatter->asDecimal($model->special_ot_amount,2)?></td>
+                        <td colspan="2"><?= Yii::$app->formatter->asDecimal($total_deductions,2)?></td>
 
                     </tr>
                     <tr>
@@ -291,6 +303,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 </div>
+
+
 
 
 <script>

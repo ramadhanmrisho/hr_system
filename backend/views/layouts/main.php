@@ -266,8 +266,7 @@ desired effect
                         ],
                         ["label"=>"My Profile","url"=>["staff/view",'id'=>Yii::$app->user->identity->user_id],"icon"=>"user"],
 
-                        ["label"=>"My PaySlips","url"=>["staff-salary/index"],"icon"=>"fa fa-money"],
-                        ["label"=>"Departments","url"=>["department/index"],"icon"=>"fa fa-building"],
+                        ["label"=>"My Salary Slips","url"=>["staff-salary/index"],"icon"=>"fa fa-money"],
 
 
 
@@ -279,7 +278,7 @@ desired effect
                                 ["label"=>"Roaster","url"=>["roster/index"],"icon"=>"calendar"],
                                 ["label"=>"OT Amounts","url"=>["overtime-amount/index"],"icon"=>"history"],
                                 ["label"=>"Salary Adjustments","url"=>["salary-adjustments/index"],"icon"=>"money"],
-                                ["label"=>"Employee Salary Slips","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],
+//                                ["label"=>"Employee Salary Slips","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],
                                 ["label" => "Salary Advance", "url" => ["salary-advance/index"], "icon" => "institution"],
                                 ["label" => "Absent Days ", "url" => ["absentees/index"], "icon" => "user-times"],
                                 ["label" => "Union Contributions ", "url" => ["union-contribution/index"], "icon" => "briefcase"],
@@ -287,14 +286,14 @@ desired effect
                             ],
                         ["label"=>"Payroll Records","url"=>["payroll/index"],"icon"=>"briefcase"],
 
-                          ["label"=>"Attachments Type","url"=>["attachments-type/index"],"icon"=>"file"],
-                          ["label"=>"Leaves","url"=>["time-table/index"],"icon"=>"plane"],
+//                          ["label"=>"Leaves","url"=>["time-table/index"],"icon"=>"plane"],
 
-                        ["label"=>"Settings","url"=>'#',"icon"=>"wrench",'visible'=>UserAccount::userHas(['ADMIN']),
+                        ["label"=>"Settings","url"=>'#',"icon"=>"wrench",'visible'=>UserAccount::userHas(['ADMIN','HR']),
                             "items"=>[
+                                ["label"=>"Attachments Type","url"=>["attachments-type/index"],"icon"=>"file"],
                                 ["label" => "Departments", "url" => ["department/index"], "icon" => "institution"],
                                 ["label" => "Financial Year", "url" => ["academic-year/index"], "icon" => "calendar"],
-                               ["label"=>"Attachment Types","url"=>["attachments-type/index"],"icon"=>"book"],
+                                ["label"=>"Attachment Types","url"=>["attachments-type/index"],"icon"=>"book"],
                                 ["label"=>"Identity Types","url"=>["identity-type/index"],"icon"=>"building"],
                                 ["label" => "Regions", "url" => ["region/index"], "icon" => "globe"],
                                 ["label"=>"Districts","url"=>["district/index"],"icon"=>"th-list"],
@@ -316,21 +315,21 @@ desired effect
 
 
 
-                        ["label"=>"Reports","url"=>"#","icon"=>"fa fa-bar-chart",
-                            'items'=>[
-                               ['label'=>'Employee Reports','url'=>"#",'icon'=>'fa fa-users',
-                                   'items'=>[
-                                       ['label'=>'Employee List','url'=>["student-payment-report/create"],'icon'=>'fa fa-users'],
-                                       ['label'=>'Departmental Report','url'=>["student-payment-report/create"],'icon'=>'fa fa-building'],
-                                       ['label'=>'Terminated Employee','url'=>["student-payment-report/create"],'icon'=>'fa fa-user'],
-                                   ]
-
-                               ],
-
-                               ['label'=>'Financial Report','url'=>["student-payment-report/create"],'icon'=>'fa fa-money'],
-
-                            ],
-                        ]
+//                        ["label"=>"Reports","url"=>"#","icon"=>"fa fa-bar-chart",
+//                            'items'=>[
+//                               ['label'=>'Employee Reports','url'=>"#",'icon'=>'fa fa-users',
+//                                   'items'=>[
+//                                       ['label'=>'Employee List','url'=>["student-payment-report/create"],'icon'=>'fa fa-users'],
+//                                       ['label'=>'Departmental Report','url'=>["student-payment-report/create"],'icon'=>'fa fa-building'],
+//                                       ['label'=>'Terminated Employee','url'=>["student-payment-report/create"],'icon'=>'fa fa-user'],
+//                                   ]
+//
+//                               ],
+//
+//                               ['label'=>'Financial Report','url'=>["student-payment-report/create"],'icon'=>'fa fa-money'],
+//
+//                            ],
+//                        ]
                     ];
 
                 }

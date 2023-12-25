@@ -31,11 +31,10 @@ class SalaryAdvance extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['staff_id', 'amount', 'created_by'], 'required'],
+            [['staff_id', 'created_by'], 'required'],
             [['staff_id', 'created_by'], 'integer'],
-            [['amount'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at', 'updated_at', 'amount'], 'safe'],
         ];
     }
 
@@ -46,7 +45,7 @@ class SalaryAdvance extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'staff_id' => 'Staff ID',
+            'staff_id' => 'Staff Name',
             'amount' => 'Amount',
             'status' => 'Status',
             'created_at' => 'Created At',

@@ -132,7 +132,7 @@ class PayrollTransactionsController extends Controller
               $model->wcf=(DeductionsPercentage::findOne(['status'=>'active'])->WCF)*$model->total_earnings;
               $model->sdl=(DeductionsPercentage::findOne(['status'=>'active'])->SDL/100)*$model->total_earnings;
               $has_NHIF=Staff::findOne(['id'=>$staff->id])->nhif;
-              $model->nhif=$has_NHIF==1?(DeductionsPercentage::findOne(['status'=>'active'])->NHIF/100)*$model->total_earnings:0;
+              $model->nhif=$has_NHIF=="Yes"?(DeductionsPercentage::findOne(['status'=>'active'])->NHIF/100)*$model->total_earnings:0;
               $model->net_salary=$model->total_earnings-($model->nssf+$model->paye+$model->loan+$model->salary_advance+$model->union_contibution+$model->nhif);
               $model->total=$model->total_earnings+$model->nssf+$model->nhif+ $model->wcf+$model->sdl;
               $userID=UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
@@ -339,10 +339,16 @@ class PayrollTransactionsController extends Controller
 
 
     public static function salaryAdvance($staff_id){
-        $has_salary=SalaryAdvance::find()->where(['staff_id'=>$staff_id,'status'=>'not paid'])->exists();
+        $year = date('Y');
+        $month = date('m');
+        $has_salary=SalaryAdvance::find()->where(['staff_id'=>$staff_id,'status'=>'not paid'])
+            ->andWhere(['MONTH(created_at)' => $month, 'YEAR(created_at)' => $year])->exists();
 
         if ($has_salary){
-            $salary=SalaryAdvance::find()->where(['staff_id'=>$staff_id,'status'=>'not paid'])->one()->amount;
+            $staff_advance=SalaryAdvance::find()->where(['staff_id'=>$staff_id,'status'=>'not paid'])->andWhere(['MONTH(created_at)' => $month, 'YEAR(created_at)' => $year])->one();
+            $salary=$staff_advance->amount;
+            $staff_advance->status="paid";
+            $staff_advance->save(false);
         }
         else $salary=null;
         return is_null($salary)?null:$salary;

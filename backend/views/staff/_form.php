@@ -128,7 +128,8 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
        <div class="col-md-3">
            <?= $form->field($model, 'name_of_high_education_level',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
            <?= $form->field($model, 'basic_salary'  ,['options'=>['class'=>'required']])->textInput(['id'=>'money-value']) ?>
-<!--           --><?php //= $form->field($model, 'nhif',['options'=>['class'=>'required']])->textInput(['id'=>'money-value3']) ?>
+           <?= $form->field($model, 'nhif',['options'=>['class'=>'required']])->dropDownList([ 'Yes' => 'Yes', 'No' => 'No' ], ['prompt' => '']) ?>
+
            <?= $form->field($model, 'category',['options'=>['class'=>'required']])->dropDownList([ 'Permanent' => 'Permanent', 'Temporary' => 'Temporary', ], ['prompt' => '']) ->label('Contract Category')?>
        </div>
 
