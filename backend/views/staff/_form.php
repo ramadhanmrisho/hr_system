@@ -92,9 +92,7 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                   <?= $form->field($model, 'alternate_phone_number')->textInput() ?>
                   <?= $form->field($model, 'home_address')->textInput(['maxlength' => true])->label('Street') ?>
 
-
                 </div>
-
 
                 <div class="col-md-3">
                     <?php if($model->isNewRecord){?>
@@ -102,7 +100,7 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                         'options' => ['accept'=>'*', 'required' => true],
                         'pluginOptions' => ['allowedFileExtensions' => ['jpg','png','jepg'], 'showUpload' => false]
                     ]); ?>
-<?php }?>
+                <?php }?>
 
                 </div>
 
@@ -126,13 +124,13 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
        </div>
 
        <div class="col-md-3">
-           <?= $form->field($model, 'name_of_high_education_level',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
+           <?= $form->field($model, 'name_of_high_education_level',['options'=>['class'=>'required']])->dropDownList([ 'PhD' => 'PhD', 'Master Degree' => 'Master Degree', 'Bachelor Degree' => 'Bachelor Degree','Diploma'=>'Diploma','Certificate'=>'Certificate',' A-Level'=>' A-Level','O-Leve'=>'O-Leve','STD VII'=>'STD VII','Nil'=>'Nil' ], ['prompt' => '']) ?>
+
            <?= $form->field($model, 'basic_salary'  ,['options'=>['class'=>'required']])->textInput(['id'=>'money-value']) ?>
            <?= $form->field($model, 'nhif',['options'=>['class'=>'required']])->dropDownList([ 'Yes' => 'Yes', 'No' => 'No' ], ['prompt' => '']) ?>
 
-           <?= $form->field($model, 'category',['options'=>['class'=>'required']])->dropDownList([ 'Permanent' => 'Permanent', 'Temporary' => 'Temporary', ], ['prompt' => '']) ->label('Contract Category')?>
+           <?= $form->field($model, 'category',['options'=>['class'=>'required']])->dropDownList([ 'Permanent' => 'Permanent', 'Fixed Term' => 'Fixed Term','Specific Task'=>'Specific Task' ], ['prompt' => '']) ->label('Contract Category')?>
        </div>
-
        <div class="col-md-3">
            <?= $form->field($model, 'department_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::className(), ['data'=> ArrayHelper::map(\common\models\Department::find()->all(),'id','name'),'options'=>['placeholder'=>'--Select Department--']]) ?>
 
@@ -161,7 +159,6 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
 
 
        </div>
-
            <legend style="font-weight: bold;color: #0d6aad">Employee Family Info:</legend>
            <div class="col-md-3">
                <?= $form->field($model, 'next_of_kin_name',['options'=>['class'=>'required']])->textInput(['maxlength' => true])->label('Next of Kin Name') ?>
@@ -180,7 +177,7 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                <?= $form->field($model, 'spouse_name')->textInput() ?>
            </div>
            <div class="col-md-3">
-               <?= $form->field($model, 'spouse_phone_number',['options'=>['class'=>'required']])->textInput() ?>
+               <?= $form->field($model, 'spouse_phone_number')->textInput() ?>
            </div>
 
            <div class="col-md-12">

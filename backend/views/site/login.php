@@ -64,6 +64,17 @@ $this ->beginBody();
                 <?= $form->field($model, 'password',['template'=>'{beginLabel}{labelTitle}{endLabel}<div class="input-group">
                             <span class="input-group-addon" id="password-view-icon"><i class="glyphicon glyphicon-lock" style="color:dodgerblue;"></i></span>{input}</div>{error}{hint}'])->passwordInput(['placeholder'=>'Password'])->label(false) ?>
 
+<!--                --><?php //= $form->field($model, 'password', [
+//                    'options' => ['class' => 'form-group has-feedback'],
+//                    'inputTemplate' => '{input}<div class="input-group-append"><div class="input-group-append">
+//                <span class="input-group-text" id="toggle-password">
+//                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
+//                </span></div></div>',
+//                    'template' => '{beginWrapper}{input}{error}{endWrapper}',
+//                    'wrapperOptions' => ['class' => 'input-group mb-3']
+//                ])
+//                    ->label(false)
+//                    ->passwordInput(['placeholder' => $model->getAttributeLabel('password'), 'id' => 'password']) ?>
             </div>
         </fieldset>
             </div>
@@ -96,4 +107,19 @@ $this ->beginBody();
 
 
 
+
+    <script>
+        document.getElementById('toggle-password').addEventListener('click', function () {
+            const passwordField = document.getElementById('password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                this.querySelector('i').classList.remove('fa-eye-slash');
+                this.querySelector('i').classList.add('fa-eye');
+            } else {
+                passwordField.type = 'password';
+                this.querySelector('i').classList.remove('fa-eye');
+                this.querySelector('i').classList.add('fa-eye-slash');
+            }
+        });
+    </script>
 

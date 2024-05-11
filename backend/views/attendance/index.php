@@ -29,9 +29,14 @@ if(Yii::$app->session->hasFlash('getSuccess')):?>
 
 <div class=" attendance-index">
     <p>
-        <?= Html::a('Upload  Attendance', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Generate  Attendance', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-<?php
+    <p align="right">
+        <?= Html::a('Add Individual Attendance', ['add'], ['class' => 'btn btn-primary']) ?>
+    </p>
+
+
+    <?php
 
 
 echo ExportMenu::widget([

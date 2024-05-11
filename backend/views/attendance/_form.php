@@ -12,8 +12,6 @@ use yii\widgets\ActiveForm;
 <div class="attendance-form">
 
 
-
-
     <div class="card card-default">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
             <span class="fa fa-file-excel-o"> View Sample Template Attendance</span>

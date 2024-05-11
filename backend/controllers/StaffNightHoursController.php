@@ -2,17 +2,18 @@
 
 namespace backend\controllers;
 
+use common\models\UserAccount;
 use Yii;
-use common\models\Payroll;
-use common\models\search\PayrollSearch;
+use common\models\StaffNightHours;
+use common\models\search\StaffNightHoursSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * PayrollController implements the CRUD actions for Payroll model.
+ * StaffNightHoursController implements the CRUD actions for StaffNightHours model.
  */
-class PayrollController extends Controller
+class StaffNightHoursController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,17 +31,13 @@ class PayrollController extends Controller
     }
 
     /**
-     * Lists all Payroll models.
+     * Lists all StaffNightHours models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new PayrollSearch();
+        $searchModel = new StaffNightHoursSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-
-
-
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -49,31 +46,34 @@ class PayrollController extends Controller
     }
 
     /**
-     * Displays a single Payroll model.
+     * Displays a single StaffNightHours model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        $payroll_id=Payroll::findOne(['id'=>$id])->payroll_transaction_id;
-        return $this->redirect(['payroll-transactions/index','payroll_id'=>$payroll_id]);
-//        return $this->render('view', [
-//            'model' => $this->findModel($id),
-//        ]);
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
     /**
-     * Creates a new Payroll model.
+     * Creates a new StaffNightHours model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Payroll();
+        $model = new StaffNightHours();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $userID=UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
+            $model->created_by=$userID;
+            if ($model->save(false)){
+                Yii::$app->session->setFlash('getSuccess',' <span class="fa fa-check-square-o">Added  Successfully</span>');
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
@@ -82,7 +82,7 @@ class PayrollController extends Controller
     }
 
     /**
-     * Updates an existing Payroll model.
+     * Updates an existing StaffNightHours model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -102,7 +102,7 @@ class PayrollController extends Controller
     }
 
     /**
-     * Deletes an existing Payroll model.
+     * Deletes an existing StaffNightHours model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -116,15 +116,15 @@ class PayrollController extends Controller
     }
 
     /**
-     * Finds the Payroll model based on its primary key value.
+     * Finds the StaffNightHours model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Payroll the loaded model
+     * @return StaffNightHours the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Payroll::findOne($id)) !== null) {
+        if (($model = StaffNightHours::findOne($id)) !== null) {
             return $model;
         }
 

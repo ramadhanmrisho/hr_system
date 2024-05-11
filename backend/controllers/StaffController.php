@@ -258,7 +258,7 @@ var_dump($model->getErrors());
 
 
             //SAVING DEPENDANT INFO
-            if (!empty($model->dependant_information)) {
+            if (!empty($model->dependant_information['0']['dependant_name'])) {
                 foreach ($model->dependant_information as $dependant) {
                     $dependant_model = new Dependants();
                     $dependant_model->name = $dependant['dependant_name'];
@@ -554,6 +554,27 @@ var_dump($model->getErrors());
             'model' => $model,
         ]);
 
+    }
+
+    public function actionActivate($id){
+
+        $model = $this->findModel($id);
+
+        if(\Yii::$app->db->createCommand()->update('user_account',['status' => 10],['user_id' => $model->id])->execute()){
+            Yii::$app->session->setFlash('reqSuccess','Account activated changed Successfully');
+
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+    }
+    public function actionDeactivate($id){
+
+        $model = $this->findModel($id);
+
+        if(\Yii::$app->db->createCommand()->update('user_account',['status' => 9],['user_id' => $model->id])->execute()){
+            Yii::$app->session->setFlash('reqSuccess','Account deactivated changed Successfully');
+
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
     }
 
 

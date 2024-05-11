@@ -36,7 +36,7 @@ if(Yii::$app->session->hasFlash('reqDanger')):?>
                 <p>Employee Statistics</p>
                 <?php \yiister\adminlte\widgets\Callout::end(); ?>
 
-                <div class="col-lg-3 col-xs-6">
+                <div class="col-lg-4 col-xs-6">
                         <?=
                         \yiister\adminlte\widgets\SmallBox::widget(
                             [
@@ -50,34 +50,33 @@ if(Yii::$app->session->hasFlash('reqDanger')):?>
                         ?>
 
                     </div>
-                    <div class="col-lg-3 col-xs-6">
+                    <div class="col-lg-4 col-xs-6">
                         <?=
                         \yiister\adminlte\widgets\SmallBox::widget(
                             [
                                 "color" => \yiister\adminlte\components\AdminLTE::BG_FUCHSIA_ACTIVE,
                                 "header" =>  \common\models\Staff::find()->where(['category'=>'Non Academic Staff'])->count(),
                                 "icon" => "group",
-                                "text" => "<b>Employee with Expired Contract</b>",
+                                "text" => "<b>Employment contracts to be renewed</b>",
                                 'linkRoute'=>['/staff/index','category'=>'non_academic']
                             ]
-                        )
-                        ?>
+                        ) ?>
                     </div>
-                       <div class="col-lg-3 col-xs-6">
-                        <?=
-                        \yiister\adminlte\widgets\SmallBox::widget(
-                            [
-                                "color" => \yiister\adminlte\components\AdminLTE::BG_LIGHT_BLUE,
-                                "header" =>  \common\models\Staff::find()->where(['category'=>'Non Academic Staff'])->count(),
-                                "icon" => "group",
-                                "text" => "<b>Employee On Leave </b>",
-                                'linkRoute'=>['/staff/index','category'=>'non_academic']
-                            ]
-                        )
-                        ?>
-                    </div>
+<!--                       <div class="col-lg-3 col-xs-6">-->
+<!--                        --><?php //=
+//                        \yiister\adminlte\widgets\SmallBox::widget(
+//                            [
+//                                "color" => \yiister\adminlte\components\AdminLTE::BG_LIGHT_BLUE,
+//                                "header" =>  \common\models\Staff::find()->where(['category'=>'Non Academic Staff'])->count(),
+//                                "icon" => "group",
+//                                "text" => "<b>Employee On Leave </b>",
+//                                'linkRoute'=>['/staff/index','category'=>'non_academic']
+//                            ]
+//                        )
+//                        ?>
+<!--                    </div>-->
 <?php }?>
-                      <div class="col-lg-3 col-xs-6">
+                      <div class="col-lg-4 col-xs-6">
                         <?=
                         \yiister\adminlte\widgets\SmallBox::widget(
                             [

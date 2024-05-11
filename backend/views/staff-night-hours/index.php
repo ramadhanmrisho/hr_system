@@ -4,10 +4,10 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel common\models\search\AbsenteesSearch */
+/* @var $searchModel common\models\search\StaffNightHoursSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Absentent Days';
+$this->title = 'Staff Night Hours';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php
@@ -17,13 +17,11 @@ $this->params['breadcrumbs'][] = $this->title;
     ]
 )
 ?>
-
-<div class="absentees-index">
-
+<div class="staff-night-hours-index">
 
 
     <p align="right ">
-        <?= Html::a('Add Absent days', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add Night Hours', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -40,16 +38,14 @@ $this->params['breadcrumbs'][] = $this->title;
             }],
             'days',
             'description:ntext',
-            'category',
-           // 'status',
+            'status',
             'created_at',
             'updated_at',
             ['attribute'=>'created_by','value'=>function($model){
                 $user=\common\models\Staff::findOne(['id'=>$model->created_by]);
                 return  $user->getFullName();
             }],
-
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn','template'=>''],
         ],
     ]); ?>
 

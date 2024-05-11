@@ -4,12 +4,12 @@ namespace common\models\search;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Payroll;
+use common\models\StaffNightHours;
 
 /**
- * PayrollSearch represents the model behind the search form of `common\models\Payroll`.
+ * StaffNightHoursSearch represents the model behind the search form of `common\models\StaffNightHours`.
  */
-class PayrollSearch extends Payroll
+class StaffNightHoursSearch extends StaffNightHours
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class PayrollSearch extends Payroll
     public function rules()
     {
         return [
-            [['id', 'payroll_transaction_id', 'created_by'], 'integer'],
-            [['created_at', 'status', 'updated_at'], 'safe'],
+            [['id', 'staff_id', 'days', 'created_by'], 'integer'],
+            [['description', 'status', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class PayrollSearch extends Payroll
      */
     public function search($params)
     {
-        $query = Payroll::find();
+        $query = StaffNightHours::find();
 
         // add conditions that should always apply here
 
@@ -59,13 +59,15 @@ class PayrollSearch extends Payroll
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'payroll_transaction_id' => $this->payroll_transaction_id,
+            'staff_id' => $this->staff_id,
+            'days' => $this->days,
             'created_at' => $this->created_at,
-            'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
-        ])->orderBy(['created_at'=>SORT_DESC]);
+            'created_by' => $this->created_by,
+        ]);
 
-        $query->andFilterWhere(['like', 'status', $this->status]);
+        $query->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'status', $this->status]);
 
         return $dataProvider;
     }

@@ -200,7 +200,7 @@ class StaffSalaryController extends Controller
 
             $helsb1=!empty($helsb)?$helsb:0;
             $nssf1=!empty($nssf)?$nssf:0;
-            $total_deduction=$paye+$nhif+$helsb1+$nssf1;
+            $total_deduction=$paye+$helsb1+$nssf1;
 //
 //            $hod_allowance_amount=isset($hod_allowance_amount)?$hod_allowance_amount:0;
 //            $transport_allowance_amount=isset($transport_allowance_amount)?$transport_allowance_amount:0;
@@ -224,7 +224,7 @@ class StaffSalaryController extends Controller
                     'paye'=>Yii::$app->formatter->asDecimal($paye,2),
                     'helsb'=>Yii::$app->formatter->asDecimal($helsb,2),
                     'nssf'=>Yii::$app->formatter->asDecimal($nssf,2),
-                    'nhif'=>Yii::$app->formatter->asDecimal($nhif,2),
+                    //'nhif'=>Yii::$app->formatter->asDecimal($nhif,2),
                     'total_deduction'=>$total_deduction,
                     'month'=>$month,
                     'staff_allowances'=>$staff_allowances_exists?$staff_allowances:'',

@@ -276,6 +276,8 @@ desired effect
                                 ["label"=>"Attendance","url"=>["attendance/index"],"icon"=>"calendar"],
                                 ["label"=>"General Deductions","url"=>["deductions-percentage/index"],"icon"=>"close"],
                                 ["label"=>"Roaster","url"=>["roster/index"],"icon"=>"calendar"],
+                                ["label"=>"Staff Night Hours","url"=>["staff-night-hours/index"],"icon"=>"fa fa-bed",'visible'=> UserAccount::userHas(['HR','ADMIN'])],
+
                                 ["label"=>"OT Amounts","url"=>["overtime-amount/index"],"icon"=>"history"],
                                 ["label"=>"Salary Adjustments","url"=>["salary-adjustments/index"],"icon"=>"money"],
 //                                ["label"=>"Employee Salary Slips","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],

@@ -96,7 +96,6 @@ class UserAccountController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
         return $this->render('update', [
             'model' => $model,
         ]);
@@ -133,21 +132,7 @@ class UserAccountController extends Controller
     }
 
 
-    public function actionActivate($id){
-        $model = $this->findModel($id);
 
-        if(\Yii::$app->db->createCommand()->update('user_account',['status' => 10],['id' => $model->id])->execute()){
-
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-    }
-    public function actionDeactivate($id){
-        $model = $this->findModel($id);
-
-        if(\Yii::$app->db->createCommand()->update('user_account',['status' => 9],['id' => $model->id])->execute()){
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-    }
     /**
      * Change User password.
      *
@@ -168,8 +153,6 @@ class UserAccountController extends Controller
                 try
                 {
                     $modeluser->password= Yii::$app->security->generatePasswordHash($_POST['PasswordForm']['newpass']);
-
-
                     $modeluser->save();
                     if($modeluser->save(false))
                     {
@@ -234,7 +217,6 @@ class UserAccountController extends Controller
         if ($user_category==''){
             $modeluser = Student::find()->where(['id'=>$user_account->user_id])->one();
         }
-
 
 
         if($model->load(Yii::$app->request->post()))

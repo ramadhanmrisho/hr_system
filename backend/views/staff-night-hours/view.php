@@ -4,30 +4,44 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Attendance */
+/* @var $model common\models\StaffNightHours */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Attendances', 'url' => ['index']];
+$this->title = 'Night Hours';
+$this->params['breadcrumbs'][] = ['label' => 'Staff Night Hours', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 
-<?php
-if(Yii::$app->session->hasFlash('getSuccess')):?>
-    <div class="alert alert-sm alert-success zoomIn" align="center">
-        <?= Yii::$app->session->getFlash('getSuccess');?>
-    </div>
-<?php endif;?>
+<?php //if (Yii::$app->session->hasFlash('success')):?>
+<!--    --><?php //= Alert::widget([
+//        'options' => [
+//            'Successfully!',
+//            'Details saved successfully!',
+//            Alert::TYPE_SUCCESS
+//        ]
+//    ]) ?>
+<!---->
+<?php //endif;?>
+<!---->
+<?php //if (Yii::$app->session->hasFlash('warning')):?>
+<!--    --><?php //= Alert::widget([
+//        'options' => [
+//            'Failed!',
+//            'Entered Quantity exceed the available medicine quantity!Please contact store keeper',
+//            Alert::TYPE_WARNING
+//        ]
+//    ]) ?>
+<!---->
+<?php //endif;?>
 <?php
 \yiister\adminlte\widgets\Box::begin(
     [
         "type" => \yiister\adminlte\widgets\Box::TYPE_PRIMARY,
     ]
-);
-
-
+)
 ?>
-<div class="attendance-view">
+<div class="staff-night-hours-view">
+
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -40,20 +54,17 @@ if(Yii::$app->session->hasFlash('getSuccess')):?>
         ]) ?>
     </p>
 
-
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            ['attribute'=>'staff_id','value'=>function ($model) {
+
+            ['attribute'=>'staff_id','value'=>function($model){
                 $user=\common\models\Staff::findOne(['id'=>$model->staff_id]);
-                return $user->fname.' '.$user->lname;
-            }],
-            'date',
-            'signin_at',
-            'singout_at',
-            'hours_per_day',
-            'normal_ot_hours',
-            'night_hours',
+                return  $user->fname.' '.$user->lname;
+            },'label'=>'Staff Name'],
+            'days',
+            'description:ntext',
+            'status',
             'created_at',
             'updated_at',
             ['attribute'=>'created_by','value'=>function($model){

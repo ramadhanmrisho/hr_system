@@ -1,11 +1,13 @@
 <?php
 
 use yii\helpers\Html;
+use kartik\time\TimePicker;
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Attendance */
 
-$this->title = 'Upload  Attendance';
+$this->title = 'Add Individual Attendance';
 $this->params['breadcrumbs'][] = ['label' => 'Attendances', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -25,7 +27,7 @@ if(Yii::$app->session->hasFlash('getError')):?>
 <div class="attendance-create">
 
 
-    <?= $this->render('_form', [
+    <?= $this->render('_forms', [
         'model' => $model,
     ]) ?>
 

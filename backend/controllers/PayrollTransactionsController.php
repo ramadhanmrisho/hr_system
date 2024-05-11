@@ -12,6 +12,7 @@ use common\models\SalaryAdjustments;
 use common\models\SalaryAdvance;
 use common\models\Staff;
 use common\models\StaffAllowance;
+use common\models\StaffNightHours;
 use common\models\UnionContribution;
 use common\models\UserAccount;
 use Yii;
@@ -82,6 +83,7 @@ class PayrollTransactionsController extends Controller
     public function actionCreate()
     {
 
+
 //
 //
 //var_dump($this->unionContribution($staff->id));
@@ -97,7 +99,7 @@ class PayrollTransactionsController extends Controller
             ->exists();
 
 
-        if (!$attendanceExists){
+        if ($attendanceExists){
           Yii::$app->session->setFlash('getError',' <span class="fa fa-check-square-o">Please Upload Attendance for this Month </span>');
           return $this->redirect(['index']);
       }
@@ -129,7 +131,7 @@ class PayrollTransactionsController extends Controller
               $model->loan=0;
               $model->salary_advance=$this->salaryAdvance($staff->id);
               $model->union_contibution=$this->unionContribution($staff->id);
-              $model->wcf=(DeductionsPercentage::findOne(['status'=>'active'])->WCF)*$model->total_earnings;
+              $model->wcf=(DeductionsPercentage::findOne(['status'=>'active'])->WCF)/100 * $model->total_earnings;
               $model->sdl=(DeductionsPercentage::findOne(['status'=>'active'])->SDL/100)*$model->total_earnings;
               $has_NHIF=Staff::findOne(['id'=>$staff->id])->nhif;
               $model->nhif=$has_NHIF=="Yes"?(DeductionsPercentage::findOne(['status'=>'active'])->NHIF/100)*$model->total_earnings:0;
@@ -208,7 +210,37 @@ class PayrollTransactionsController extends Controller
         return $totalNightHours ? round($totalNightHours, 2) : 0;
     }
 
+//    public static function calculateNightHours($staff_id)
+//    {
+//        $year = date('Y');
+//        $month = date('m');
+//
+//        $totalNightHours = StaffNightHours::find()
+//            ->select(['SUM(days) AS total_days'])
+//            ->where(['staff_id' => $staff_id])
+//            ->andWhere(['MONTH(created_at)' => $month, 'YEAR(created_at)' => $year])
+//            ->scalar();
+//
+//        return $totalNightHours ? round($totalNightHours, 2) : 0;
+//    }
 
+
+
+//    public static function calculateOvertimeByStaffInMonth($staffId)
+//    {
+//        $year = date('Y');
+//        $month = date('m');
+//
+//        $overtimeQuery = Attendance::find()
+//            ->select(['staff_id', 'SUM(normal_ot_hours) AS overtime'])
+//            ->where(['staff_id' => $staffId])
+//            ->andWhere(['MONTH(signin_at)' => $month, 'YEAR(signin_at)' => $year])
+//            ->groupBy('staff_id')
+//            ->asArray()
+//            ->all();
+//
+//        return $overtimeQuery;
+//    }
 
     public static function calculateOvertimeByStaffInMonth($staffId)
     {
@@ -306,7 +338,6 @@ class PayrollTransactionsController extends Controller
     }
 
 
-
     public static function calculatePAYE($totalEarnings) {
         if ($totalEarnings <= 270000) {
             return 0;
@@ -330,7 +361,6 @@ class PayrollTransactionsController extends Controller
             return "Invalid input. Please provide valid numeric values for basic pay and number of working days.";
         }
         // Calculate daily salary
-
         $days=4.333 * $numberOfWorkingDays;
         $dailySalary = $basicPay /$days ;
         return $dailySalary;
@@ -364,6 +394,7 @@ class PayrollTransactionsController extends Controller
         else $union_amount=null;
         return is_null($union_amount)?null:$union_amount;
     }
+
     public static function getPublicHolidaysInTanzania() {
         $year=date('Y');
         $holidays = array(

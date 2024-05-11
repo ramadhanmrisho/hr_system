@@ -2,6 +2,7 @@
 
 use common\models\AttachmentsType;
 use common\models\EmployeeSpouse;
+use common\models\UserAccount;
 use yii\bootstrap\Modal;
 use yii\bootstrap\Tabs;
 use yii\helpers\Html;
@@ -44,14 +45,38 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
 <div class="staff-view" style="font-family: 'Lucida Bright'">
 
     <p>
-        <?php if (\common\models\UserAccount::userHas(['ADMIN','HR']) || Yii::$app->user->identity->user_id==$model->id):?>
+        <?php if (UserAccount::userHas(['ADMIN','HR']) || Yii::$app->user->identity->user_id==$model->id):?>
             <?= Html::a('Update Staff Details', ['update', 'id' => $model->id], ['class' => 'btn btn-primary btn-fill']) ?>
 
         <?php endif;?>
 
-        <?php if (\common\models\UserAccount::userHas(['ADMIN'])):?>
+        <?php if (UserAccount::userHas(['ADMIN'])):?>
             <?= Html::button('<span class=" fa fa-lock"> Change Password</span>', ['id' => 'modalButton', 'value' => \yii\helpers\Url::to(['staff/change-nywila','staff_id'=>$model->id]), 'class' => 'btn btn-success']) ?>
+
+
         <?php endif;?>
+
+        <?php if(UserAccount::find()->where(['user_id'=>$model->id])->one()->status ==10 && UserAccount::userHas(['ADMIN','HR'])) : ?>
+        <?= Html::a('<i class="glyphicon glyphicon-remove"></i> Deactivate', ['deactivate', 'id' => $model->id], [
+            'class' => 'btn btn-danger btn-fill',
+            'data' => [
+                'confirm' => 'Are you sure you want to Deactivate this Account?',
+                'method' => 'post',
+            ],
+        ]);
+        ?>
+        <?php endif;?>
+
+        <?php if(UserAccount::find()->where(['user_id'=>$model->id])->one()->status ==9 && UserAccount::userHas(['ADMIN','HR'])) : ?>
+            <?= Html::a('<i class="glyphicon glyphicon-ok"></i> Activate', ['activate', 'id' => $model->id], [
+                'class' => 'btn btn-success btn-fill',
+                'data' => [
+                    'confirm' => 'Are you sure you want to Activate this Account?',
+                    'method' => 'post',
+                ],
+            ]) ?>
+        <?php endif;?>
+
     </p>
 
 
@@ -140,6 +165,20 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
                         ['attribute'=>'nssf','format'=>'html','value'=>function($model){
                             return  $model->nssf;
                         }],
+                        ['attribute'=>'nssf','format'=>'html','value'=>function($model){
+
+                        $allowances = \common\models\StaffAllowance::find()->where(['staff_id'=>$model->id])->all();
+
+                        $tot = 0;
+                        foreach ($allowances as $all){
+                            $tot = + \common\models\Allowance::find()->where(['id'=>$all->allowance_id])->sum('amount');
+                        }
+
+                        $total = $model->basic_salary + $tot;
+
+                        return Yii::$app->formatter->asDecimal(intval($total),2);
+
+                        },'label'=>'Total Packages'],
                         ['attribute'=>'nhif','format'=>'html','value'=>function($model){
                         return  $model->nhif;
                         }],
@@ -186,7 +225,7 @@ if (isset($dataProvider)){
 
             ['class' => 'yii\grid\ActionColumn',
                 'template'=>'{delete}','buttons'=>['delete'=>function($url,$model){
-                return  \common\models\UserAccount::userHas(['ADMIN','HR'])? Html::a('<span class="glyphicon glyphicon-remove"></span> Remove Allowance',['/staff/remove-allowance','id'=>$model->id,'staff_id'=>$model->staff_id],[
+                return  UserAccount::userHas(['ADMIN','HR'])? Html::a('<span class="glyphicon glyphicon-remove"></span> Remove Allowance',['/staff/remove-allowance','id'=>$model->id,'staff_id'=>$model->staff_id],[
                     'data' => [
                         'confirm' => 'Are you sure you want to remove this Allowance?',
                         'method' => 'post',
