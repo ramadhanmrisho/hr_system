@@ -56,10 +56,10 @@ if(Yii::$app->session->hasFlash('getSuccess')):?>
             'night_hours',
             'created_at',
             'updated_at',
-            ['attribute'=>'created_by','value'=>function($model){
-                $user=\common\models\Staff::findOne(['id'=>$model->created_by]);
-                return  $user->getFullName();
-            }]
+//            ['attribute'=>'created_by','value'=>function($model){
+//                $user=\common\models\Staff::findOne(['id'=>$model->created_by]);
+//                return  $user->getFullName();
+//            }]
         ],
     ]) ?>
 

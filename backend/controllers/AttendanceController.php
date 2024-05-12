@@ -240,6 +240,9 @@ class AttendanceController extends Controller
     {
         // Get current year
         $year = date('Y');
+       // Current Month
+        $month = date('m');
+
 
         // Define public holidays
         $holidays = [
@@ -286,79 +289,92 @@ class AttendanceController extends Controller
             date("Y-m-d", strtotime("$year-12-26"))
         ];
 
-        // Get all staff members
-        $staffMembers = Staff::find()->all();
 
-        // Begin transaction
-        $transaction = Yii::$app->db->beginTransaction();
+        $AttendanceExist = Attendance::find()
+            ->where(['MONTH(created_at)' => $month, 'YEAR(created_at)' => $year])
+            ->exists();
 
-        try {
-            // Iterate over each staff member
-            foreach ($staffMembers as $staff) {
-                $staffId = $staff->id;
-
-                // Get the first day of the current month
-                $firstDayOfMonth = date('Y-m-01');
-
-                // Get the last day of the current month
-                $lastDayOfMonth = date('Y-m-t');
-
-                // Iterate over each day of the current month
-                $currentDate = $firstDayOfMonth;
-                while ($currentDate <= $lastDayOfMonth) {
-                    // Check if the current day is a working day (e.g., Monday to Friday)
-                    $dayOfWeek = date('N', strtotime($currentDate));
-                    if ($dayOfWeek >= 1 && $dayOfWeek <= 5) { // Assuming Monday to Friday are working days
-                        // Check if the current date is not a public holiday
-                        if (!in_array($currentDate, $holidays)) {
-                            // Create a new Attendance record
-                            $model = new Attendance();
-                            $model->staff_id = $staffId;
-                            $model->date = $currentDate;
-                            $model->signin_at = $currentDate . ' 08:00:00'; // Assuming signin time is 08:00 am
-                            $model->singout_at = $currentDate . ' 16:00:00'; // Assuming signout time is 04:00 pm
-                            $model->created_by = Yii::$app->user->id;
-
-                            // Calculate hours_per_day
-                            $dateTime1 = new \DateTime($model->signin_at);
-                            $dateTime2 = new \DateTime($model->singout_at);
-                            $interval = $dateTime1->diff($dateTime2);
-                            $model->hours_per_day = $interval->h + ($interval->days * 24);
-
-                            // Calculate night_hours
-                            $model->night_hours = $this->calculateNightHours($model->singout_at);
-
-                            // Calculate normal_ot_hours
-                            $model->normal_ot_hours = $this->calculateNormalOvertimeHours($model->signin_at, $model->singout_at);
-
-                            // Save the attendance record
-                            $model->save(false);
-                        }
-                    }
-
-                    // Move to the next day
-                    $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
-                }
-            }
-
-            // Commit transaction
-            $transaction->commit();
-
+        if ($AttendanceExist){
             // Set success flash message
-            Yii::$app->session->setFlash('getSuccess', '<span class="fa fa-check-square-o">Attendance Generated Successfully</span>');
-
+            Yii::$app->session->setFlash('getError', '<span class="fa fa-close"> The Attendance for this Month already exist</span>');
             // Redirect to index page
             return $this->redirect(['/attendance/index']);
-        } catch (\Exception $e) {
-            // Roll back transaction
-            $transaction->rollBack();
-
-            // Set error flash message
-            Yii::$app->session->setFlash('getError', $e->getMessage());
-
-            // Render create view with model
-            return $this->render('create', ['model' => new Attendance()]);
         }
+        else{
+            // Get all staff members
+            $staffMembers = Staff::find()->all();
+
+            // Begin transaction
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                // Iterate over each staff member
+                foreach ($staffMembers as $staff) {
+                    $staffId = $staff->id;
+
+                    // Get the first day of the current month
+                    $firstDayOfMonth = date('Y-m-01');
+
+                    // Get the last day of the current month
+                    $lastDayOfMonth = date('Y-m-t');
+
+                    // Iterate over each day of the current month
+                    $currentDate = $firstDayOfMonth;
+                    while ($currentDate <= $lastDayOfMonth) {
+                        // Check if the current day is a working day (e.g., Monday to Friday)
+                        $dayOfWeek = date('N', strtotime($currentDate));
+                        if ($dayOfWeek >= 1 && $dayOfWeek <= 5) { // Assuming Monday to Friday are working days
+                            // Check if the current date is not a public holiday
+                            if (!in_array($currentDate, $holidays)) {
+                                // Create a new Attendance record
+                                $model = new Attendance();
+                                $model->staff_id = $staffId;
+                                $model->date = $currentDate;
+                                $model->signin_at = $currentDate . ' 08:00:00'; // Assuming signin time is 08:00 am
+                                $model->singout_at = $currentDate . ' 16:00:00'; // Assuming signout time is 04:00 pm
+                                $model->created_by = Yii::$app->user->id;
+
+                                // Calculate hours_per_day
+                                $dateTime1 = new \DateTime($model->signin_at);
+                                $dateTime2 = new \DateTime($model->singout_at);
+                                $interval = $dateTime1->diff($dateTime2);
+                                $model->hours_per_day = $interval->h + ($interval->days * 24);
+
+                                // Calculate night_hours
+                                $model->night_hours = $this->calculateNightHours($model->singout_at);
+
+                                // Calculate normal_ot_hours
+                                $model->normal_ot_hours = $this->calculateNormalOvertimeHours($model->signin_at, $model->singout_at);
+
+                                // Save the attendance record
+                                $model->save(false);
+                            }
+                        }
+
+                        // Move to the next day
+                        $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+                    }
+                }
+
+                // Commit transaction
+                $transaction->commit();
+
+                // Set success flash message
+                Yii::$app->session->setFlash('getSuccess', '<span class="fa fa-check-square-o">Attendance Generated Successfully</span>');
+
+                // Redirect to index page
+                return $this->redirect(['/attendance/index']);
+            } catch (\Exception $e) {
+                // Roll back transaction
+                $transaction->rollBack();
+
+                // Set error flash message
+                Yii::$app->session->setFlash('getError', $e->getMessage());
+
+                // Render create view with model
+                return $this->render('create', ['model' => new Attendance()]);
+            }
+        }
+
     }
 
 
@@ -413,7 +429,6 @@ class AttendanceController extends Controller
     public function actionAdd()
     {
         $model = new Attendance();
-
         if ($model->load(Yii::$app->request->post())) {
             //var_dump($model);die();
             $userID=UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
@@ -453,11 +468,26 @@ class AttendanceController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) ) {
+
+            $dateTime1 = new \DateTime($model->signin_at);
+            $dateTime2 = new \DateTime($model->singout_at);
+            $interval = $dateTime1->diff($dateTime2);
+            $model->hours_per_day = $interval->h + ($interval->days * 24);
+
+            // Calculate night_hours
+            $model->night_hours = $this->calculateNightHours($model->singout_at);
+
+            // Calculate normal_ot_hours
+            $model->normal_ot_hours = $this->calculateNormalOvertimeHours($model->signin_at, $model->singout_at);
+            if ($model->save(false)){
+                Yii::$app->session->setFlash('getSuccess', '<span class="fa fa-check-square-o">Attendance updated Successfully</span>');
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
+
             'model' => $model,
         ]);
     }

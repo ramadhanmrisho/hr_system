@@ -26,6 +26,13 @@ if(Yii::$app->session->hasFlash('getSuccess')):?>
     </div>
 <?php endif;?>
 
+<?php
+if(Yii::$app->session->hasFlash('getError')):?>
+    <div class="alert alert-sm alert-danger zoomIn" align="center">
+        <?= Yii::$app->session->getFlash('getError');?>
+    </div>
+<?php endif;?>
+
 
 <div class=" attendance-index">
     <p>

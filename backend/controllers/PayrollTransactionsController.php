@@ -84,6 +84,7 @@ class PayrollTransactionsController extends Controller
     {
 
 
+
 //
 //
 //var_dump($this->unionContribution($staff->id));
@@ -98,12 +99,12 @@ class PayrollTransactionsController extends Controller
             ->andWhere(['MONTH(created_at)' => $currentMonth])
             ->exists();
 
-
-        if ($attendanceExists){
-          Yii::$app->session->setFlash('getError',' <span class="fa fa-check-square-o">Please Upload Attendance for this Month </span>');
-          return $this->redirect(['index']);
+        if (!$attendanceExists){
+          Yii::$app->session->setFlash('getError',' <span class="fa fa-check-square-o">Please Generate Attendance for this Month first</span>');
+          return $this->redirect(['payroll/index']);
       }
       else{
+
           $allStaff=Staff::find()->where(['status'=>1])->orderBy(['fname'=>SORT_ASC])->all();
           foreach ($allStaff as $staff){
               $model = new PayrollTransactions();
@@ -140,6 +141,7 @@ class PayrollTransactionsController extends Controller
               $userID=UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
               $model->created_by=$userID;
               $model->save(false);
+
 ////          //print $staff->fname.' - '.$this->calculatePAYE($staff->basic_salary).'<br>';
 //          var_dump($model->total);
 //          echo $staff->id.'<br>';
@@ -148,6 +150,7 @@ class PayrollTransactionsController extends Controller
           $payroll_record->payroll_transaction_id=$model->payroll_id;
           $payroll_record->created_by=$userID;
           $payroll_record->save();
+
           Yii::$app->session->setFlash('getSuccess',' <span class="fa fa-check-square-o">Payroll Generated  Successfully</span>');
           return $this->redirect(['index','payroll_id'=>$model->payroll_id]);
       }
