@@ -13,7 +13,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $model common\models\Staff */
 
-$this->title = 'Employee Number :'.$model->employee_number;
+$this->title = 'Staff Profile:'.$model->fname .' '.$model->lname;
 $this->params['breadcrumbs'][] = ['label' => 'Employees List', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -45,7 +45,8 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
 <div class="staff-view" style="font-family: 'Lucida Bright'">
 
     <p>
-        <?php if (UserAccount::userHas(['ADMIN','HR']) || Yii::$app->user->identity->user_id==$model->id):?>
+<!--        --><?php //if (UserAccount::userHas(['ADMIN','HR']) || Yii::$app->user->identity->user_id==$model->id):?>
+        <?php if (UserAccount::userHas(['ADMIN','HR'])):?>
             <?= Html::a('Update Staff Details', ['update', 'id' => $model->id], ['class' => 'btn btn-primary btn-fill']) ?>
 
         <?php endif;?>
@@ -199,11 +200,12 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
 
 <?php $this->endBlock()?>
 
-
-
-
 <?php $this->beginBlock('allowance')?>
 <?php $dataProvider=new \yii\data\ActiveDataProvider(['query'=>\common\models\StaffAllowance::find()->where(['staff_id'=>$model->id])]);
+
+echo  Html::button('<span class=" fa fa-money"> Add Allowance</span>', ['id' => 'modalButton4', 'value' => \yii\helpers\Url::to(['staff-allowance/create', 'staff_id' => $model->id]), 'class' => 'btn btn-success']);
+
+
 if (isset($dataProvider)){
     echo   GridView::widget([
         'dataProvider' => $dataProvider,
@@ -218,14 +220,13 @@ if (isset($dataProvider)){
             },'label'=>'Allowance Type'],
 
             ['attribute'=>'allowance_id','value'=>function($model){
-
                 $name=\common\models\Allowance::find()->where(['id'=>$model->allowance_id])->one();
                 return !empty($name)?Yii::$app->formatter->asDecimal(\common\models\Allowance::find()->where(['id'=>$model->allowance_id])->one()->amount,2):' ';
             },'label'=>'Amount'],
 
             ['class' => 'yii\grid\ActionColumn',
                 'template'=>'{delete}','buttons'=>['delete'=>function($url,$model){
-                return  UserAccount::userHas(['ADMIN','HR'])? Html::a('<span class="glyphicon glyphicon-remove"></span> Remove Allowance',['/staff/remove-allowance','id'=>$model->id,'staff_id'=>$model->staff_id],[
+                return  UserAccount::userHas(['ADMIN','HR'])? Html::a('<span class="glyphicon glyphicon-remove" style="color: red">Remove</span> ',['/staff/remove-allowance','id'=>$model->id,'staff_id'=>$model->staff_id],[
                     'data' => [
                         'confirm' => 'Are you sure you want to remove this Allowance?',
                         'method' => 'post',
@@ -245,19 +246,30 @@ if (isset($dataProvider)){
 <div class="panel panel-default" style="font-family: Lucida Bright">
     <div class="panel-body">
         <div class="col-sm-6">
-<?php $dataProvider=new \yii\data\ActiveDataProvider(['query'=>\common\models\Dependants::find()->where(['staff_id'=>$model->id])]);
+<?php $dataProvider = new \yii\data\ActiveDataProvider(['query'=>\common\models\Dependants::find()->where(['staff_id'=>$model->id])]);
 if (!empty($dataProvider)) {
-echo ' <h4 class="badge btn-success"  style=" font-family:Lucida Bright ;color: whitesmoke;">Employee Dependants</h4>';
+echo ' <h4 class=""  style=" font-family:Lucida Bright ;color: black;">Employee Dependants</h4>';
+   echo  Html::button('<span class=" fa fa-child"> Add Dependents</span>', ['id' => 'modalButton1', 'value' => \yii\helpers\Url::to(['dependants/create', 'staff_id' => $model->id]), 'class' => 'btn btn-success']);
+
     echo GridView::widget([
         'dataProvider' => $dataProvider,
        // 'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'name',
             'gender',
             'dob',
+            ['class' => 'yii\grid\ActionColumn',
+                'template'=>'{delete}','buttons'=>['delete'=>function($url,$model){
+                return  UserAccount::userHas(['ADMIN','HR'])? Html::a('<span class="glyphicon glyphicon-remove" style="color: red"> Remove</span> ',['/staff/remove-dependents','id'=>$model->id,'staff_id'=>$model->staff_id],[
+                    'data' => [
+                        'confirm' => 'Are you sure you want to remove?',
+                        'method' => 'post',
+                    ],
+                ]):'';
+            }]]
         ],
+
     ]);
 }
 else{
@@ -266,57 +278,78 @@ else{
            ?>
         </div>
         <div class="col-sm-6">
-           <h4 class="badge btn-success" style=" font-family:Lucida Bright ;color: whitesmoke;">Employee Spouse</h4>
-
+           <h4 class="" style=" font-family:Lucida Bright ;color: black;">Employee Spouse</h4>
             <?php
-            $spouse_exists= EmployeeSpouse::find()->where(['staff_id'=>$model->id])->exists();
+            echo  Html::button('<span class=" fa fa-user"> Add Spouse Info </span>', ['id' => 'modalButton2', 'value' => \yii\helpers\Url::to(['employee-spouse/create', 'staff_id' => $model->id]), 'class' => 'btn btn-success']);
+
+            $spouse_exists = EmployeeSpouse::find()->where(['staff_id'=>$model->id])->exists();
             if ($spouse_exists):
-            $spouse=EmployeeSpouse::find()->where(['staff_id'=>$model->id])->one();
+                $spouseProvider = new \yii\data\ActiveDataProvider([
+                    'query' => \common\models\EmployeeSpouse::find()->where(['staff_id' => $model->id]),
+                ]);
             ?>
-            <?= DetailView::widget([
-                'model' => $spouse,
-                'attributes' => [
+            <?= GridView::widget([
+                'dataProvider' => $spouseProvider,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
                     'name',
                     'phone_number',
-
+                    ['class' => 'yii\grid\ActionColumn',
+                        'template'=>'{delete}','buttons'=>['delete'=>function($url,$model){
+                        return  UserAccount::userHas(['ADMIN','HR'])? Html::a('<span class="glyphicon glyphicon-remove" style="color: red"> Remove</span>',['/staff/remove-spouse','id'=>$model->id,'staff_id'=>$model->staff_id],[
+                            'data' => [
+                                'confirm' => 'Are you sure you want to remove?',
+                                'method' => 'post',
+                            ],
+                        ]):'';
+                    }]]
                 ],
             ]) ?>
 <?php endif;?>
         </div>
+
         <div class="col-sm-6">
-            <h4 class="badge btn-success" style=" font-family:Lucida Bright ;color: whitesmoke;">Next of Kin</h4>
+            <h4 class="" style="font-family: Lucida Bright; color: black;">Next of Kin Details</h4>
 
             <?php
-            $next_of_kin_exists= \common\models\NextOfKin::find()->where(['staff_id'=>$model->id])->exists();
+            echo  Html::button('<span class=" fa fa-user"> Add New </span>', ['id' => 'modalButton3', 'value' => \yii\helpers\Url::to(['next-of-kin/create', 'staff_id' => $model->id]), 'class' => 'btn btn-success']);
+
+            $next_of_kin_exists = \common\models\NextOfKin::find()->where(['staff_id' => $model->id])->exists();
             if ($next_of_kin_exists):
-                $next_of_kin=\common\models\NextOfKin::find()->where(['staff_id'=>$model->id])->one();
-                ?>
-                <?= DetailView::widget([
-                'model' => $next_of_kin,
-                'attributes' => [
-                    'name',
-                    'relationship',
-                    'phone_number',
-                    'physical_address',
-                ],
-            ]) ?>
-            <?php endif;?>
-        </div>
-
-
+                $dataProvider = new \yii\data\ActiveDataProvider([
+                    'query' => \common\models\NextOfKin::find()->where(['staff_id' => $model->id]),
+                ]);
+                echo \yii\grid\GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'columns' => [
+                        ['class' => 'yii\grid\SerialColumn'],
+                        'name',
+                        'relationship',
+                        'phone_number',
+                        'physical_address',
+                        ['class' => 'yii\grid\ActionColumn',
+                            'template'=>'{delete}','buttons'=>['delete'=>function($url,$model){
+                            return  UserAccount::userHas(['ADMIN','HR'])? Html::a('<span class="glyphicon glyphicon-remove" style="color: red"> Remove</span>',['/staff/remove-kin','id'=>$model->id,'staff_id'=>$model->staff_id],[
+                                'data' => [
+                                    'confirm' => 'Are you sure you want to remove?',
+                                    'method' => 'post',
+                                ],
+                            ]):'';
+                        }]],
+                    ],
+                ]);
+            endif;
+            ?>
     </div>
 </div>
-
-
 <?php $this->endBlock()?>
-
-
 <?php $this->beginBlock('attachments')?>
 <?php
 $attachment_exist= \common\models\EmployeeAttachments::find()->where(['staff_id'=>$model->id])->exists();
 
+if (UserAccount::userHas(['ADMIN', 'HR'])):
 echo   Html::a(' <span class="fa fa-edit"></span> Add Attachment', ['staff/add-attachment', 'id' => $model->id], ['class' => 'btn btn-success pull-right']).'<br>';
-
+endif;
 
 if($attachment_exist){
     $attachments=new yii\data\ActiveDataProvider(['query' => \common\models\EmployeeAttachments::find()->where(['staff_id'=>$model->id])]);
@@ -356,15 +389,8 @@ if($attachment_exist){
 }else{
     echo '<br><div class="alert alert-warning alert-sm">No file is attached</div>';
 }
-
 ?>
-
 <?php $this->endBlock()?>
-
-
-
-
-
 
 <?php
 Modal::begin([
@@ -377,11 +403,58 @@ echo "<div id='modalContent'></div>";
 
 Modal::end(); ?>
 
+
+
+
+    <?php
+    Modal::begin([
+        'header' => '<h4 align="center" style="color: red;"><span class="fa fa-child"> Dependants Info</span></h4>',
+        'id'     => 'modal1',
+        'size'   => 'modal-small',
+    ]);
+
+    echo '<div id="modalContent1"></div>';
+
+
+
+    Modal::end(); ?>
+
+
+
+    <?php
+    Modal::begin([
+        'header' => '<h4 align="center" style="color: red;"><span class="fa fa-user"> Spouse Info</span></h4>',
+        'id'     => 'modal2',
+        'size'   => 'modal-small',
+    ]);
+    echo '<div id="modalContent2"></div>';
+    Modal::end(); ?>
+
+    <?php
+    Modal::begin([
+        'header' => '<h4 align="center" style="color: red;"><span class="fa fa-user"> Next of Keen Info</span></h4>',
+        'id'     => 'modal3',
+        'size'   => 'modal-small',
+    ]);
+    echo '<div id="modalContent3"></div>';
+    Modal::end(); ?>
+
+
+    <?php
+    Modal::begin([
+        'header' => '<h4 align="center" style="color: red;"><span class="fa fa-money"> Allowance Info</span></h4>',
+        'id'     => 'modal4',
+        'size'   => 'modal-small',
+    ]);
+    echo '<div id="modalContent4"></div>';
+    Modal::end(); ?>
+
+
 <?php
 echo '<h5 style="font-family: Lucida Bright">'. Tabs::widget([
     'items' => [
         [
-            'label' => 'STAFF DETAILS',
+            'label' => 'Staff Details',
             'content' => $this->blocks['staff_details'],
         ],
         [
@@ -424,8 +497,26 @@ $(function (){
 $(function (){
 
     $('#modalButton1').click(function(){
-        $('#modalImport').modal('show')
-            .find('#modalContentImport')
+        $('#modal1').modal('show')
+            .find('#modalContent1')
+            .load($(this).attr('value'));
+    });
+    
+      $('#modalButton2').click(function(){
+        $('#modal2').modal('show')
+            .find('#modalContent2')
+            .load($(this).attr('value'));
+    });
+      
+           $('#modalButton3').click(function(){
+        $('#modal3').modal('show')
+            .find('#modalContent3')
+            .load($(this).attr('value'));
+    });
+           
+                      $('#modalButton4').click(function(){
+        $('#modal4').modal('show')
+            .find('#modalContent4')
             .load($(this).attr('value'));
     });
     

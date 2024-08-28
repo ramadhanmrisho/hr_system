@@ -135,7 +135,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <!DOCTYPE html>
             <html>
             <head>
-
                 <!-- Include CSS for styling -->
                 <style>
                     /* Add your CSS styling here */
@@ -195,8 +194,9 @@ $this->params['breadcrumbs'][] = $this->title;
             $union=is_null($model->union_contibution)?0:$model->union_contibution;
             $salary_advance=is_null($model->salary_advance)?0:$model->salary_advance;
             $nhif=is_null($model->nhif)?0:$model->nhif;
+            $loan=is_null($model->loan)?0:$model->loan;
 
-            $total_deductions=$model->absent_amount+$union+$salary_advance+$model->nssf+$model->paye+$nhif;
+            $total_deductions=$model->absent_amount+$union+$salary_advance+$model->nssf+$model->paye+$nhif+$loan;
             ?>
 
             <div class="printableContent container" id="printableDiv">
@@ -242,7 +242,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <tr>
                         <td>Allowance:</td>
-                        <td colspan="2">-</td>
+                        <td colspan="2"> <?= Yii::$app->formatter->asDecimal($model->allowances)?></td>
                         <td>Salary Advance:</td>
                         <td colspan="2"><?= Yii::$app->formatter->asDecimal($salary_advance,2)?></td>
 
@@ -257,7 +257,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <td>Special OT Amount:</td>
                         <td colspan="2"><?= Yii::$app->formatter->asDecimal($model->special_ot_amount,2)?></td>
                         <td>Loan:</td>
-                        <td colspan="2">-</td>
+                        <td colspan="2"><?= Yii::$app->formatter->asDecimal($model->loan,2)?></td>
                     </tr>
                     <tr>
                         <td>Night Hours Amount:</td>
@@ -296,8 +296,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </p>
             </body>
             </html>
-
-
+            
         </div>
     </div>
 

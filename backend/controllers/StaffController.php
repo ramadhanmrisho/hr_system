@@ -11,6 +11,7 @@ use common\models\EmployeeSpouse;
 use common\models\NextOfKin;
 use common\models\StaffAllowance;
 use common\models\UserAccount;
+use Faker\Core\DateTime;
 use Yii;
 use common\models\Staff;
 use common\models\search\StaffSearch;
@@ -100,29 +101,24 @@ class StaffController extends Controller
     public function actionCreate()
     {
         $model = new Staff();
-
-        $userAccount_model=new UserAccount();
-        
         if ($model->load(Yii::$app->request->post())) {
-
-
-
-
-             $staff_number=Staff::find()->where(['employee_number'=>$model->employee_number])->exists();
+             $staff_number = Staff::find()->where(['employee_number'=>$model->employee_number])->exists();
 
             if ($staff_number){
                 Yii::$app->session->setFlash('getDanger','<span class="fa fa-warning">Employee Number already exists in the System!</span>');
                 return $this->render('create', ['model' => $model,]);
             }
+            $userAccount_model = new UserAccount();
 
-            $userID=UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
+//var_dump(($model->dependant_information));die();
+            $userID = UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
             $model->created_by=$userID;
             $model->salary_scale='TPS';
 
             $model->photo = Uploadedfile::getInstance($model, 'photo');
-            $model->fname=strtoupper($model->fname);
-            $model->mname=strtoupper($model->mname);
-            $model->lname=strtoupper($model->lname);
+            $model->fname = strtoupper($model->fname);
+            $model->mname = strtoupper($model->mname);
+            $model->lname = strtoupper($model->lname);
             $model->basic_salary=(int)str_replace(',','',$model->basic_salary);
 //            $model->nhif=(int)str_replace(',','',$model->nhif);
 //            $model->paye=(int)str_replace(',','',$model->paye);
@@ -135,22 +131,14 @@ class StaffController extends Controller
             $transaction = Yii::$app->db->beginTransaction();
             try {
                 if ($model->save()) {
-                    //CREATING USER ACCOUNT
-                    $userAccount_model->user_id = $model->id;
-                    $userAccount_model->username = $model->employee_number;
-                    $userAccount_model->password = Yii::$app->security->generatePasswordHash($model->phone_number);
-                    $userAccount_model->email = $model->email;
-                    $userAccount_model->category = 'staff';
-                    //$userAccount_model->designation_abbr=Designation::find()->where(['id'=>$model->designation_id])->one()->abbreviation;
-                    $userAccount_model->created_by = Yii::$app->user->identity->getId();
-                    $userAccount_model->save();
+
                     if (!empty($model->photo)) {
                         $model->photo->saveAs('staff_photo/' . $model->photo->baseName . '.' . $model->photo->extension);
                     }
 
                     //SAVING ALLOWANCE
                     if (!empty($model->allowance_id)) {
-                        foreach ($model->allowance_id as $allowance) {
+                        foreach($model->allowance_id as $allowance) {
                             $alowance_model = new StaffAllowance();
                             $alowance_model->staff_id = $model->id;
                             $alowance_model->allowance_id = $allowance;
@@ -158,9 +146,9 @@ class StaffController extends Controller
                             $alowance_model->save();
                         }
                     }
-
                     //SAVING DEPENDANT INFO
-                    if (!empty($model->dependant_information)) {
+                    $array = $model->dependant_information;
+                    if (!empty($array[0]['dependant_name']) && !empty($array[0]['date_of_birth']) && !empty($array[0]['dependant_gender'])) {
                         foreach ($model->dependant_information as $dependant) {
                             $dependant_model = new Dependants();
                             $dependant_model->name = $dependant['dependant_name'];
@@ -197,6 +185,18 @@ class StaffController extends Controller
                         $val->saveAs('employee_attachments/'.$val->baseName.'.'.$val->extension);
                         $attachment_model->save(false);
                     }
+                    //CREATING USER ACCOUNT
+                    $userAccount_model = new UserAccount();
+                    $userAccount_model->user_id = $model->id;
+                    $userAccount_model->username = $model->employee_number;
+                    $userAccount_model->password = Yii::$app->security->generatePasswordHash($model->phone_number);
+                    $userAccount_model->email = $model->email;
+                    $userAccount_model->category = 'staff';
+                    $userAccount_model->created_at = date('Y-m-d H:i:s');
+                    $userAccount_model->updated_at = date('Y-m-d H:i:s');
+                    //$userAccount_model->designation_abbr=Designation::find()->where(['id'=>$model->designation_id])->one()->abbreviation;
+                    $userAccount_model->created_by = Yii::$app->user->identity->getId();
+                    $userAccount_model->save(false);
                     $transaction->commit();
                     Yii::$app->session->setFlash('getSuccess',' <span class="fa fa-check-square-o">Staff added Successfully!</span>');
                     return $this->redirect(['view', 'id' => $model->id]);
@@ -205,12 +205,8 @@ class StaffController extends Controller
             catch (\Exception $e){
              // Roll back the transaction
                 $transaction->rollBack();
-                var_dump($e);
                 Yii::$app->session->setFlash('getDanger',$e->getMessage());
             }
-
-var_dump($model->getErrors());
-            die();
         }
 
         return $this->render('create', [
@@ -229,12 +225,8 @@ var_dump($model->getErrors());
    public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         $model->created_by=Yii::$app->user->identity->getId();
-
         if ($model->load(Yii::$app->request->post())) {
-
-
             $model->photo = Uploadedfile::getInstance($model, 'photo');
             if (!empty($model->photo)) {
                 $model->photo->saveAs('../web/staff_photo/' . $model->photo->baseName. '.' . $model->photo->extension);
@@ -410,6 +402,30 @@ var_dump($model->getErrors());
         return $this->redirect(['view', 'id' => $staff_id]);
 
     }
+
+    public function actionRemoveDependents($id,$staff_id)
+    {
+        $model = Dependants::find()->where(['staff_id' => $staff_id,'id'=>$id])->one();
+        $model->delete();
+        Yii::$app->session->setFlash('getSuccess','Details removed successfully!');
+        return $this->redirect(['view', 'id' => $staff_id]);
+    }
+
+    public function actionRemoveSpouse($id,$staff_id)
+    {
+        $model = EmployeeSpouse::find()->where(['staff_id' => $staff_id,'id'=>$id])->one();
+        $model->delete();
+        Yii::$app->session->setFlash('getSuccess','Details removed successfully!');
+        return $this->redirect(['view', 'id' => $staff_id]);
+    }
+
+    public function actionRemoveKin($id,$staff_id)
+    {
+        $model = NextOfKin::find()->where(['staff_id' => $staff_id,'id'=>$id])->one();
+        $model->delete();
+        Yii::$app->session->setFlash('getSuccess','Details removed successfully!');
+        return $this->redirect(['view', 'id' => $staff_id]);
+    }
     
 
     //**********CHANGE PASSWORD BY  ADMIN*************
@@ -574,6 +590,28 @@ var_dump($model->getErrors());
             Yii::$app->session->setFlash('reqSuccess','Account deactivated changed Successfully');
 
             return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+
+
+
+
+
+    }
+
+    public function actionSpouse($staff_id)
+    {
+        $model = new EmployeeSpouse();
+        if ($model->load(Yii::$app->request->post())) {
+            $model->staff_id = $staff_id;
+            if ($model->save(false)) {
+                Yii::$app->session->setFlash('getSuccess', ' <span class="fa fa-check-square-o"> Dependants added Successfully</span>');
+                return $this->redirect(['staff/view', 'id' => $staff_id]);
+            }
+            else{
+                Yii::$app->session->setFlash('getError', ' <span class="fa fa-check-square-o"> Failed to Save</span>');
+                return $this->redirect(['staff/view', 'id' => $staff_id]);
+            }
         }
     }
 

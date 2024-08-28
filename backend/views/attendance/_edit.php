@@ -22,16 +22,12 @@ use yii\widgets\ActiveForm;
 
 
     <?= $form->field($model, 'date')->textInput() ?>
-
-<!--    --><?php //= $form->field($model, 'signin_at')->widget(TimePicker::classname(), []); ?>
-<!---->
-<!---->
-<!--    --><?php //= $form->field($model, 'singout_at')->widget(TimePicker::classname(), []); ?>
-
+    
     <?= $form->field($model, 'signin_at')->textInput() ?>
 
     <?= $form->field($model, 'singout_at')->textInput() ?>
 
+    <?= $form->field($model, 'status',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::className(), ['data'=>[ 'Unpaid Leave'=>'Unpaid Leave','Absent'=>'Absent','Annual Leave' => 'Annual Leave', 'Paternity Leave' => 'Paternity Leave','Maternity Leave'=>'Maternity Leave','Compassionate Leave'=>'Compassionate Leave'],'options'=>['placeholder'=>'--Select Status--']]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

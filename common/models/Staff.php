@@ -69,6 +69,8 @@ class Staff extends \yii\db\ActiveRecord
     public $phone;
     public $next_of_kin_address;
     public $spouse_name;
+    public $name;
+    public $date_of_birth;
     public $spouse_phone_number;
 
 
@@ -92,7 +94,7 @@ class Staff extends \yii\db\ActiveRecord
             [[ 'basic_salary','nssf','nhif','created_by'], 'safe'],
            // [[ 'basic_salary', 'paye', 'nssf', 'nhif'], 'safe'],
             [['marital_status', 'gender', 'category'], 'string'],
-            [['fname', 'mname', 'lname', 'place_of_birth', 'bank_account_number',], 'string', 'max' => 255],
+            [['fname', 'mname', 'lname', 'place_of_birth', 'bank_account_number','name'], 'string', 'max' => 255],
             [['phone_number'], 'string', 'max' => 14],
             [['id_number', 'email','home_address'], 'string', 'max' => 30],
             [['employee_number', 'name_of_high_education_level', 'account_name'], 'string', 'max' => 100],

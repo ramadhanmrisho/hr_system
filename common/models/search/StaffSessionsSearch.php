@@ -19,7 +19,7 @@ class StaffSessionsSearch extends StaffSessions
     {
         return [
             [['id', 'staff_id'], 'integer'],
-            [['time', 'client', 'ip', 'tgt', 'sid'], 'safe'],
+            [['time', 'client', 'ip', 'tgt', 'sid','year','month'], 'safe'],
         ];
     }
 

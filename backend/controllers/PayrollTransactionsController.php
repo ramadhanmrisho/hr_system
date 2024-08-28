@@ -12,6 +12,7 @@ use common\models\SalaryAdjustments;
 use common\models\SalaryAdvance;
 use common\models\Staff;
 use common\models\StaffAllowance;
+use common\models\StaffLoans;
 use common\models\StaffNightHours;
 use common\models\UnionContribution;
 use common\models\UserAccount;
@@ -61,6 +62,17 @@ class PayrollTransactionsController extends Controller
         ]);
     }
 
+    public function actionSlip($id)
+    {
+        $searchModel = new PayrollTransactionsSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andFilterWhere(['staff_id' => $id]);
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     /**
      * Displays a single PayrollTransactions model.
      * @param integer $id
@@ -100,58 +112,60 @@ class PayrollTransactionsController extends Controller
             ->exists();
 
         if (!$attendanceExists){
-          Yii::$app->session->setFlash('getError',' <span class="fa fa-check-square-o">Please Generate Attendance for this Month first</span>');
+          Yii::$app->session->setFlash('getError',' <span class="fa fa-check-square-o"> Please Generate Attendance for this Month first</span>');
           return $this->redirect(['payroll/index']);
       }
       else{
 
           $allStaff=Staff::find()->where(['status'=>1])->orderBy(['fname'=>SORT_ASC])->all();
-          foreach ($allStaff as $staff){
+//          foreach ($allStaff as $staff){
+//           var_dump( $staff->fname.' '.$this->staffLoan($staff->id).'<br>');
+//          }
+
+              foreach ($allStaff as $staff){
               $model = new PayrollTransactions();
-              $model->payroll_id=$this->payrollID();
-              $model->staff_id=$staff->id;
-              $model->departiment_id=$staff->department_id;
-              $model->designation_id=$staff->designation_id;
-              $model->basic_salary=$staff->basic_salary;
-              $model->salary_adjustiment_id=!is_null($this->salaryAdjustment($staff->id))?$this->salaryAdjustment($staff->id):0;
-              $model->allowances=$this->staffAllowances($staff->id);
-              $model->night_hours=$this->calculateNightHours($staff->id);
-              $model->night_allowance=$this->calculateNightHours($staff->id)*OvertimeAmount::find()->where(['status'=>1])->one()->normal_ot_amount;
-              $has_overtime=Staff::findOne(['id'=>$staff->id])->has_ot;
-              $model->normal_ot_hours=$has_overtime=="Yes"?$this->calculateOvertimeByStaffInMonth($staff->id):0;
-              $model->special_ot_hours=$this->calculateWorkingHoursWithHolidays($staff->id);
-              $model->normal_ot_amount=(int)$model->normal_ot_hours*OvertimeAmount::find()->where(['status'=>1])->one()->normal_ot_amount;
-              $model->special_ot_amount= (int) $model->special_ot_hours*OvertimeAmount::find()->where(['status'=>1])->one()->special_ot_amount;
-              $model->absent_days=$this->absentDays($staff->id);
-              $model->absent_amount= (int)$model->absent_days*$this->calculateDailySalary($staff->id);
-              $adjustmentAmount=SalaryAdjustments::find()->where(['id'=>$model->salary_adjustiment_id])->exists()?SalaryAdjustments::findOne(['id'=>$model->salary_adjustiment_id])->amount:0;
-              $model->total_earnings=($model->basic_salary+$adjustmentAmount+ $model->allowances+$model->night_allowance+$model->normal_ot_amount+$model->special_ot_amount)-$model->absent_amount;
-              $model->nssf=(DeductionsPercentage::findOne(['status'=>'active'])->NSSF/100)*$model->total_earnings;
-              $model->taxable_income=$model->total_earnings-$model->nssf;
-              $model->paye=$this->calculatePAYE($model->taxable_income);
-              $model->loan=0;
-              $model->salary_advance=$this->salaryAdvance($staff->id);
-              $model->union_contibution=$this->unionContribution($staff->id);
-              $model->wcf=(DeductionsPercentage::findOne(['status'=>'active'])->WCF)/100 * $model->total_earnings;
-              $model->sdl=(DeductionsPercentage::findOne(['status'=>'active'])->SDL/100)*$model->total_earnings;
-              $has_NHIF=Staff::findOne(['id'=>$staff->id])->nhif;
-              $model->nhif=$has_NHIF=="Yes"?(DeductionsPercentage::findOne(['status'=>'active'])->NHIF/100)*$model->total_earnings:0;
-              $model->net_salary=$model->total_earnings-($model->nssf+$model->paye+$model->loan+$model->salary_advance+$model->union_contibution+$model->nhif);
-              $model->total=$model->total_earnings+$model->nssf+$model->nhif+ $model->wcf+$model->sdl;
-              $userID=UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
-              $model->created_by=$userID;
+              $model->payroll_id = $this->payrollID();
+              $model->staff_id = $staff->id;
+              $model->departiment_id = $staff->department_id;
+              $model->designation_id = $staff->designation_id;
+              $model->basic_salary = $staff->basic_salary;
+              $model->salary_adjustiment_id = !is_null($this->salaryAdjustment($staff->id))?$this->salaryAdjustment($staff->id):0;
+              $model->allowances = $this->staffAllowances($staff->id);
+              $model->night_hours = $this->calculateNightHours($staff->id);
+              //$model->night_allowance=$this->calculateNightHours($staff->id)*OvertimeAmount::find()->where(['status'=>1])->one()->normal_ot_amount;
+              $model->night_allowance = $this->calculateNightHours($staff->id)* $this->NightHoursAmount($staff->id);
+              $has_overtime = Staff::findOne(['id'=>$staff->id])->has_ot;
+              $model->normal_ot_hours = $has_overtime=="Yes"?$this->calculateOvertimeByStaffInMonth($staff->id):0;
+              $model->special_ot_hours = $this->calculateWorkingHoursWithHolidays($staff->id);
+              $model->normal_ot_amount = (int)$model->normal_ot_hours*$this->NormalOtAmount($staff->id);
+              //$model->normal_ot_amount=(int)$model->normal_ot_hours*OvertimeAmount::find()->where(['status'=>1])->one()->normal_ot_amount;
+              //$model->special_ot_amount= (int) $model->special_ot_hours*OvertimeAmount::find()->where(['status'=>1])->one()->special_ot_amount;
+              $model->special_ot_amount = (int) $model->special_ot_hours * $this->SpecialOtAmount($staff->id);
+              $model->absent_days = $this->absentDays($staff->id);
+              $model->absent_amount = (int)$model->absent_days*$this->calculateDailySalary($staff->id);
+              $adjustmentAmount = SalaryAdjustments::find()->where(['id'=>$model->salary_adjustiment_id])->exists()?SalaryAdjustments::findOne(['id'=>$model->salary_adjustiment_id])->amount:0;
+              $model->total_earnings = ($model->basic_salary+$adjustmentAmount+ $model->allowances+$model->night_allowance+$model->normal_ot_amount+$model->special_ot_amount)-$model->absent_amount;
+              $model->nssf = (DeductionsPercentage::findOne(['status'=>'active'])->NSSF/100)*$model->total_earnings;
+              $model->taxable_income = $model->total_earnings-$model->nssf;
+              $model->paye = $this->calculatePAYE($model->taxable_income);
+              $model->loan = $this->staffLoan($staff->id);
+              $model->salary_advance = $this->salaryAdvance($staff->id);
+              $model->union_contibution = $this->unionContribution($staff->id);
+              $model->wcf = (DeductionsPercentage::findOne(['status'=>'active'])->WCF)/100 * $model->total_earnings;
+              $model->sdl = (DeductionsPercentage::findOne(['status'=>'active'])->SDL/100)*$model->total_earnings;
+              $has_NHIF = Staff::findOne(['id'=>$staff->id])->nhif;
+              $model->nhif = $has_NHIF == "Yes"?(DeductionsPercentage::findOne(['status'=>'active'])->NHIF/100)*$model->total_earnings:0;
+              $model->net_salary = $model->total_earnings-($model->nssf+$model->paye+$model->loan+$model->salary_advance+$model->union_contibution+$model->nhif);
+              $model->total = $model->total_earnings+$model->nssf+$model->nhif+ $model->wcf+$model->sdl;
+              $userID = UserAccount::findOne(['id' =>Yii::$app->user->identity->getId()])->user_id;
+              $model->created_by = $userID;
               $model->save(false);
-
-////          //print $staff->fname.' - '.$this->calculatePAYE($staff->basic_salary).'<br>';
-//          var_dump($model->total);
-//          echo $staff->id.'<br>';
           }
-          $payroll_record=new Payroll();
-          $payroll_record->payroll_transaction_id=$model->payroll_id;
-          $payroll_record->created_by=$userID;
+          $payroll_record = new Payroll();
+          $payroll_record->payroll_transaction_id = $model->payroll_id;
+          $payroll_record->created_by = $userID;
           $payroll_record->save();
-
-          Yii::$app->session->setFlash('getSuccess',' <span class="fa fa-check-square-o">Payroll Generated  Successfully</span>');
+          Yii::$app->session->setFlash('getSuccess',' <span class="fa fa-check-square-o"> Payroll Generated  Successfully</span>');
           return $this->redirect(['index','payroll_id'=>$model->payroll_id]);
       }
 
@@ -261,15 +275,29 @@ class PayrollTransactionsController extends Controller
         return $overtimeQuery;
     }
 
+    //old
+//    public static function absentDays($staff_id){
+//        $year = date('Y');
+//        $month = date('m');
+//        $absentdayz = Absentees::find()
+//            ->select(['SUM(days) AS total_days'])
+//            ->where(['staff_id' => $staff_id])
+//            ->andWhere(['MONTH(created_at)' => $month, 'YEAR(created_at)' => $year])
+//            ->scalar();
+//        return isset($absentdayz)?$absentdayz:0;
+//    }
+
     public static function absentDays($staff_id){
         $year = date('Y');
         $month = date('m');
-        $absentdayz = Absentees::find()
-            ->select(['SUM(days) AS total_days'])
+        $absentdayz = Attendance::find()
             ->where(['staff_id' => $staff_id])
-            ->andWhere(['MONTH(created_at)' => $month, 'YEAR(created_at)' => $year])
-            ->scalar();
-        return isset($absentdayz)?$absentdayz:0;
+            ->andWhere(['status' => 'Absent'])
+            ->orWhere(['status' => 'Unpaid Leave'])
+            ->andWhere(['MONTH(created_at)' => $month,'YEAR(created_at)' => $year])
+            ->count();
+       // var_dump($absentdayz);die();
+        return isset($absentdayz) ? $absentdayz:0;
     }
 
 
@@ -447,6 +475,38 @@ class PayrollTransactionsController extends Controller
         return $holidays;
     }
 
+   public static function staffLoan($staff_id) {
+        // Fetch the staff loan record
+        $staffLoan = StaffLoans::findOne(['staff_id' => $staff_id]);
+
+        // Check if staff loan record exists and loan status is not paid
+        if ($staffLoan && $staffLoan->status !== 'paid') {
+            // Calculate the remaining loan amount
+            $remainingLoanAmount = $staffLoan->loan_amount - $staffLoan->amount_paid;
+
+            // Check if the remaining loan amount is greater than zero
+            if ($remainingLoanAmount > 0) {
+                // Add monthly return to the amount paid
+                $staffLoan->amount_paid += $staffLoan->monthly_return;
+
+                // Check if the loan amount and amount paid are equal
+                if ($staffLoan->amount_paid >= $staffLoan->loan_amount) {
+                    // Set loan status to paid
+                    $staffLoan->status = 'paid';
+                }
+
+                // Save the updated staff loan record
+                $staffLoan->save();
+
+                // Return the monthly return amount
+                return $staffLoan->monthly_return;
+            }
+        }
+
+        // Return 0 if no monthly return or if the loan is already paid
+        return 0;
+    }
+
 
 //     public static function calculateWorkingDays()
 //{
@@ -481,8 +541,28 @@ class PayrollTransactionsController extends Controller
             ->count(); // Count complete working days
         return $workingDays;
     }
+    public static function NormalOtAmount($staffId)
+    {
 
+        $basic_salary = Staff::find()->where(['id'=>$staffId])->one()->basic_salary;
+        $rate = ($basic_salary/(4.333*45))*1.5;
+        return $rate;
+    }
 
+    public static function SpecialOtAmount($staffId)
+    {
+        $basic_salary = Staff::find()->where(['id'=>$staffId])->one()->basic_salary;
+
+        $rate = ($basic_salary/(4.333*45))*2; // Count complete working days
+        return $rate;
+    }
+    public static function NightHoursAmount($staffId)
+    {
+        $basic_salary = Staff::find()->where(['id'=>$staffId])->one()->basic_salary;
+
+        $rate = ($basic_salary/(4.333*45))*0.05;
+        return $rate;
+    }
 
 
 

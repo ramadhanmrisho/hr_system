@@ -37,6 +37,7 @@ if(Yii::$app->session->hasFlash('getError')):?>
 
     <?php
 
+    $total_nssf = 0;
 
     $columns=[
         ['class' => 'yii\grid\SerialColumn'],
@@ -137,7 +138,7 @@ if(Yii::$app->session->hasFlash('getError')):?>
             'attribute' => 'nssf',
             'value' => function ($model) {
                 return Yii::$app->formatter->asDecimal($model->nssf);
-            },
+            },'footer'=>$total_nssf
         ],
         [
             'attribute' => 'taxable_income',
@@ -179,7 +180,7 @@ if(Yii::$app->session->hasFlash('getError')):?>
             'attribute' => 'wcf',
             'value' => function ($model) {
                 return Yii::$app->formatter->asDecimal($model->wcf);
-            },
+            }
         ],
         [
             'attribute' => 'sdl',
@@ -235,6 +236,7 @@ if(Yii::$app->session->hasFlash('getError')):?>
         'dataProvider' => $dataProvider,
         'columns' => $columns,
 
+
         'clearBuffers' => false, //optional
         'dropdownOptions' => [
             'label' => 'Export',
@@ -254,6 +256,7 @@ if(Yii::$app->session->hasFlash('getError')):?>
           'id'=>'gridTable',
         'clientOptions' => [
             'scrollX' => true,
+            'showFooter'=>true,
             //'scrollY' => '400px', // You can adjust the height as needed
             // Add other DataTables options here if required
 

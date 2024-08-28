@@ -43,21 +43,8 @@ if(Yii::$app->session->hasFlash('getDanger')):?>
 
 
     <p>
-        <?= Html::button('<span class=" fa fa-plus"> Create Academic Year</span> ', ['id' => 'modalButton', 'value' => \yii\helpers\Url::to(['academic-year/create']), 'class' => 'btn btn-success']) ?>
+        <?= Html::button('<span class=" fa fa-plus"> Create Financial Year</span> ', ['id' => 'modalButton', 'value' => \yii\helpers\Url::to(['academic-year/create']), 'class' => 'btn btn-success']) ?>
 
-        <?php
-        $active_semester=Semester::find()->where(['status'=>'Active'])->one();
-
-        if ($active_semester->name=='II'){
-            ?>
-            <?= Html::a('<span class="fa fa-calendar-times-o"> Close Academic Year</span>', ['academic-year/change-year'], [
-                'class' => 'btn btn-danger',
-                'data' => [
-                    'confirm' => 'Are you sure you want to close this Academic Year ?',
-                    'method' => 'post',
-                ],
-            ]) ?>
-        <?php }?>
 
     </p>
 

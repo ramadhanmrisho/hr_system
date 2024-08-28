@@ -31,13 +31,13 @@ if(Yii::$app->session->hasFlash('getSuccess')):?>
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
+<!--        --><?php //= Html::a('Delete', ['delete', 'id' => $model->id], [
+//            'class' => 'btn btn-danger',
+//            'data' => [
+//                'confirm' => 'Are you sure you want to delete this item?',
+//                'method' => 'post',
+//            ],
+//        ]) ?>
     </p>
 
 
@@ -56,6 +56,7 @@ if(Yii::$app->session->hasFlash('getSuccess')):?>
             'night_hours',
             'created_at',
             'updated_at',
+            'status',
 //            ['attribute'=>'created_by','value'=>function($model){
 //                $user=\common\models\Staff::findOne(['id'=>$model->created_by]);
 //                return  $user->getFullName();

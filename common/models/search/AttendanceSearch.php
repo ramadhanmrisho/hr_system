@@ -69,6 +69,7 @@ class AttendanceSearch extends Attendance
             'created_by' => $this->created_by,
         ]);
 
+
         return $dataProvider;
     }
 }

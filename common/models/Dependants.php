@@ -32,7 +32,7 @@ class Dependants extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'gender', 'dob', 'staff_id'], 'required'],
-            [['name', 'staff_id'], 'integer'],
+            [['staff_id'], 'integer'],
             [['gender'], 'string'],
             [['dob', 'created_at', 'updated_at'], 'safe'],
         ];
@@ -45,9 +45,9 @@ class Dependants extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => 'Full Name',
             'gender' => 'Gender',
-            'dob' => 'Dob',
+            'dob' => 'Date of Birth',
             'staff_id' => 'Staff ID',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

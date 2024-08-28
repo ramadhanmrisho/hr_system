@@ -57,16 +57,17 @@ echo ExportMenu::widget([
             return $model->fname . ' ' . $model->lname;
 
         })],
-        ['attribute'=>'staff_id','value'=>function ($model) {
-            $user=\common\models\Staff::findOne(['id'=>$model->staff_id]);
-            return $user->employee_number;
-        },'filter'=>ArrayHelper::map(\common\models\Staff::find()->all(), 'id', 'employee_number')],
-        'date',
+//        ['attribute'=>'staff_id','value'=>function ($model) {
+//            $user=\common\models\Staff::findOne(['id'=>$model->staff_id]);
+//            return $user->employee_number;
+//        },'filter'=>ArrayHelper::map(\common\models\Staff::find()->all(), 'id', 'employee_number')],
+
         'signin_at',
         'singout_at',
         'hours_per_day',
         'normal_ot_hours',
         'night_hours',
+        'status',
         //'updated_at',
         //'created_by',
         ['class' => 'yii\grid\ActionColumn','template'=>'{view}{update}'],
@@ -81,23 +82,42 @@ echo ExportMenu::widget([
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
+
+            ['attribute'=>'staff_id','value'=>function ($model) {
+                $user=\common\models\Staff::findOne(['id'=>$model->staff_id]);
+                return $user->employee_number;
+            },'filter'=>ArrayHelper::map(\common\models\Staff::find()->all(), 'id', function ($model) {
+                return  $model->employee_number;
+            })],
+
             ['attribute'=>'staff_id','value'=>function ($model) {
                 $user=\common\models\Staff::findOne(['id'=>$model->staff_id]);
                 return $user->fname.' '.$user->lname;
             },'filter'=>ArrayHelper::map(\common\models\Staff::find()->all(), 'id', function ($model) {
                 return $model->fname . ' ' . $model->lname;
             })],
-            ['attribute'=>'staff_id','value'=>function ($model) {
-                $user=\common\models\Staff::findOne(['id'=>$model->staff_id]);
-                return $user->employee_number;
-            },'label'=>'Staff Number','filter'=>ArrayHelper::map(\common\models\Staff::find()->all(), 'id', 'employee_number')],
+
+
             'date',
-            'signin_at',
-            'singout_at',
+
+            ['attribute'=>'signin_at','value'=>function($model){
+                if ($model->status == 'Absent' || $model->status == 'Unpaid Leave'){
+                   return  "-";
+                }
+                else return $model->signin_at;
+            }],
+            ['attribute'=>'singout_at','value'=>function($model){
+                if ($model->status == 'Absent' || $model->status == 'Unpaid Leave'){
+                    return  "-";
+                }
+                else return $model->singout_at;
+            }],
+
             'hours_per_day',
             'normal_ot_hours',
             'night_hours',
-            'created_at',
+            'status',
+            //'created_at',
             //'updated_at',
             //'created_by',
             ['class' => 'yii\grid\ActionColumn','template'=>'{view}{update}'],

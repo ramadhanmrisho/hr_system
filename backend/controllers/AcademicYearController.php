@@ -80,22 +80,19 @@ class AcademicYearController extends Controller
     {
         $model = new AcademicYear();
 
-        $model->created_by=Yii::$app->user->identity->getId();
+        $model->created_by = Yii::$app->user->identity->getId();
         if ($model->load(Yii::$app->request->post()) ) {
 
-            $active_year=AcademicYear::find()->where(['status'=>'Active'])->exists();
-            if ($active_year && $model->status=='Active'){
-                Yii::$app->session->setFlash('getDanger',' <span class=" fa fa-close"> Active Academic Year already exist!</span>');
-                return $this->redirect(['index']);
-            }
-
-            elseif( $model->save()){
+            $active_year=AcademicYear::find()->where(['status'=>'Active'])->one();
+            if (!empty($active_year)){
+                $active_year->status = 'Inactive';
+                $active_year->save();
+                $model->save();
                 Yii::$app->session->setFlash('gSuccess',' <span class="fa fa-check-square"> Created Successfully!</span>');
                 return $this->redirect(['index']);
             }
-
             else{
-                Yii::$app->session->setFlash('getDanger',' <span class=" fa fa-close">  Academic Year '.$model->name. ' already exist!</span>');
+                Yii::$app->session->setFlash('getDanger',' <span class=" fa fa-close">  Financila Year '.$model->name. ' already exist!</span>');
                 return $this->redirect(['index']);
             }
 
@@ -181,48 +178,5 @@ class AcademicYearController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    //CHANGE ACADEMIC YEAR
-    public function actionChangeYear(){
-        // CONDITIONS
-        $active_semester=Semester::find()->where(['status'=>'Active'])->one();
-        $all_modules=Module::find()->where(['semester_id'=>$active_semester])->count();
-        $all_modules_uploaded=ExamResult::find()->where(['semester_id'=>$active_semester])->groupBy(['module_id'])->count();
-
-        $release_result_first=ExamResult::find()->where(['status'=>'Wait for Approval','semester_id'=>$active_semester->id])->exists();
-        if ($release_result_first){
-            Yii::$app->session->setFlash('getDanger','<span class="fa fa-close"> Failed! Please make sure all student results have been published in order to close Year</span>');
-            return $this->redirect(['index']);
-        }
-        // elseif($all_modules==$all_modules_uploaded){
-        //     Yii::$app->session->setFlash('getDanger','<span class="fa fa-close"> Failed! Please make sure that  all module  results of the current semester have been uploaded  in order to close Year</span>');
-        //     return $this->redirect(['index']);
-        // }
-
-            //DEACTIVATE CURRENT ACADEMIC YEAR
-            $active_academic_year=AcademicYear::find()->where(['status'=>'Active'])->one();
-            $active_academic_year->status='Inactive';
-            if($active_academic_year->save()){
-
-
-                //ACTIVATE NEXT ACADEMIC YEAR IF NOT EXIST
-                $current = date('Y');
-                $next = date('Y', strtotime('+1 year'));
-                $year=$current.'/'.$next;
-
-                Yii::$app->db->createCommand()->update('academic_year', ['status' => 'Active'], ['status'=>'Inactive','name'=>$year])->execute();
-
-                //DEACTIVATE SEMESTER II
-                $active_semester->status='Inactivate';
-                $active_semester->save();
-
-            //CHANGE SEMESTER II TO I
-                $activate_semester_I = Semester::find()->where(['name' => 'I'])->one();
-                $activate_semester_I->status = 'Active';
-                $activate_semester_I->save();
-        }
-
-        Yii::$app->session->setFlash('getSuccess','<span class="fa fa-check-square"> Academic Year closed successfully! The next academic year is  '.$year.'</span>');
-        return $this->redirect(['index']);
-    }
 
 }

@@ -51,7 +51,7 @@ class StaffAllowance extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'staff_id' => 'Staff ID',
-            'allowance_id' => 'Allowance ID',
+            'allowance_id' => 'Allowance',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

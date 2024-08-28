@@ -470,24 +470,32 @@ class AttendanceController extends Controller
 
         if ($model->load(Yii::$app->request->post()) ) {
 
+//var_dump($model);
+//die();
             $dateTime1 = new \DateTime($model->signin_at);
             $dateTime2 = new \DateTime($model->singout_at);
             $interval = $dateTime1->diff($dateTime2);
             $model->hours_per_day = $interval->h + ($interval->days * 24);
-
             // Calculate night_hours
             $model->night_hours = $this->calculateNightHours($model->singout_at);
-
             // Calculate normal_ot_hours
+
             $model->normal_ot_hours = $this->calculateNormalOvertimeHours($model->signin_at, $model->singout_at);
-            if ($model->save(false)){
-                Yii::$app->session->setFlash('getSuccess', '<span class="fa fa-check-square-o">Attendance updated Successfully</span>');
+
+            if ($model->status == 'Absent' || $model->status == 'Unpaid Leave'){
+                $model->hours_per_day = 0;
+                $model->signin_at = "0000-00-00 00:00:00";
+                $model->singout_at = "0000-00-00 00:00:00";
+            }
+
+            if ($model->save()){
+                Yii::$app->session->setFlash('getSuccess', '<span class="fa fa-check-square-o"> Attendance updated Successfully</span>');
                 return $this->redirect(['view', 'id' => $model->id]);
             }
+            var_dump($model->getErrors());die();
         }
 
         return $this->render('update', [
-
             'model' => $model,
         ]);
     }

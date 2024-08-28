@@ -266,12 +266,12 @@ desired effect
                         ],
                         ["label"=>"My Profile","url"=>["staff/view",'id'=>Yii::$app->user->identity->user_id],"icon"=>"user"],
 
-                        ["label"=>"My Salary Slips","url"=>["staff-salary/index"],"icon"=>"fa fa-money"],
+                        ["label"=>"My Salary Slips","url"=>["payroll-transactions/slip",'id'=>Yii::$app->user->identity->user_id],"icon"=>"fa fa-money"],
 
 
 
 
-                        ["label" => "Payroll Configurations", "url" => "#", "icon" => "book",
+                        ["label" => "Payroll Configurations", "url" => "#", "icon" => "book",'visible'=>UserAccount::userHas(['ADMIN','HR']),
                             "items"=>[
                                 ["label"=>"Attendance","url"=>["attendance/index"],"icon"=>"calendar"],
                                 ["label"=>"General Deductions","url"=>["deductions-percentage/index"],"icon"=>"close"],
@@ -281,12 +281,13 @@ desired effect
                                 ["label"=>"OT Amounts","url"=>["overtime-amount/index"],"icon"=>"history"],
                                 ["label"=>"Salary Adjustments","url"=>["salary-adjustments/index"],"icon"=>"money"],
 //                                ["label"=>"Employee Salary Slips","url"=>["staff-salary/index"],"icon"=>"fa fa-money",'visible'=> UserAccount::userHas(['HR','PR','ACC','ADMIN'])],
-                                ["label" => "Salary Advance", "url" => ["salary-advance/index"], "icon" => "institution"],
+                                ["label" => "Salary Advance", "url" => ["salary-advance/index"], "icon" => "money"],
+                                ["label" => "Staff  Loans", "url" => ["staff-loans/index"], "icon" => "money"],
                                 ["label" => "Absent Days ", "url" => ["absentees/index"], "icon" => "user-times"],
                                 ["label" => "Union Contributions ", "url" => ["union-contribution/index"], "icon" => "briefcase"],
                             ],
                             ],
-                        ["label"=>"Payroll Records","url"=>["payroll/index"],"icon"=>"briefcase"],
+                        ["label"=>"Payroll Records","url"=>["payroll/index"],"icon"=>"briefcase",'visible'=>UserAccount::userHas(['ADMIN','HR'])],
 
 //                          ["label"=>"Leaves","url"=>["time-table/index"],"icon"=>"plane"],
 
@@ -313,25 +314,15 @@ desired effect
                         ],
 
 
-
-
-
-
-//                        ["label"=>"Reports","url"=>"#","icon"=>"fa fa-bar-chart",
-//                            'items'=>[
-//                               ['label'=>'Employee Reports','url'=>"#",'icon'=>'fa fa-users',
-//                                   'items'=>[
-//                                       ['label'=>'Employee List','url'=>["student-payment-report/create"],'icon'=>'fa fa-users'],
-//                                       ['label'=>'Departmental Report','url'=>["student-payment-report/create"],'icon'=>'fa fa-building'],
-//                                       ['label'=>'Terminated Employee','url'=>["student-payment-report/create"],'icon'=>'fa fa-user'],
-//                                   ]
-//
-//                               ],
-//
-//                               ['label'=>'Financial Report','url'=>["student-payment-report/create"],'icon'=>'fa fa-money'],
-//
-//                            ],
-//                        ]
+                        ["label"=>"Reports","url"=>"#","icon"=>"fa fa-bar-chart",
+                            'items'=>[
+                                ['label'=>'Salary Sheet','url'=>["staff-sessions/create"],'icon'=>'fa fa-file'],
+                                ['label'=>'Payroll Total Cost','url'=>["staff-sessions/payroll"],'icon'=>'fa fa-book'],
+                                ['label'=>'Bank Salary Sheet','url'=>["staff-sessions/bank"],'icon'=>'fa fa-users'],
+                                ['label'=>'WCF Report','url'=>["staff-sessions/wcf"],'icon'=>'fa fa-building'],
+                                ['label'=>'NSSF Report','url'=>["staff-sessions/nssf"],'icon'=>'fa fa-building'],
+                            ],
+                        ]
                     ];
 
                 }

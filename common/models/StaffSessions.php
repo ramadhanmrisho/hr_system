@@ -23,6 +23,10 @@ class StaffSessions extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
+    public  $month;
+    public  $year;
+    public  $account_name;
     public static function tableName()
     {
         return 'staff_sessions';
@@ -36,7 +40,7 @@ class StaffSessions extends \yii\db\ActiveRecord
         return [
             [['staff_id'], 'required'],
             [['staff_id'], 'integer'],
-            [['time'], 'safe'],
+            [['time','year','month','account_name'], 'safe'],
             [['client', 'tgt'], 'string', 'max' => 255],
             [['ip'], 'string', 'max' => 20],
             [['sid'], 'string', 'max' => 256],
@@ -54,6 +58,7 @@ class StaffSessions extends \yii\db\ActiveRecord
             'staff_id' => 'Staff ID',
             'time' => 'Time',
             'client' => 'Client',
+            'account_name' => 'Bank Name',
             'ip' => 'Ip',
             'tgt' => 'Tgt',
             'sid' => 'Sid',

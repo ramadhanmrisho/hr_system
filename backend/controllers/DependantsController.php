@@ -62,15 +62,17 @@ class DependantsController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($staff_id)
     {
         $model = new Dependants();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->staff_id = $staff_id;
+            if ( $model->save()){
+                Yii::$app->session->setFlash('getSuccess',' <span class="fa fa-check-square-o"> Dependants added Successfully</span>');
+                return $this->redirect(['staff/view', 'id' => $staff_id]);
+            }
         }
-
-        return $this->render('create', [
+        return $this->renderAjax('create', [
             'model' => $model,
         ]);
     }

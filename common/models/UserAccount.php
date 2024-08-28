@@ -23,8 +23,7 @@ use yii\web\IdentityInterface;
  * @property string $category
  * @property string $designation_abbr
  * @property int $created_by
- * @property string $created_at
- * @property string $updated_at
+
  *
  * @property AcademicYear[] $academicYears
  * @property Allowance[] $allowances
@@ -36,27 +35,15 @@ use yii\web\IdentityInterface;
  * @property Department[] $departments
  * @property Designation[] $designations
  * @property District[] $districts
- * @property ExamResult[] $examResults
- * @property FinalExam[] $finalExams
- * @property Gpa[] $gpas
- * @property GpaClass[] $gpaClasses
- * @property Grade[] $grades
- * @property Module[] $modules
- * @property NtaLevel[] $ntaLevels
- * @property OlevelAndAlevelSubject[] $olevelAndAlevelSubjects
- * @property ParentInformation[] $parentInformations
- * @property Payment[] $payments
- * @property PaymentType[] $paymentTypes
- * @property PostponedStudent[] $postponedStudents
- * @property RegisteredModule[] $registeredModules
- * @property Semester[] $semesters
+
+
+
  * @property Staff[] $staff
  * @property StaffSalary[] $staffSalaries
  * @property Student[] $students
  * @property StudentFinancialCategory[] $studentFinancialCategories
  * @property SystemAudit[] $systemAudits
- * @property Test[] $tests
- * @property Transcript[] $transcripts
+
  * @property UserAccount $createdBy
  * @property UserAccount[] $userAccounts
  * @property YearOfStudy[] $yearOfStudies
@@ -98,10 +85,10 @@ class UserAccount extends ActiveRecord implements IdentityInterface
             [['category'], 'string'],
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
-            [['created_at', 'updated_at'], 'safe'],
             [['username', 'password', 'auth_key', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
             [['designation_abbr'], 'string', 'max' => 30],
             [['username'], 'unique'],
+            [['created_at','updated_at'], 'safe'],
             [['email'], 'unique'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => UserAccount::className(), 'targetAttribute' => ['created_by' => 'id']],
         ];
@@ -125,8 +112,8 @@ class UserAccount extends ActiveRecord implements IdentityInterface
             'category' => 'Category',
             'designation_abbr' => 'Designation Abbr',
             'created_by' => 'Created By',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+
+
         ];
     }
 

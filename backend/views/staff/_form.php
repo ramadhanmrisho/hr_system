@@ -91,9 +91,7 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                   <?= $form->field($model, 'email',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
                   <?= $form->field($model, 'alternate_phone_number')->textInput() ?>
                   <?= $form->field($model, 'home_address')->textInput(['maxlength' => true])->label('Street') ?>
-
                 </div>
-
                 <div class="col-md-3">
                     <?php if($model->isNewRecord){?>
                     <?= $form->field($model, 'photo',['options'=>['class'=>'required']])->widget(\kartik\file\FileInput::className(),[
@@ -101,22 +99,18 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                         'pluginOptions' => ['allowedFileExtensions' => ['jpg','png','jepg'], 'showUpload' => false]
                     ]); ?>
                 <?php }?>
-
                 </div>
-
             </fieldset>
             <br>
-
    <fieldset>
        <?php if ($hr ||$admin){?>
-       <legend style="font-weight: bold;color: #0d6aad">Employment Information:</legend>
+       <legend style="font-weight: bold;color: #0d6aad"> Employment Information:</legend>
        <div class="col-md-3">
            <?= $form->field($model, 'employee_number',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
            <?= $form->field($model, 'designation_id',['options'=>['class'=>'required']])->widget(\kartik\select2\Select2::className(), ['data'=> ArrayHelper::map(\common\models\Designation::find()->all(),'id','name'),             'options'=>['placeholder'=>'--Select--']]) ?>
 <!--           --><?php //= $form->field($model, 'paye',['options'=>['class'=>'money required']])->textInput(['id'=>'money-value1']) ?>
            <?= $form->field($model, 'account_name',['options'=>['class'=>'required']])->dropDownList([ 'NMB' => 'NMB', 'CRDB' => 'CRDB','NBC'=>'NBC','AMANA BANK'=>'AMANA BANK','AZANIA'=>'AZANIA' ], ['prompt' => '']) ?>
        </div>
-
        <div class="col-md-3">
            <?= $form->field($model, 'date_employed',['options'=>['class'=>'required']])->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
            <?= $form->field($model, 'contract_end_date')->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
@@ -124,7 +118,7 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
        </div>
 
        <div class="col-md-3">
-           <?= $form->field($model, 'name_of_high_education_level',['options'=>['class'=>'required']])->dropDownList([ 'PhD' => 'PhD', 'Master Degree' => 'Master Degree', 'Bachelor Degree' => 'Bachelor Degree','Diploma'=>'Diploma','Certificate'=>'Certificate',' A-Level'=>' A-Level','O-Leve'=>'O-Leve','STD VII'=>'STD VII','Nil'=>'Nil' ], ['prompt' => '']) ?>
+           <?= $form->field($model, 'name_of_high_education_level',['options'=>['class'=>'required']])->dropDownList([ 'PhD' => 'PhD', 'Master Degree' => 'Master Degree', 'Bachelor Degree' => 'Bachelor Degree','Diploma'=>'Diploma','Certificate'=>'Certificate',' A-Level'=>' A-Level','O-Level'=>'O-Level','STD VII'=>'STD VII','Nil'=>'Nil' ], ['prompt' => '']) ?>
 
            <?= $form->field($model, 'basic_salary'  ,['options'=>['class'=>'required']])->textInput(['id'=>'money-value']) ?>
            <?= $form->field($model, 'nhif',['options'=>['class'=>'required']])->dropDownList([ 'Yes' => 'Yes', 'No' => 'No' ], ['prompt' => '']) ?>
@@ -140,25 +134,20 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                    ['name'=>'allowance_id',
                        'type'=>Select2::className(),
                        'title'=>'Allowance',
-
                           'options'=>[
                     'data'=> ArrayHelper::map(\common\models\Allowance::find()->all(),'id',function($model){
                         return $model['name'].' ['.Yii::$app->formatter->asDecimal($model['amount'],0).' Tsh]';
                     }),
                     'options' => [ 'prompt' =>'----Select-----',
-
                     ],
                 ]
                    ],
                ]
            ])->label(false)?>
-<!--           --><?php //= $form->field($model, 'contract_termination_date')->widget(\dosamigos\datepicker\DatePicker::className(),['clientOptions'=>['format'=>'yyyy-mm-dd','autoclose'=>true],'options'=>['autocomplete'=>'off']]) ?>
-
            <?= $form->field($model, 'nssf',['options'=>['class'=>'required']])->textInput() ?>
            <?= $form->field($model, 'has_ot',['options'=>['class'=>'required']])->dropDownList([ 'Yes' => 'Yes', 'No' => 'No' ], ['prompt' => '']) ?>
-
-
        </div>
+    <?php if ($model->isNewRecord){?>
            <legend style="font-weight: bold;color: #0d6aad">Employee Family Info:</legend>
            <div class="col-md-3">
                <?= $form->field($model, 'next_of_kin_name',['options'=>['class'=>'required']])->textInput(['maxlength' => true])->label('Next of Kin Name') ?>
@@ -172,17 +161,14 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
            <div class=" col-md-3">
                <?= $form->field($model, 'next_of_kin_address',['options'=>['class'=>'required']])->textInput(['maxlength' => true]) ?>
            </div>
-
            <div class="col-md-3">
                <?= $form->field($model, 'spouse_name')->textInput() ?>
            </div>
            <div class="col-md-3">
                <?= $form->field($model, 'spouse_phone_number')->textInput() ?>
            </div>
-
            <div class="col-md-12">
-               <legend style="font-weight: bold;color: #0d6aad">Dependants Info:</legend>
-
+               <legend style="font-weight: bold;color: #0d6aad"> Dependants Info:</legend>
                <?=  $form->field($model,'dependant_information')->widget(multipleinput\MultipleInput::className(),[
                    'max' => 3,
                    'columns'=>[
@@ -195,7 +181,6 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                                ],
                            ]
                        ],
-
                        [
                            'name'     => 'date_of_birth',
                            'title'    => 'Date of birth',
@@ -213,7 +198,6 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                            'options'=>[
                                'data'=>['Male'=>'Male','Female'=>'Female'],
                                'options' => [ 'prompt' =>'----Select-----',
-
                                ],
                            ]
                        ],
@@ -233,14 +217,12 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                        'class' => 'btn btn-danger',
                        'label' => '<span class=" fa fa-minus"></span>'
                    ],
-
                    'columns'=>[
                        ['name'=>'attachments_type_id',
                            'type'=>Select2::className(),
                            'title'=>'Attachment Name',
                            'options'=>[
                                'data'=> ArrayHelper::map(AttachmentsType::find()->where(['status'=>'active'])->all(),'id','name'),'options' => [ 'prompt' =>'----Select Attachment Type-----',
-
                                ],
                            ]
                        ],
@@ -253,12 +235,11 @@ $admin=\common\models\UserAccount::userHas(['ADMIN']);
                                'accept' => 'application/pdf',
                            ],
                        ],
-
                    ]
                ])->label(false)?>
 
            </div>
-
+           <?php }?>
 
        <?php }?>
    </fieldset>

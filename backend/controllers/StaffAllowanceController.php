@@ -74,18 +74,25 @@ class StaffAllowanceController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($staff_id)
     {
         $model = new StaffAllowance();
+        if ($model->load(Yii::$app->request->post())) {
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+
+            $model->staff_id = $staff_id;
+            $model->created_by = Yii::$app->user->identity->getId();
+            if ( $model->save()){
+                Yii::$app->session->setFlash('getSuccess',' <span class="fa fa-check-square-o"> Info added Successfully</span>');
+                return $this->redirect(['staff/view', 'id' => $staff_id]);
+            }
         }
 
-        return $this->render('create', [
+        return $this->renderAjax('create', [
             'model' => $model,
         ]);
     }
+
 
     /**
      * Updates an existing StaffAllowance model.

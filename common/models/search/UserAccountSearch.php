@@ -19,7 +19,7 @@ class UserAccountSearch extends UserAccount
     {
         return [
             [['id', 'user_id', 'status', 'created_by'], 'integer'],
-            [['username', 'password', 'auth_key', 'password_reset_token', 'email', 'verification_token', 'category', 'designation_abbr', 'created_at', 'updated_at'], 'safe'],
+            [['username', 'password', 'auth_key', 'password_reset_token', 'email', 'verification_token', 'category', 'designation_abbr','created_at','updated_at'], 'safe'],
         ];
     }
 
@@ -63,8 +63,7 @@ class UserAccountSearch extends UserAccount
             'user_id' => $this->user_id,
             'status' => $this->status,
             'created_by' => $this->created_by,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+
         ]);
 
         if (\Yii::$app->request->get('authorization')=='staff'){
