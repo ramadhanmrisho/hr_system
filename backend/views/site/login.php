@@ -44,7 +44,7 @@ $this ->beginBody();
 
 
         <div style="text-align: center">
-            <img src="images/pay.jpeg" width="150px" height="130px" class="img-circle">
+            <img src="images/new.jpeg" width="150px" height="130px" class="img-circle">
         </div>
         <br>
         <div class="login-box-msg"  style= "font-size:xx-large ;font-weight: bold;color: black" > <h4 style="font-family: 'Tahoma';font-weight: bold">Sign In</>
